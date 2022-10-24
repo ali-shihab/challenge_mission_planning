@@ -14,6 +14,7 @@ new_session $drone_namespace
 
 new_window 'controller_manager' "ros2 launch controller_manager controller_manager_launch.py \
     drone_id:=$drone_namespace \
+    namespace:=$drone_namespace \
     use_bypass:=true \
     config:=config/controller.yaml \
     base_frame_id:=base_link \
