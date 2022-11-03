@@ -33,6 +33,24 @@
         x: 0.0
         y: 0.0
         z: 0.0
+    speed_in_a_plane_control:
+      reset_integral: false
+      antiwindup_cte: 1.0
+      alpha: 0.3
+      height:
+        kp: 1.0
+        kd: 0.0
+        ki: 0.0
+      speed:
+        kp:
+          x: 0.0
+          y: 0.0
+        kd:
+          x: 0.0
+          y: 0.0
+        ki:
+          x: 0.0
+          y: 0.0
     trajectory_control:
       reset_integral: false
       antiwindup_cte : 1.0
