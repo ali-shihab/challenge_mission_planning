@@ -1,49 +1,46 @@
 #!/bin/python3
 
-import rclpy
 from time import sleep
+import rclpy
 from python_interface.drone_interface import DroneInterface
 
 
-def drone_run(drone_interface, n_uav):
+def drone_run(drone_interface: DroneInterface):
 
     speed = 1.0
     takeoff_height = 2.0
     height = 3.0
 
-    size = 5.0
-    goal0 = [size, 0.0, height]
-    goal1 = [size, size, height]
-    goal2 = [0.0, 0.0, height]
+    sleep_time = 1.0
+
+    dim = 5.0
+    path = [
+        [0.0, 0.0, takeoff_height],
+        [dim, dim, height],
+        [dim, -dim, height],
+        [-dim, dim, height],
+        [-dim, -dim, height],
+        [0.0, 0.0, takeoff_height],
+    ]
 
     ignore_yaw_ = False
 
-    print(f"Start mission")
+    print("Start mission")
 
     drone_interface.offboard()
     drone_interface.arm()
 
-    # drone_interface.send_motion_reference_pose(goal0)
-
-    print(f"Take Off")
+    print("Take Off")
     drone_interface.takeoff(takeoff_height, speed=1.0)
-    print(f"Take Off done")
+    print("Take Off done")
+    sleep(sleep_time)
 
     # ##### GOTO #####
-    sleep(1.0)
-    print(f"Go to: {goal0}")
-    drone_interface.go_to_point(goal0, speed=speed, ignore_yaw=ignore_yaw_)
-    print(f"Go to done")
-
-    sleep(1.0)
-    print(f"Go to: {goal1}")
-    drone_interface.go_to_point(goal1, speed=speed, ignore_yaw=ignore_yaw_)
-    print(f"Go to done")
-
-    sleep(1.0)
-    print(f"Go to: {goal2}")
-    drone_interface.go_to_point(goal2, speed=speed, ignore_yaw=ignore_yaw_)
-    print(f"Go to done")
+    for goal in path:
+        print(f"Go to {goal}")
+        drone_interface.go_to_point(goal, speed=speed, ignore_yaw=ignore_yaw_)
+        print("Go to done")
+        sleep(sleep_time)
 
     ##### FOLLOW PATH #####
     # sleep(1.0)
@@ -52,19 +49,20 @@ def drone_run(drone_interface, n_uav):
     # drone_interface.follow_path(path, speed=speed)
     # print(f"Follow path done")
 
-    # sleep(1.0)
-    print(f"Land: [{goal2}]")
+    sleep(1.0)
+    print("Landing")
     drone_interface.land(speed=0.5)
-    print(f"Land done")
+    print("Land done")
 
     print("Clean exit")
 
 
 if __name__ == '__main__':
     rclpy.init()
-    uav = DroneInterface("drone_sim_0", verbose=False, use_gps=False)
+    uav = DroneInterface("drone_sim_0", verbose=False,
+                         use_gps=False, use_sim_time=True)
 
-    drone_run(uav, 0)
+    drone_run(uav)
 
     uav.shutdown()
     rclpy.shutdown()

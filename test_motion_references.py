@@ -5,10 +5,6 @@ import time
 import rclpy
 from python_interface.drone_interface import DroneInterface
 
-from motion_reference_handlers.hover_motion import HoverMotion
-from motion_reference_handlers.position_motion import PositionMotion
-from motion_reference_handlers.speed_motion import SpeedMotion
-from motion_reference_handlers.speed_in_a_plane import SpeedInAPlaneMotion
 import motion_reference_handlers.utils as mh_utils
 from geometry_msgs.msg import PoseStamped, TwistStamped
 
@@ -46,7 +42,7 @@ def get_speed_output(drone_interface: DroneInterface,
     return twist_msg
 
 
-def test_position_motion(drone_interface: DroneInterface, position_motion_handler: PositionMotion):
+def test_position_motion(drone_interface: DroneInterface):
     # ##### Motion Handler Position #####
 
     size = 0.0
@@ -72,7 +68,7 @@ def test_position_motion(drone_interface: DroneInterface, position_motion_handle
         print(
             f"{i} - Send position motion with yaw angle using list: [{pose_list[0]}, {pose_list[1]}, {pose_list[2]}]")
         pose_frame_id = mh_utils.get_tf_name(drone_interface, frame_id)
-        position_motion_handler.send_position_command_with_yaw_angle(
+        drone_interface.position_motion_handler.send_position_command_with_yaw_angle(
             pose_list, yaw_angle=yaw_angle, pose_frame_id=pose_frame_id)
         time.sleep(time_sleep)
         i += 1
@@ -81,7 +77,8 @@ def test_position_motion(drone_interface: DroneInterface, position_motion_handle
     while i < limit and rclpy.ok():
         print(
             f"{i} - Send position motion with yaw angle using msg: [{pose_msg.pose.position.x}, {pose_msg.pose.position.y}, {pose_msg.pose.position.z}]")
-        position_motion_handler.send_position_command_with_yaw_angle(pose_msg)
+        drone_interface.position_motion_handler.send_position_command_with_yaw_angle(
+            pose_msg)
         time.sleep(1)
         i += 1
 
@@ -91,7 +88,7 @@ def test_position_motion(drone_interface: DroneInterface, position_motion_handle
         print(
             f"{i} - Send position motion with yaw speed using pose list and speed float: [{pose_list[0]}, {pose_list[1]}, {pose_list[2]}]")
         pose_frame_id = mh_utils.get_tf_name(drone_interface, frame_id)
-        position_motion_handler.send_position_command_with_yaw_speed(
+        drone_interface.position_motion_handler.send_position_command_with_yaw_speed(
             pose_list, yaw_speed=yaw_speed, pose_frame_id=pose_frame_id)
         time.sleep(time_sleep)
         i += 1
@@ -100,7 +97,7 @@ def test_position_motion(drone_interface: DroneInterface, position_motion_handle
     while i < limit and rclpy.ok():
         print(
             f"{i} - Send position motion with yaw speed using pose msg and speed float: [{pose_msg.pose.position.x}, {pose_msg.pose.position.y}, {pose_msg.pose.position.z}]")
-        position_motion_handler.send_position_command_with_yaw_speed(
+        drone_interface.position_motion_handler.send_position_command_with_yaw_speed(
             pose_msg, yaw_speed=yaw_speed)
         time.sleep(1)
         i += 1
@@ -109,13 +106,13 @@ def test_position_motion(drone_interface: DroneInterface, position_motion_handle
     while i < limit and rclpy.ok():
         print(
             f"{i} - Send position motion with yaw speed using pose msg and speed msg: [{pose_msg.pose.position.x}, {pose_msg.pose.position.y}, {pose_msg.pose.position.z}]")
-        position_motion_handler.send_position_command_with_yaw_speed(
+        drone_interface.position_motion_handler.send_position_command_with_yaw_speed(
             pose_msg, twist_limit_msg)
         time.sleep(1)
         i += 1
 
 
-def test_speed_motion(drone_interface: DroneInterface, speed_motion_handler: SpeedMotion):
+def test_speed_motion(drone_interface: DroneInterface):
     # ##### Motion Handler Speed #####
 
     frame_id = '/earth'
@@ -138,7 +135,7 @@ def test_speed_motion(drone_interface: DroneInterface, speed_motion_handler: Spe
         print(
             f"{i} - Send speed motion with yaw angle using list: [{speed_list[0]}, {speed_list[1]}, {speed_list[2]}]")
         twist_frame_id = mh_utils.get_tf_name(drone_interface, frame_id)
-        speed_motion_handler.send_speed_command_with_yaw_angle(
+        drone_interface.speed_motion_handler.send_speed_command_with_yaw_angle(
             speed_list, twist_frame_id=twist_frame_id, yaw_angle=yaw_angle)
         time.sleep(time_sleep)
         i += 1
@@ -147,7 +144,7 @@ def test_speed_motion(drone_interface: DroneInterface, speed_motion_handler: Spe
     while i < limit and rclpy.ok():
         print(
             f"{i} - Send speed motion with yaw angle using msg and float: [{twist_msg.twist.linear.x}, {twist_msg.twist.linear.y}, {twist_msg.twist.linear.z}]")
-        speed_motion_handler.send_speed_command_with_yaw_angle(
+        drone_interface.speed_motion_handler.send_speed_command_with_yaw_angle(
             twist_msg, yaw_angle=yaw_angle)
         time.sleep(time_sleep)
         i += 1
@@ -156,7 +153,7 @@ def test_speed_motion(drone_interface: DroneInterface, speed_motion_handler: Spe
     while i < limit and rclpy.ok():
         print(
             f"{i} - Send speed motion with yaw angle using msg and msg: [{twist_msg.twist.linear.x}, {twist_msg.twist.linear.y}, {twist_msg.twist.linear.z}]")
-        speed_motion_handler.send_speed_command_with_yaw_angle(
+        drone_interface.speed_motion_handler.send_speed_command_with_yaw_angle(
             twist_msg, pose_msg)
         time.sleep(time_sleep)
         i += 1
@@ -167,7 +164,7 @@ def test_speed_motion(drone_interface: DroneInterface, speed_motion_handler: Spe
         print(
             f"{i} - Send speed motion with yaw speed using list: [{speed_list[0]}, {speed_list[1]}, {speed_list[2]}]")
         twist_frame_id = mh_utils.get_tf_name(drone_interface, frame_id)
-        speed_motion_handler.send_speed_command_with_yaw_speed(
+        drone_interface.speed_motion_handler.send_speed_command_with_yaw_speed(
             speed_list, twist_frame_id=twist_frame_id, yaw_speed=yaw_speed)
         time.sleep(time_sleep)
         i += 1
@@ -176,13 +173,13 @@ def test_speed_motion(drone_interface: DroneInterface, speed_motion_handler: Spe
     while i < limit and rclpy.ok():
         print(
             f"{i} - Send speed motion with yaw speed using msg: [{twist_msg.twist.linear.x}, {twist_msg.twist.linear.y}, {twist_msg.twist.linear.z}]")
-        speed_motion_handler.send_speed_command_with_yaw_speed(
+        drone_interface.speed_motion_handler.send_speed_command_with_yaw_speed(
             twist_msg)
         time.sleep(time_sleep)
         i += 1
 
 
-def test_speed_in_a_plane_motion(drone_interface: DroneInterface, speed_motion_handler: SpeedInAPlaneMotion):
+def test_speed_in_a_plane_motion(drone_interface: DroneInterface):
     # ##### Motion Handler Speed In A Plane#####
 
     frame_id = '/earth'
@@ -210,7 +207,7 @@ def test_speed_in_a_plane_motion(drone_interface: DroneInterface, speed_motion_h
         print(f"{i} - Send speed motion with yaw angle {yaw_angle} using list:")
         print(f"{i} - speed: [{speed_list[0]}, {speed_list[1]}]")
         print(f"{i} - height: {height}")
-        speed_motion_handler.send_speed_in_a_plane_command_with_yaw_angle(
+        drone_interface.speed_in_a_plane_motion_handler.send_speed_in_a_plane_command_with_yaw_angle(
             speed_list, height, twist_frame_id=twist_frame_id, pose_frame_id=pose_frame_id, yaw_angle=yaw_angle)
         time.sleep(time_sleep)
         i += 1
@@ -221,7 +218,7 @@ def test_speed_in_a_plane_motion(drone_interface: DroneInterface, speed_motion_h
         print(
             f"{i} - speed: [{twist_msg.twist.linear.x}, {twist_msg.twist.linear.y}]")
         print(f"{i} - height: [{pose_msg.pose.position.z}]")
-        speed_motion_handler.send_speed_in_a_plane_command_with_yaw_angle(
+        drone_interface.speed_in_a_plane_motion_handler.send_speed_in_a_plane_command_with_yaw_angle(
             twist_msg, pose_msg)
         time.sleep(time_sleep)
         i += 1
@@ -232,7 +229,7 @@ def test_speed_in_a_plane_motion(drone_interface: DroneInterface, speed_motion_h
         print(f"{i} - Send speed motion with yaw speed {yaw_speed} using list:")
         print(f"{i} - speed: [{speed_list[0]}, {speed_list[1]}]")
         print(f"{i} - height: {height}")
-        speed_motion_handler.send_speed_in_a_plane_command_with_yaw_speed(
+        drone_interface.speed_in_a_plane_motion_handler.send_speed_in_a_plane_command_with_yaw_speed(
             speed_list, height, twist_frame_id=twist_frame_id, pose_frame_id=pose_frame_id, yaw_speed=yaw_speed)
         time.sleep(time_sleep)
         i += 1
@@ -243,18 +240,13 @@ def test_speed_in_a_plane_motion(drone_interface: DroneInterface, speed_motion_h
         print(
             f"{i} - speed: [{twist_msg.twist.linear.x}, {twist_msg.twist.linear.y}]")
         print(f"{i} - height: [{pose_msg.pose.position.z}]")
-        speed_motion_handler.send_speed_in_a_plane_command_with_yaw_speed(
+        drone_interface.speed_in_a_plane_motion_handler.send_speed_in_a_plane_command_with_yaw_speed(
             twist_msg, pose_msg)
         time.sleep(time_sleep)
         i += 1
 
 
 def drone_run(drone_interface: DroneInterface):
-
-    hover_motion_handler = HoverMotion(drone_interface)
-    position_motion_handler = PositionMotion(drone_interface)
-    speed_motion_handler = SpeedMotion(drone_interface)
-    speed_In_a_plane_motion_handler = SpeedInAPlaneMotion(drone_interface)
 
     takeoff_height = 2.0
     takeoff_speed = 0.5
@@ -268,29 +260,28 @@ def drone_run(drone_interface: DroneInterface):
     drone_interface.takeoff(takeoff_height, speed=takeoff_speed)
     print("Take Off done")
 
-    # time.sleep(1.0)
+    time.sleep(1.0)
 
-    # print("Test position motion")
-    # test_position_motion(drone_interface, position_motion_handler)
-    # print("Test position motion done")
+    print("Test position motion")
+    drone_interface.hover_motion_handler.send_hover()
+    print("Test position motion done")
 
-    # time.sleep(1.0)
+    time.sleep(1.0)
 
-    # print("Test position motion")
-    # hover_motion_handler.send_hover()
-    # print("Test position motion done")
+    print("Test position motion")
+    test_position_motion(drone_interface)
+    print("Test position motion done")
 
-    # time.sleep(1.0)
+    time.sleep(1.0)
 
-    # print("Test speed motion")
-    # test_speed_motion(drone_interface, speed_motion_handler)
-    # print("Test speed motion done")
+    print("Test speed motion")
+    test_speed_motion(drone_interface)
+    print("Test speed motion done")
 
     time.sleep(1.0)
 
     print("Test speed in a plane motion")
-    test_speed_in_a_plane_motion(
-        drone_interface, speed_In_a_plane_motion_handler)
+    test_speed_in_a_plane_motion(drone_interface)
     print("Test speed in a plane motion done")
 
     print("Clean exit")
