@@ -3,8 +3,8 @@
     proportional_limitation: true
     position_control:
       reset_integral: false
-      antiwindup_cte: 1.0
-      alpha: 0.3
+      antiwindup_cte: 0.5
+      alpha: 0.2
       kp:
         x: 1.0
         y: 1.0
@@ -14,9 +14,9 @@
         y: 0.0
         z: 0.0
       ki:
-        x: 0.01
-        y: 0.01
-        z: 0.01
+        x: 0.0
+        y: 0.0
+        z: 0.0
     speed_control:
       reset_integral: false
       antiwindup_cte : 1.0
@@ -39,8 +39,8 @@
       alpha: 0.3
       height:
         kp: 1.0
-        kd: 0.0
-        ki: 0.0
+        kd: 1.0
+        ki: 1.0
       speed:
         kp:
           x: 0.0

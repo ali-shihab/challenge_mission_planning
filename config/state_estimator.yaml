@@ -1,0 +1,4 @@
+/**:
+  ros__parameters:
+    plugin_name: "as2_state_estimator_plugin_ground_truth"
+    plugin_config_file: ""
