@@ -7,43 +7,44 @@ fi
 
 # Arguments
 drone_namespace=$1
+use_sim_time=true
+behavior_type="position" # "position" or "trajectory"
 
-source ./launch_tools.bash
+source ./utils/launch_tools.bash
 
 new_session $drone_namespace
 
-new_window 'controller_manager' "ros2 launch controller_manager controller_manager_launch.py \
+new_window 'as2_ignition_platform' "ros2 launch as2_ignition_platform ignition_platform_launch.py \
     drone_id:=$drone_namespace \
+    use_sim_time:=$use_sim_time \
+    config_file:=simulation_config/default.json"
+
+new_window 'as2_controller_manager' "ros2 launch as2_controller_manager controller_manager_launch.py \
     namespace:=$drone_namespace \
+    use_sim_time:=$use_sim_time \
+    cmd_freq:=100.0 \
+    info_freq:=10.0 \
     use_bypass:=true \
-    config:=config/controller.yaml \
-    base_frame_id:=base_link \
-    use_sim_time:=true"
+    plugin_name:=controller_plugin_speed_controller \
+    plugin_config_file:=config/controller.yaml"
 
-new_window 'state_estimator' "ros2 launch basic_state_estimator basic_state_estimator_launch.py \
+new_window 'as2_state_estimator' "ros2 launch as2_state_estimator state_estimator_launch.py \
     namespace:=$drone_namespace \
-    odom_only:=false \
-    ground_truth:=true \
-    base_frame:="\/$drone_namespace" \
-    use_sim_time:=true"
+    use_sim_time:=$use_sim_time \
+    plugin_name:=as2_state_estimator_plugin_ground_truth \
+    plugin_config_file:=config/default_state_estimator.yaml" 
 
-new_window 'ignition_interface' "ros2 launch ignition_platform ignition_platform_launch.py \
-    drone_id:=$drone_namespace \
-    config_file:=sim_config/test.json \
-    use_sim_time:=true"
+new_window 'as2_platform_behaviors' "ros2 launch as2_platform_behaviors as2_platform_behaviors_launch.py \
+    namespace:=$drone_namespace \
+    use_sim_time:=$use_sim_time \
+    follow_path_plugin_name:=follow_path_plugin_$behavior_type \
+    goto_plugin_name:=goto_plugin_$behavior_type \
+    takeoff_plugin_name:=takeoff_plugin_$behavior_type \
+    land_plugin_name:=land_plugin_speed"
 
-new_window 'traj_generator' "ros2 launch trajectory_generator trajectory_generator_launch.py  \
-    drone_id:=$drone_namespace \
-    use_sim_time:=true"
-
-new_window 'basic_behaviours' "ros2 launch as2_basic_behaviours all_basic_behaviours_launch.py \
-    drone_id:=$drone_namespace \
-    config_follow_path:=config/follow_path_behaviour.yaml \
-    config_takeoff:=config/takeoff_behaviour.yaml \
-    config_land:=config/land_behaviour.yaml \
-    config_goto:=config/goto_behaviour.yaml \
-    use_sim_time:=true"
-
-new_window 'gps_translator' "ros2 launch gps_utils gps_translator_launch.py \
-    namespace:=$drone_namespace"
-
+if [[ "$behavior_type" == "trajectory" ]]
+then
+    new_window 'traj_generator' "ros2 launch trajectory_generator trajectory_generator_launch.py  \
+        namespace:=$drone_namespace \
+        use_sim_time:=$use_sim_time"
+fi
