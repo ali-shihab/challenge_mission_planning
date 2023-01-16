@@ -14,27 +14,27 @@ source ./utils/launch_tools.bash
 
 new_session $drone_namespace
 
-new_window 'as2_ignition_platform' "ros2 launch as2_ignition_platform ignition_platform_launch.py \
-    drone_id:=$drone_namespace \
+new_window 'platform' "ros2 launch as2_platform_ign_gazebo ign_gazebo_launch.py \
+    namespace:=$drone_namespace \
     use_sim_time:=$use_sim_time \
     config_file:=simulation_config/default.json"
 
-new_window 'as2_controller_manager' "ros2 launch as2_controller_manager controller_manager_launch.py \
+new_window 'controller' "ros2 launch as2_controller controller_launch.py \
     namespace:=$drone_namespace \
     use_sim_time:=$use_sim_time \
     cmd_freq:=100.0 \
     info_freq:=10.0 \
     use_bypass:=true \
-    plugin_name:=controller_plugin_speed_controller \
+    plugin_name:=speed_controller \
     plugin_config_file:=config/controller.yaml"
 
-new_window 'as2_state_estimator' "ros2 launch as2_state_estimator state_estimator_launch.py \
+new_window 'state_estimator' "ros2 launch as2_state_estimator state_estimator_launch.py \
     namespace:=$drone_namespace \
     use_sim_time:=$use_sim_time \
-    plugin_name:=as2_state_estimator_plugin_ground_truth \
+    plugin_name:=ground_truth \
     plugin_config_file:=config/default_state_estimator.yaml" 
 
-new_window 'as2_platform_behaviors' "ros2 launch as2_platform_behaviors as2_platform_behaviors_launch.py \
+new_window 'behaviors' "ros2 launch as2_movement_behaviors movement_behaviors_launch.py \
     namespace:=$drone_namespace \
     use_sim_time:=$use_sim_time \
     follow_path_plugin_name:=follow_path_plugin_$behavior_type \
@@ -44,7 +44,7 @@ new_window 'as2_platform_behaviors' "ros2 launch as2_platform_behaviors as2_plat
 
 if [[ "$behavior_type" == "trajectory" ]]
 then
-    new_window 'traj_generator' "ros2 launch trajectory_generator trajectory_generator_launch.py  \
+    new_window 'traj_generator' "ros2 launch as2_trajectory_generator trajectory_generator_launch.py  \
         namespace:=$drone_namespace \
         use_sim_time:=$use_sim_time"
 fi
