@@ -8,7 +8,7 @@ fi
 # Arguments
 drone_namespace=$1
 use_sim_time=true
-behavior_type="position" # "position" or "trajectory"
+behavior_type="trajectory" # "position" or "trajectory"
 
 source ./utils/launch_tools.bash
 
@@ -34,7 +34,7 @@ new_window 'state_estimator' "ros2 launch as2_state_estimator state_estimator_la
     plugin_name:=ground_truth \
     plugin_config_file:=config/default_state_estimator.yaml" 
 
-new_window 'behaviors' "ros2 launch as2_movement_behaviors movement_behaviors_launch.py \
+new_window 'behaviors' "ros2 launch as2_behaviors_motion motion_behaviors_launch.py \
     namespace:=$drone_namespace \
     use_sim_time:=$use_sim_time \
     follow_path_plugin_name:=follow_path_plugin_$behavior_type \
@@ -44,7 +44,7 @@ new_window 'behaviors' "ros2 launch as2_movement_behaviors movement_behaviors_la
 
 if [[ "$behavior_type" == "trajectory" ]]
 then
-    new_window 'traj_generator' "ros2 launch as2_trajectory_generator trajectory_generator_launch.py  \
+    new_window 'traj_generator' "ros2 launch as2_behaviors_trajectory_generator dynamic_polynomial_generator_launch.py  \
         namespace:=$drone_namespace \
         use_sim_time:=$use_sim_time"
 fi
