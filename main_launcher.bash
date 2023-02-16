@@ -1,16 +1,11 @@
 #!/bin/bash
 
-num_drones=$1
-num_drones=${num_drones:=1}
+drone_namespaces=('drone_sim_0')
+simulation_config="simulation_config/default.json"
+launch_keyboard_teleop="true"
 
-DIR_SCRIPT="${0%/*}"
-
-n=0
-drone_namespace="drone_sim_"
-while [ $n -lt $num_drones ]; do
-    ${DIR_SCRIPT}/as2_launch.bash $drone_namespace$n
-    n=$(($n + 1))
-done
+# Run nodes
+./as2_launch.bash "${drone_namespaces[0]}" $simulation_config $launch_keyboard_teleop
 
 session=${drone_namespace}$(($n - 1))
 
