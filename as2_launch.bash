@@ -32,13 +32,13 @@ new_window 'platform' "ros2 launch as2_platform_ign_gazebo ign_gazebo_launch.py 
     use_sim_time:=$use_sim_time \
     config_file:=$simulation_config"
 
-new_window 'controller' "ros2 launch as2_controller controller_launch.py \
+new_window 'controller' "ros2 launch as2_motion_controller controller_launch.py \
     namespace:=$drone_namespace \
     use_sim_time:=$use_sim_time \
     cmd_freq:=100.0 \
     info_freq:=10.0 \
     use_bypass:=true \
-    plugin_name:=speed_controller \
+    plugin_name:=pid_speed_controller \
     plugin_config_file:=config/controller.yaml"
 
 new_window 'state_estimator' "ros2 launch as2_state_estimator state_estimator_launch.py \
