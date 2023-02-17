@@ -57,7 +57,7 @@ new_window 'behaviors' "ros2 launch as2_behaviors_motion motion_behaviors_launch
 
 if [[ "$behavior_type" == "trajectory" ]]
 then
-    new_window 'traj_generator' "ros2 launch as2_behaviors_trajectory_generator dynamic_polynomial_generator_launch.py  \
+    new_window 'traj_generator' "ros2 launch as2_behaviors_trajectory_generation generate_polynomial_trajectory_behavior_launch.py  \
         namespace:=$drone_namespace \
         use_sim_time:=$use_sim_time"
 fi
