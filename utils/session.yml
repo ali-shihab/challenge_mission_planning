@@ -32,7 +32,8 @@ windows:
         - ros2 launch as2_platform_ign_gazebo ign_gazebo_launch.py
             namespace:=<%= drone_namespace %>
             use_sim_time:=true
-            config_file:=<%= simulation_config %>
+            simulation_config_file:=<%= simulation_config %>
+            platform_config_file:=sim_config/platform_config_file.yaml
   - state_estimator:
       layout:
       panes:

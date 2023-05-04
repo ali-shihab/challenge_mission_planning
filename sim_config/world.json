@@ -1,11 +1,20 @@
 {
-    "world": "empty",
+    "world_name": "empty",
     "drones": [
         {
-            "model": "quadrotor_base",
-            "name": "drone_sim_0",
-            "xyz": [ 1.0, 1.0, 0.3 ],
-            "rpy": [ 0, 0, 0.0 ]
+            "model_type": "quadrotor_base",
+            "model_name": "drone_sim_0",
+            "xyz": [
+                1.0,
+                1.0,
+                0.3
+            ],
+            "rpy": [
+                0,
+                0,
+                0.0
+            ],
+            "flight_time": 60
         }
-    ]      
+    ]
 }

@@ -67,5 +67,7 @@ done
 tmuxinator start -n gazebo -p utils/gazebo.yml simulation_config=${simulation_config} &
 wait
 
-tmux a
+# Attach to tmux session ${drone_ns[@]}, window 0
+tmux attach-session -t ${drone_ns[0]}:0
+
 pkill -9 -f "gazebo"
