@@ -1,20 +1,71 @@
 #!/bin/bash
 
-$drone_namespace=$1
-if [ -z "$drone_namespace" ]; then
-    drone_namespace="drone_sim_0"
-fi
-simulation_config="simulation_config/default.json"
-launch_keyboard_teleop="true"
+usage() {
+    echo "usage: $0 [-p <ign_gz|dji_osdk>] [-r] [-t] [drone_namespace]"
+    echo ""
+    echo "  options:"
+    echo "      -w: swarm, choices: [true | false]"
+    echo "      -r: record rosbag"
+    echo "      -t: launch keyboard teleoperation"
+    echo "      drone_namespace: [drone_sim_0 | drone_0]"
+}
 
-# Run nodes
-./as2_launch.bash "${drone_namespace}" $simulation_config $launch_keyboard_teleop
+# Arg parser
+while getopts ":w:r:t" opt; do
+  case ${opt} in
+    w )
+      swarm=${OPTARG}
+      ;;
+    r )
+      record_rosbag=${OPTARG}
+      ;;
+    t )
+      launch_keyboard_teleop=${OPTARG}
+      ;;
+    \? )
+      echo "Invalid option: -$OPTARG" 1>&2
+      usage
+      exit 1
+      ;;
+    : )
+      echo "Option -$OPTARG requires an argument" 1>&2
+      usage
+      exit 1
+      ;;
+  esac
+done
 
-session=${drone_namespace}
+# Shift optional args
+shift $((OPTIND -1))
 
-# if inside a tmux session detach before attaching to the session
-if [ -n "$TMUX" ]; then
-    tmux switch-client -t $session
+## DEFAULTS
+swarm=${swarm:="false"}
+record_rosbag=${record_rosbag:="false"}
+launch_keyboard_teleop=${launch_keyboard_teleop:="false"}
+
+if [[ ${swarm} == "true" ]]; then
+  simulation_config="sim_config/world_swarm.json"
+  drone_ns=('drone_sim_0' 'drone_sim_1' 'drone_sim_2')
 else
-    tmux attach -t $session:0
+  simulation_config="sim_config/world.json" 
+  drone_ns=('drone_sim_0')
 fi
+
+for ns in "${drone_ns[@]}"
+do
+  if [[ ${ns} == ${drone_ns[0]} ]]; then
+    base_launch="true"
+  else
+    base_launch="false"
+  fi 
+
+  tmuxinator start -n ${ns} -p utils/session.yml drone_namespace=${ns} estimator_plugin="ground_truth" record_rosbag=${record_rosbag} launch_keyboard_teleop=${launch_keyboard_teleop} simulation_config=${simulation_config} &
+  wait
+
+done
+
+tmuxinator start -n gazebo -p utils/gazebo.yml simulation_config=${simulation_config} &
+wait
+
+tmux a
+pkill -9 -f "gazebo"
