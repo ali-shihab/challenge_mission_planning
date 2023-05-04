@@ -2,22 +2,49 @@
     "world": "empty",
     "drones": [
         {
-            "model": "quadrotor_base",
-            "name": "drone_sim_0",
-            "xyz": [ 2.0, 0.0, 0.2 ],
-            "rpy": [ 0, 0, 0.0 ]
+            "model_type": "quadrotor_base",
+            "model_name": "drone_sim_0",
+            "xyz": [
+                2.0,
+                0.0,
+                0.3
+            ],
+            "rpy": [
+                0,
+                0,
+                0.0
+            ],
+            "flight_time": 60
         },
         {
-            "model": "quadrotor_base",
-            "name": "drone_sim_1",
-            "xyz": [ -2.0, 0.0, 0.2 ],
-            "rpy": [ 0, 0, 0.0 ]
+            "model_type": "quadrotor_base",
+            "model_name": "drone_sim_1",
+            "xyz": [
+                -2.0,
+                0.0,
+                0.3
+            ],
+            "rpy": [
+                0,
+                0,
+                0.0
+            ],
+            "flight_time": 60
         },
         {
-            "model": "quadrotor_base",
-            "name": "drone_sim_2",
-            "xyz": [ 0.0, 0.0, 0.2 ],
-            "rpy": [ 0, 0, 0.0 ]
+            "model_type": "quadrotor_base",
+            "model_name": "drone_sim_2",
+            "xyz": [
+                0.0,
+                0.0,
+                0.3
+            ],
+            "rpy": [
+                0,
+                0,
+                0.0
+            ],
+            "flight_time": 60
         }
     ]
 }
