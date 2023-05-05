@@ -14,23 +14,25 @@ usage() {
 while getopts ":w:r:t" opt; do
   case ${opt} in
     w )
-      swarm=${OPTARG}
+      swarm="true"
       ;;
     r )
-      record_rosbag=${OPTARG}
+      record_rosbag="true"
       ;;
     t )
-      launch_keyboard_teleop=${OPTARG}
+      launch_keyboard_teleop="true"
       ;;
     \? )
-      echo "Invalid option: -$OPTARG" 1>&2
+      echo "Invalid option: -$OPTARG" >&2
       usage
       exit 1
       ;;
     : )
-      echo "Option -$OPTARG requires an argument" 1>&2
-      usage
-      exit 1
+      if [[ ! $OPTARG =~ ^[wrt]$ ]]; then
+        echo "Option -$OPTARG requires an argument" >&2
+        usage
+        exit 1
+      fi
       ;;
   esac
 done
