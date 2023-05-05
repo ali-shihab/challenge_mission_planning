@@ -14,4 +14,4 @@ windows:
       panes:
         - ros2 launch as2_ign_gazebo_assets launch_simulation.py
           use_sim_time:=true
-          config_file:=<%= simulation_config %>
+          simulation_config_file:=<%= simulation_config %>

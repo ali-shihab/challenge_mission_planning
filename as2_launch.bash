@@ -4,14 +4,15 @@ usage() {
     echo "usage: $0 [-p <ign_gz|dji_osdk>] [-r] [-t] [drone_namespace]"
     echo ""
     echo "  options:"
-    echo "      -w: swarm, choices: [true | false]"
+    echo "      -w: swarm mode"
     echo "      -r: record rosbag"
     echo "      -t: launch keyboard teleoperation"
     echo "      drone_namespace: [drone_sim_0 | drone_0]"
 }
 
 # Arg parser
-while getopts ":w:r:t" opt; do
+while getopts "wrt" opt; do
+  echo "Command line arguments: $@"
   case ${opt} in
     w )
       swarm="true"
@@ -37,6 +38,7 @@ while getopts ":w:r:t" opt; do
   esac
 done
 
+echo ${swarm}
 # Shift optional args
 shift $((OPTIND -1))
 
