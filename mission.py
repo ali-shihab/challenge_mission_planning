@@ -1,8 +1,13 @@
 #!/bin/python3
 
+"""
+mission.py
+"""
+
 from time import sleep
 import rclpy
 from as2_python_api.drone_interface import DroneInterface
+
 
 def drone_run(drone_interface: DroneInterface):
     """ Run the mission """
@@ -48,10 +53,10 @@ def drone_run(drone_interface: DroneInterface):
 
     drone_interface.disarm()
 
-if __name__ == '__main__':     
 
+if __name__ == '__main__':
     rclpy.init()
-    
+
     uav = DroneInterface("drone_sim_0", verbose=False, use_sim_time=True)
 
     drone_run(uav)
