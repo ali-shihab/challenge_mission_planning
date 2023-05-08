@@ -43,11 +43,9 @@ windows:
         - ros2 launch as2_motion_controller controller_launch.py
             namespace:=<%= drone_namespace %>
             use_sim_time:=true
-            cmd_freq:=100.0
-            info_freq:=10.0
+            motion_controller_config_file:=sim_config/motion_controller.yaml
             plugin_name:=pid_speed_controller
-            use_bypass:=true
-            plugin_config_file:=sim_config/controller_tunning_params.yaml      
+            plugin_config_file:=sim_config/motion_controller_plugin.yaml   
   - behaviors:
       layout:
       panes:
@@ -83,4 +81,4 @@ windows:
   - mission:
       layout:
       panes:
-        - 
+        - echo Run here the mission
