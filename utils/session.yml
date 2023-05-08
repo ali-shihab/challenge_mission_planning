@@ -5,6 +5,7 @@
 simulation_config   = @settings["simulation_config"]
 drone_namespace     = @settings["drone_namespace"]
 base_launch         = @settings["base_launch"] == "true"
+use_behavior_tree   = @settings["behavior_tree"] == "true"
 use_keyboard_teleop = @settings["launch_keyboard_teleop"] == "true"
 record_rosbag       = @settings["record_rosbag"] == "true"
 
@@ -58,9 +59,6 @@ windows:
             go_to_plugin_name:=go_to_plugin_<%= behavior_type %>
             takeoff_plugin_name:=takeoff_plugin_<%= behavior_type %>
             land_plugin_name:=land_plugin_speed
-        - ros2 launch as2_behaviors_motion follow_reference_behavior_launch.py
-            namespace:=<%= drone_namespace %>
-            use_sim_time:=true
         <%- if behavior_type == "trajectory" %>
         - ros2 launch as2_behaviors_trajectory_generation generate_polynomial_trajectory_behavior_launch.py
             namespace:=<%= drone_namespace %>
@@ -83,4 +81,10 @@ windows:
   - mission:
       layout:
       panes:
-        - 
+        <%- if use_behavior_tree %>
+        - ros2 launch as2_behavior_tree behavior_trees.launch.py
+            drone_id:=<%= drone_namespace %>
+            use_sim_time:=true
+            tree:=./trees/square.xml
+        <%- end %>
+        -

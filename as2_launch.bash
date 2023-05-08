@@ -4,6 +4,7 @@ usage() {
     echo "usage: $0 [-p <ign_gz|dji_osdk>] [-r] [-t] [drone_namespace]"
     echo ""
     echo "  options:"
+    echo "      -b: launch behavior tree"
     echo "      -w: swarm mode"
     echo "      -r: record rosbag"
     echo "      -t: launch keyboard teleoperation"
@@ -11,9 +12,12 @@ usage() {
 }
 
 # Arg parser
-while getopts "wrt" opt; do
+while getopts "bwrt" opt; do
   echo "Command line arguments: $@"
   case ${opt} in
+    b )
+      behavior_tree="true"
+      ;;
     w )
       swarm="true"
       ;;
@@ -43,6 +47,7 @@ echo ${swarm}
 shift $((OPTIND -1))
 
 ## DEFAULTS
+behavior_tree=${behavior_tree:="false"}
 swarm=${swarm:="false"}
 record_rosbag=${record_rosbag:="false"}
 launch_keyboard_teleop=${launch_keyboard_teleop:="false"}
@@ -63,7 +68,7 @@ do
     base_launch="false"
   fi 
 
-  tmuxinator start -n ${ns} -p utils/session.yml drone_namespace=${ns} estimator_plugin="ground_truth" record_rosbag=${record_rosbag} launch_keyboard_teleop=${launch_keyboard_teleop} simulation_config=${simulation_config} &
+  tmuxinator start -n ${ns} -p utils/session.yml drone_namespace=${ns} estimator_plugin="ground_truth" behavior_tree=${behavior_tree} record_rosbag=${record_rosbag} launch_keyboard_teleop=${launch_keyboard_teleop} simulation_config=${simulation_config} &
   wait
 
 done
