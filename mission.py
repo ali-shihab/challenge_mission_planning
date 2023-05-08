@@ -2,7 +2,6 @@
 
 from time import sleep
 import rclpy
-import argparse
 from as2_python_api.drone_interface import DroneInterface
 
 def drone_run(drone_interface: DroneInterface):
@@ -53,7 +52,7 @@ if __name__ == '__main__':
 
     rclpy.init()
     
-    uav = DroneInterface("drone_sim_0", verbose=True, use_sim_time=True)
+    uav = DroneInterface("drone_sim_0", verbose=False, use_sim_time=True)
 
     drone_run(uav)
 

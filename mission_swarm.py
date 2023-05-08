@@ -140,7 +140,7 @@ if __name__ == '__main__':
     rclpy.init()
     uavs = []
     for i in range(len(drones_ns)):
-        uavs.append(DroneInterface(drones_ns[i], use_sim_time=True, verbose=True))
+        uavs.append(DroneInterface(drones_ns[i], use_sim_time=True, verbose=False))
 
     print("Takeoff")
     confirm(uavs, "Takeoff")
@@ -157,7 +157,7 @@ if __name__ == '__main__':
     run_func(uavs, land)
 
     print("Shutdown")
-    confirm(uavs, "Shutdown")
+    shutdown_all(uavs)
     rclpy.shutdown()
 
     exit(0)

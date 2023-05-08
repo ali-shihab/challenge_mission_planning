@@ -16,6 +16,11 @@ attach: false
 root: ./
 startup_window: alphanumeric_viewer
 windows:
+  - alphanumeric_viewer:
+      layout: tiled
+      panes:
+        - ros2 run as2_alphanumeric_viewer as2_alphanumeric_viewer_node
+            --ros-args -r  __ns:=/<%= drone_namespace %>
   - platform:
       layout: tiled
       panes:
@@ -31,12 +36,7 @@ windows:
             namespace:=<%= drone_namespace %>
             use_sim_time:=true
             plugin_name:=ground_truth
-            plugin_config_file:=sim_config/default_state_estimator.yaml
-  - alphanumeric_viewer:
-      layout: tiled
-      panes:
-        - ros2 run as2_alphanumeric_viewer as2_alphanumeric_viewer_node
-            --ros-args -r  __ns:=/<%= drone_namespace %>
+            plugin_config_file:=sim_config/state_estimator_config_file.yaml
   - controller:
       layout:
       panes:
@@ -47,7 +47,7 @@ windows:
             info_freq:=10.0
             plugin_name:=pid_speed_controller
             use_bypass:=true
-            plugin_config_file:=sim_config/controller.yaml      
+            plugin_config_file:=sim_config/controller_tunning_params.yaml      
   - behaviors:
       layout:
       panes:
