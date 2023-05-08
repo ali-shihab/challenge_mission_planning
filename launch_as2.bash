@@ -5,7 +5,7 @@ usage() {
     echo ""
     echo "  options:"
     echo "      -b: launch behavior tree"
-    echo "      -w: swarm mode"
+    echo "      -m: multi agent, choices: [true | false]"
     echo "      -r: record rosbag"
     echo "      -t: launch keyboard teleoperation"
     echo "      drone_namespace: [drone_sim_0 | drone_0]"
@@ -18,7 +18,7 @@ while getopts "bwrt" opt; do
     b )
       behavior_tree="true"
       ;;
-    w )
+    m )
       swarm="true"
       ;;
     r )
@@ -54,11 +54,17 @@ launch_keyboard_teleop=${launch_keyboard_teleop:="false"}
 
 if [[ ${swarm} == "true" ]]; then
   simulation_config="sim_config/world_swarm.json"
-  drone_ns=('drone_sim_0' 'drone_sim_1' 'drone_sim_2')
+  num_drones=3
 else
   simulation_config="sim_config/world.json" 
-  drone_ns=('drone_sim_0')
+  num_drones=1
 fi
+
+# Generate the list of drone namespaces
+drone_ns=()
+for ((i=0; i<num_drones; i++)); do
+  drone_ns+=("cf$i")
+done
 
 for ns in "${drone_ns[@]}"
 do
