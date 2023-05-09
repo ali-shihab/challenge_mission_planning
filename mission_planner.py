@@ -15,7 +15,7 @@ def main():
 
     mission_json = """
     {
-        "target": "drone_sim_0",
+        "target": "drone0",
         "verbose": "False",
         "use_sim_time": "True",
         "plan": [

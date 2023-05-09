@@ -22,6 +22,6 @@ class StartBehaviorTree(Node):
 
 if __name__ == "__main__":
     rclpy.init()
-    start_bt = StartBehaviorTree(namespace="drone_sim_0")
+    start_bt = StartBehaviorTree(namespace="drone0")
     rclpy.spin_once(start_bt, timeout_sec=1)
     rclpy.shutdown()
