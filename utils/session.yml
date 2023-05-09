@@ -2,12 +2,9 @@
 
 <%
 # Input parameters
-simulation_config   = @settings["simulation_config"]
 drone_namespace     = @settings["drone_namespace"]
-base_launch         = @settings["base_launch"] == "true"
+simulation_config   = @settings["simulation_config"]
 use_behavior_tree   = @settings["behavior_tree"] == "true"
-use_keyboard_teleop = @settings["launch_keyboard_teleop"] == "true"
-record_rosbag       = @settings["record_rosbag"] == "true"
 
 # Other parameters
 behavior_type       = "position"
@@ -62,20 +59,6 @@ windows:
             namespace:=<%= drone_namespace %>
             use_sim_time:=true
         <%- end %>
-  <%- if use_keyboard_teleop %>
-  - keyboard_teleop:
-      layout:
-      panes:
-        - ros2 launch as2_keyboard_teleoperation as2_keyboard_teleoperation_launch.py
-            namespace:=<%= drone_namespace %>
-            use_sim_time:=true
-  <%- end %>
-  <%- if record_rosbag %>
-  - rosbag:
-      layout:
-      panes:
-        - ./rosbag/record_rosbag.bash <%= drone_namespace %>
-  <%- end %>
   - mission:
       layout:
       panes:

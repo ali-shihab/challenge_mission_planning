@@ -3,7 +3,7 @@
     "drones": [
         {
             "model_type": "quadrotor_base",
-            "model_name": "drone_sim_0",
+            "model_name": "drone0",
             "xyz": [
                 2.0,
                 0.0,
@@ -18,7 +18,7 @@
         },
         {
             "model_type": "quadrotor_base",
-            "model_name": "drone_sim_1",
+            "model_name": "drone1",
             "xyz": [
                 -2.0,
                 0.0,
@@ -33,7 +33,7 @@
         },
         {
             "model_type": "quadrotor_base",
-            "model_name": "drone_sim_2",
+            "model_name": "drone2",
             "xyz": [
                 0.0,
                 0.0,

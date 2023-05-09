@@ -1,19 +1,16 @@
 #!/bin/bash
 
 usage() {
-    echo "usage: $0 [-p <ign_gz|dji_osdk>] [-r] [-t] [drone_namespace]"
-    echo ""
     echo "  options:"
     echo "      -b: launch behavior tree"
     echo "      -m: multi agent, choices: [true | false]"
     echo "      -r: record rosbag"
     echo "      -t: launch keyboard teleoperation"
-    echo "      drone_namespace: [drone_sim_0 | drone_0]"
+    echo "      -n: drone namespace, default is drone0"
 }
 
 # Arg parser
-while getopts "bwrt" opt; do
-  echo "Command line arguments: $@"
+while getopts "bmrtn" opt; do
   case ${opt} in
     b )
       behavior_tree="true"
@@ -26,6 +23,9 @@ while getopts "bwrt" opt; do
       ;;
     t )
       launch_keyboard_teleop="true"
+      ;;
+    n )
+      drone_namespace="${OPTARG}"
       ;;
     \? )
       echo "Invalid option: -$OPTARG" >&2
@@ -42,7 +42,8 @@ while getopts "bwrt" opt; do
   esac
 done
 
-echo ${swarm}
+source utils/tools.bash
+
 # Shift optional args
 shift $((OPTIND -1))
 
@@ -51,6 +52,7 @@ behavior_tree=${behavior_tree:="false"}
 swarm=${swarm:="false"}
 record_rosbag=${record_rosbag:="false"}
 launch_keyboard_teleop=${launch_keyboard_teleop:="false"}
+drone_namespace=${drone_namespace:="drone"}
 
 if [[ ${swarm} == "true" ]]; then
   simulation_config="sim_config/world_swarm.json"
@@ -60,29 +62,31 @@ else
   num_drones=1
 fi
 
+
 # Generate the list of drone namespaces
 drone_ns=()
-for ((i=0; i<num_drones; i++)); do
-  drone_ns+=("cf$i")
+for ((i=0; i<${num_drones}; i++)); do
+  drone_ns+=("$drone_namespace$i")
 done
 
 for ns in "${drone_ns[@]}"
 do
-  if [[ ${ns} == ${drone_ns[0]} ]]; then
-    base_launch="true"
-  else
-    base_launch="false"
-  fi 
-
-  tmuxinator start -n ${ns} -p utils/session.yml drone_namespace=${ns} estimator_plugin="ground_truth" behavior_tree=${behavior_tree} record_rosbag=${record_rosbag} launch_keyboard_teleop=${launch_keyboard_teleop} simulation_config=${simulation_config} &
+  tmuxinator start -n ${ns} -p utils/session.yml drone_namespace=${ns} simulation_config=${simulation_config} behavior_tree=${behavior_tree} &
   wait
-
 done
+
+if [[ ${record_rosbag} == "true" ]]; then
+  tmuxinator start -n rosbag -p utils/rosbag.yml drone_namespace=$(list_to_string "${drone_ns[@]}") &
+  wait
+fi
+
+if [[ ${launch_keyboard_teleop} == "true" ]]; then
+  tmuxinator start -n keyboard_teleop -p utils/keyboard_teleop.yml simulation=true drone_namespace=$(list_to_string "${drone_ns[@]}") &
+  wait
+fi
 
 tmuxinator start -n gazebo -p utils/gazebo.yml simulation_config=${simulation_config} &
 wait
 
-# Attach to tmux session ${drone_ns[@]}, window 0
+# Attach to tmux session ${drone_ns[@]}, window mission
 tmux attach-session -t ${drone_ns[0]}:mission
-
-pkill -9 -f "gazebo"
