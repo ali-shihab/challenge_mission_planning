@@ -1,155 +1,221 @@
 #!/bin/python3
 
-import rclpy
+"""
+mission_swarm.py
+"""
+
 import sys
-import threading
-from typing import List
-from as2_python_api.drone_interface import DroneInterface
+from typing import List, Optional
+from math import radians, cos, sin
+from itertools import cycle, islice
+import rclpy
 from as2_msgs.msg import YawMode
-
-drones_ns = [
-    'drone_sim_0',
-    'drone_sim_1',
-    'drone_sim_2']
-
-speed = 0.5
-yaw_mode = YawMode()
-yaw_mode.mode = YawMode.PATH_FACING
-
-h1 = 1.0
-h2 = 1.5
-h3 = 2.0
+from as2_msgs.msg import BehaviorStatus
+from as2_python_api.drone_interface import DroneInterface
+from as2_python_api.behavior_actions.behavior_handler import BehaviorHandler
 
 
-v0 = [-2.0, -1.0, h1]
-v1 = [ 0.0,  2.0, h1]
-v2 = [ 2.0, -1.0, h1]
+class Choreographer:
+    """Simple Geometric Choreographer"""
 
-v3 = [ 2.0,  1.0, h2]
-v4 = [-2.0,  1.0, h2]
-v5 = [ 0.0, -2.0, h2]
+    @staticmethod
+    def delta_formation(base: float, height: float, orientation: float = 0.0):
+        """Triangle"""
+        theta = radians(orientation)
+        v0 = [-height * cos(theta) / 2.0 - base * sin(theta) / 2.0,
+              base * cos(theta) / 2.0 - height * sin(theta) / 2.0]
+        v1 = [height * cos(theta) / 2.0, height * sin(theta) / 2.0]
+        v2 = [-height * cos(theta) / 2.0 + base * sin(theta) / 2.0,
+              -base * cos(theta) / 2.0 - height * sin(theta) / 2.0]
+        return [v0, v1, v2]
+
+    @staticmethod
+    def line_formation(length: float, orientation: float = 0.0):
+        """Line"""
+        theta = radians(orientation)
+        l0 = [length * cos(theta) / 2.0, length * sin(theta) / 2.0]
+        l1 = [0.0, 0.0]
+        l2 = [-length * cos(theta) / 2.0, -length * sin(theta) / 2.0]
+        return [l0, l1, l2]
+
+    @staticmethod
+    def draw_waypoints(waypoints):
+        """Debug"""
+        import matplotlib.pyplot as plt
+
+        print(waypoints)
+
+        xaxys = []
+        yaxys = []
+        for wp in waypoints:
+            xaxys.append(wp[0])
+            yaxys.append(wp[1])
+        plt.plot(xaxys, yaxys, 'o-b')
+        plt.xlim(-3, 3)
+        plt.ylim(-3, 3)
+        plt.ylabel('some numbers')
+        plt.show()
+
+    @staticmethod
+    def do_cycle(formation: list, index: int, height: int):
+        """List to cycle with height"""
+        return list(e + [height]
+                    for e in list(islice(cycle(formation), 0+index, 3+index)))
 
 
-# Generate paths
-v6 = v0
-v6[2] = h3
-v7 = v1
-v7[2] = h3
-v8 = v2
-v8[2] = h3
+class Dancer(DroneInterface):
+    """Drone Interface extended with path to perform and async behavior wait"""
+
+    def __init__(self, namespace: str, path: list):
+        super().__init__(namespace, verbose=False, use_sim_time=True)
+
+        self.__path = path
+
+        self.__current = 0
+
+        self.__speed = 0.5
+        self.__yaw_mode = YawMode.PATH_FACING
+        self.__yaw_angle = None
+        self.__frame_id = "earth"
+
+        self.current_behavior: Optional[BehaviorHandler] = None
+
+    def reset(self) -> None:
+        """Set current waypoint in path to start point"""
+        self.__current = 0
+
+    def do_behavior(self, beh, *args) -> None:
+        """Start behavior and save current to check if finished or not"""
+        self.current_behavior = getattr(self, beh)
+        self.current_behavior(*args)
+
+    def go_to_next(self) -> None:
+        """Got to next position in path"""
+        point = self.__path[self.__current]
+        self.do_behavior("go_to", point[0], point[1], point[2], self.__speed,
+                         self.__yaw_mode, self.__yaw_angle, self.__frame_id, False)
+        self.__current += 1
+
+    def goal_reached(self) -> bool:
+        """Check if current behavior has finished"""
+        if not self.current_behavior:
+            return False
+
+        if self.current_behavior.status == BehaviorStatus.IDLE:
+            return True
+        return False
 
 
-l0 = [ 2.0, 0.0, 1.0]
-l1 = [-2.0, 0.0, 1.0]
-l2 = [ 0.0, 0.0, 1.0]
+class SwarmConductor:
+    """Swarm Conductor"""
 
-pos0 = [v2, v1, v0, v2, v5, v4, v3, v5, v8, v7, v6, v8, v2, l0]
-pos1 = [v0, v2, v1, v0, v4, v3, v5, v4, v6, v8, v7, v6, v0, l1]
-pos2 = [v1, v0, v2, v1, v3, v5, v4, v3, v7, v6, v8, v7, v1, l2]
+    def __init__(self, drones_ns: List[str]):
+        self.drones: dict[int, Dancer] = {}
+        for index, name in enumerate(drones_ns):
+            path = get_path(index)
+            self.drones[index] = Dancer(name, path)
 
-n_point_0 = 0
-n_point_1 = 0
-n_point_2 = 0
+    def shutdown(self):
+        """Shutdown all drones in swarm"""
+        for drone in self.drones.values():
+            drone.shutdown()
 
-def reset_point():
-    """ Reset the point counter for each drone """
-    global n_point_0, n_point_1, n_point_2
-    n_point_0 = 0
-    n_point_1 = 0
-    n_point_2 = 0
+    def reset_point(self):
+        """Reset path for all drones in swarm"""
+        for drone in self.drones.values():
+            drone.reset()
 
-def pose_generator(uav: DroneInterface):
-    """ Generate the next pose for each drone """
-    global n_point_0, n_point_1, n_point_2
-    if uav.get_namespace()[-1] == '0':
-        ret = pos0[n_point_0]
-        n_point_0 += 1
-    elif uav.get_namespace()[-1] == '1':
-        ret = pos1[n_point_1]
-        n_point_1 += 1
-    elif uav.get_namespace()[-1] == '2':
-        ret = pos2[n_point_2]
-        n_point_2 += 1
-    return ret
+    def wait(self):
+        """Wait until all drones has reached their goal (aka finished its behavior)"""
+        all_finished = False
+        while not all_finished:
+            all_finished = True
+            for drone in self.drones.values():
+                all_finished = all_finished and drone.goal_reached()
 
-def shutdown_all(uavs):
-    """ Shutdown all drones """
-    print("Exiting...")
-    for uav in uavs:
-        uav.shutdown()
-    sys.exit(1)
+    def get_ready(self):
+        """Arm and offboard for all drones in swarm"""
+        for drone in self.drones.values():
+            drone.arm()
+            drone.offboard()
 
-def takeoff(uav: DroneInterface):
-    """ Takeoff all drones """
-    uav.arm()
-    uav.offboard()
-    uav.takeoff(1, 0.7)
+    def takeoff(self):
+        """Takeoff swarm and wait for all drones"""
+        for drone in self.drones.values():
+            drone.do_behavior("takeoff", 1, 0.7, False)
+        self.wait()
 
-def land(drone_interface: DroneInterface):
-    """ Land all drones """
-    drone_interface.land(0.4)
+    def land(self):
+        """Land swarm and wait for all drones"""
+        for drone in self.drones.values():
+            drone.do_behavior("land", 0.4, False)
+        self.wait()
 
-def go_to(drone_interface: DroneInterface):
-    """" Go to the next pose """
-    drone_interface.go_to(
-        *pose_generator(drone_interface),
-        speed=speed,
-        yaw_mode=yaw_mode.mode,
-        yaw_angle=yaw_mode.angle)
+    def dance(self):
+        """Perform swarm choreography"""
+        self.reset_point()
+        for _ in range(len(get_path(0))):
+            for drone in self.drones.values():
+                drone.go_to_next()
+            self.wait()
 
-def confirm(uavs: List[DroneInterface], msg: str = 'Continue') -> bool:
-    """ Ask for confirmation """
+
+def get_path(i: int) -> list:
+    """Path: initial, steps, final
+
+    1   1           6       7           0
+    2       2   5               8       1
+    0   3           4       9           2
+
+    """
+    delta_frontward = Choreographer.delta_formation(3, 3, 0)
+    delta_backward = Choreographer.delta_formation(3, 3, 180)
+    line = Choreographer.line_formation(3, 180)
+
+    h1 = 1.0
+    h2 = 2.0
+    h3 = 3.0
+    line_formation = [line[i] + [h3]]
+    return Choreographer.do_cycle(delta_frontward, i, h1) + \
+        Choreographer.do_cycle(delta_backward, i, h2) + \
+        Choreographer.do_cycle(delta_frontward, i, h3) + \
+        line_formation
+
+
+def confirm(msg: str = 'Continue') -> bool:
+    """Confirm message"""
     confirmation = input(f"{msg}? (y/n): ")
     if confirmation == "y":
         return True
-    elif confirmation == "n":
-        return False
-    else:
-        shutdown_all(uavs)
+    return False
 
-def run_func(uavs: List[DroneInterface], func, *args):
-    """ Run a function in parallel for each drone """
-    threads = []
-    for uav in uavs:
-        t = threading.Thread(target=func, args=(uav, *args))
-        threads.append(t)
-        t.start()
-    print("Waiting for threads to finish...")
-    for t in threads:
-        t.join()
-    print("all done")
 
-def move_uavs(uavs):
-    """ Move all drones """
-    reset_point()
-    for i in range(len(pos0)):
-        run_func(uavs, go_to)
-    return
-
-if __name__ == '__main__':
+def main():
+    """Entrypoint"""
+    drones_ns = ['drone0', 'drone1', 'drone2']
 
     rclpy.init()
-    uavs = []
+    swarm = SwarmConductor(drones_ns)
 
-    for uav_name in drones_ns:
-        uavs.append(DroneInterface(uav_name, verbose=True))
+    confirm("Takeoff")
+    swarm.get_ready()
+    swarm.takeoff()
 
-    print("Takeoff")
-    confirm(uavs, "Takeoff")
-    run_func(uavs, takeoff)
+    confirm("Go to")
+    swarm.dance()
 
-    print("Go to")
-    if confirm(uavs, "Go to"):
-        move_uavs(uavs)
+    while confirm("Replay"):
+        swarm.dance()
 
-        while confirm(uavs, "Replay"):
-            move_uavs(uavs)
-
-    print("Land")
-    if confirm(uavs, "Land"):
-        run_func(uavs, land)
+    confirm("Land")
+    swarm.land()
 
     print("Shutdown")
+    swarm.shutdown()
     rclpy.shutdown()
 
-    exit(0)
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()
