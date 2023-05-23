@@ -197,18 +197,18 @@ def main():
     rclpy.init()
     swarm = SwarmConductor(drones_ns)
 
-    confirm("Takeoff")
-    swarm.get_ready()
-    swarm.takeoff()
+    if confirm("Takeoff"):
+        swarm.get_ready()
+        swarm.takeoff()
 
-    confirm("Go to")
-    swarm.dance()
+        if confirm("Go to"):
+            swarm.dance()
 
-    while confirm("Replay"):
-        swarm.dance()
+            while confirm("Replay"):
+                swarm.dance()
 
-    confirm("Land")
-    swarm.land()
+        confirm("Land")
+        swarm.land()
 
     print("Shutdown")
     swarm.shutdown()

@@ -71,21 +71,21 @@ done
 
 for ns in "${drone_ns[@]}"
 do
-  tmuxinator start -n ${ns} -p utils/session.yml drone_namespace=${ns} simulation_config=${simulation_config} behavior_tree=${behavior_tree} &
+  tmuxinator start -n ${ns} -p tmuxinator/session.yml drone_namespace=${ns} simulation_config=${simulation_config} behavior_tree=${behavior_tree} &
   wait
 done
 
 if [[ ${record_rosbag} == "true" ]]; then
-  tmuxinator start -n rosbag -p utils/rosbag.yml drone_namespace=$(list_to_string "${drone_ns[@]}") &
+  tmuxinator start -n rosbag -p tmuxinator/rosbag.yml drone_namespace=$(list_to_string "${drone_ns[@]}") &
   wait
 fi
 
 if [[ ${launch_keyboard_teleop} == "true" ]]; then
-  tmuxinator start -n keyboard_teleop -p utils/keyboard_teleop.yml simulation=true drone_namespace=$(list_to_string "${drone_ns[@]}") &
+  tmuxinator start -n keyboard_teleop -p tmuxinator/keyboard_teleop.yml simulation=true drone_namespace=$(list_to_string "${drone_ns[@]}") &
   wait
 fi
 
-tmuxinator start -n gazebo -p utils/gazebo.yml simulation_config=${simulation_config} &
+tmuxinator start -n gazebo -p tmuxinator/gazebo.yml simulation_config=${simulation_config} &
 wait
 
 # Attach to tmux session ${drone_ns[@]}, window mission
