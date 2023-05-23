@@ -19,23 +19,23 @@ class Choreographer:
     """Simple Geometric Choreographer"""
 
     @staticmethod
-    def delta_formation(base: float, height: float, orientation: float = 0.0):
+    def delta_formation(base: float, height: float, orientation: float = 0.0, center: list = [0.0, 0.0]):
         """Triangle"""
         theta = radians(orientation)
-        v0 = [-height * cos(theta) / 2.0 - base * sin(theta) / 2.0,
-              base * cos(theta) / 2.0 - height * sin(theta) / 2.0]
-        v1 = [height * cos(theta) / 2.0, height * sin(theta) / 2.0]
-        v2 = [-height * cos(theta) / 2.0 + base * sin(theta) / 2.0,
-              -base * cos(theta) / 2.0 - height * sin(theta) / 2.0]
+        v0 = [-height * cos(theta) / 2.0 - base * sin(theta) / 2.0 + center[0],
+              base * cos(theta) / 2.0 - height * sin(theta) / 2.0 + center[1]]
+        v1 = [height * cos(theta) / 2.0 + center[0], height * sin(theta) / 2.0 + center[1]]
+        v2 = [-height * cos(theta) / 2.0 + base * sin(theta) / 2.0 + center[0],
+              -base * cos(theta) / 2.0 - height * sin(theta) / 2.0 + center[1]]
         return [v0, v1, v2]
 
     @staticmethod
-    def line_formation(length: float, orientation: float = 0.0):
+    def line_formation(length: float, orientation: float = 0.0, center: list = [0.0, 0.0]):
         """Line"""
         theta = radians(orientation)
-        l0 = [length * cos(theta) / 2.0, length * sin(theta) / 2.0]
-        l1 = [0.0, 0.0]
-        l2 = [-length * cos(theta) / 2.0, -length * sin(theta) / 2.0]
+        l0 = [length * cos(theta) / 2.0 + center[1], length * sin(theta) / 2.0 + center[1]]
+        l1 = [0.0 + center[1], 0.0 + center[1]]
+        l2 = [-length * cos(theta) / 2.0 + center[1], -length * sin(theta) / 2.0 + center[1]]
         return [l0, l1, l2]
 
     @staticmethod
@@ -66,8 +66,9 @@ class Choreographer:
 class Dancer(DroneInterface):
     """Drone Interface extended with path to perform and async behavior wait"""
 
-    def __init__(self, namespace: str, path: list):
-        super().__init__(namespace, verbose=False, use_sim_time=True)
+    def __init__(self, namespace: str, path: list, verbose: bool = False,
+                 use_sim_time: bool = False):
+        super().__init__(namespace, verbose=verbose, use_sim_time=use_sim_time)
 
         self.__path = path
 
@@ -109,11 +110,12 @@ class Dancer(DroneInterface):
 class SwarmConductor:
     """Swarm Conductor"""
 
-    def __init__(self, drones_ns: List[str]):
+    def __init__(self, drones_ns: List[str], verbose: bool = False,
+                 use_sim_time: bool = False):
         self.drones: dict[int, Dancer] = {}
         for index, name in enumerate(drones_ns):
             path = get_path(index)
-            self.drones[index] = Dancer(name, path)
+            self.drones[index] = Dancer(name, path, verbose, use_sim_time)
 
     def shutdown(self):
         """Shutdown all drones in swarm"""
@@ -168,9 +170,10 @@ def get_path(i: int) -> list:
     0   3           4       9           2
 
     """
-    delta_frontward = Choreographer.delta_formation(3, 3, 0)
-    delta_backward = Choreographer.delta_formation(3, 3, 180)
-    line = Choreographer.line_formation(3, 180)
+    center = [0.0, 0.0]
+    delta_frontward = Choreographer.delta_formation(3, 3, 0, center)
+    delta_backward = Choreographer.delta_formation(3, 3, 180, center)
+    line = Choreographer.line_formation(3, 180, center)
 
     h1 = 1.0
     h2 = 2.0
@@ -195,7 +198,8 @@ def main():
     drones_ns = ['drone0', 'drone1', 'drone2']
 
     rclpy.init()
-    swarm = SwarmConductor(drones_ns)
+    swarm = SwarmConductor(drones_ns, verbose=False,
+                           use_sim_time=True)
 
     if confirm("Takeoff"):
         swarm.get_ready()
