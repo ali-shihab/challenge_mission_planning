@@ -1,3 +1,3 @@
-# Project Ignition
+# Project Gazebo
 
-Please refer to https://aerostack2.github.io/_projects/_project_ignition/index.html for more information.
+Please refer to https://aerostack2.github.io/_02_examples/gazebo/project_gazebo/index.html for more information.
