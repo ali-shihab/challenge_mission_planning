@@ -3,7 +3,7 @@
 usage() {
     echo "  options:"
     echo "      -b: launch behavior tree"
-    echo "      -m: multi agent, choices: [true | false]"
+    echo "      -m: multi agent"
     echo "      -r: record rosbag"
     echo "      -t: launch keyboard teleoperation"
     echo "      -n: drone namespace, default is drone0"
