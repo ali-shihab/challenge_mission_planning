@@ -11,7 +11,7 @@ use_sim_time      = true
 attach: true
 root: ./
 startup_window: gazebo
-on_project_exit: pkill -9 -f "gazebo"
+# on_project_exit: pkill -9 -f "gazebo"
 windows:
   - gazebo:
       layout:
