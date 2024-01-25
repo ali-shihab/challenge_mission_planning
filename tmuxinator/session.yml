@@ -22,7 +22,7 @@ windows:
   - platform:
       layout: tiled
       panes:
-        - ros2 launch as2_platform_ign_gazebo ign_gazebo_launch.py
+        - ros2 launch as2_platform_gazebo platform_gazebo_launch.py
             namespace:=<%= drone_namespace %>
             use_sim_time:=true
             simulation_config_file:=<%= simulation_config %>
