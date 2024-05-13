@@ -29,9 +29,9 @@ def main():
             {
                 "behavior": "go_to", 
                 "args": {
-                    "_x": 5.0,
-                    "_y": 5.0,
-                    "_z": 1.0,
+                    "x": 5.0,
+                    "y": 5.0,
+                    "z": 1.0,
                     "speed": 0.5,
                     "yaw_mode": 1
                 }
@@ -39,9 +39,9 @@ def main():
             {
                 "behavior": "go_to", 
                 "args": {
-                    "_x": 5.0,
-                    "_y": -5.0,
-                    "_z": 1.0,
+                    "x": 5.0,
+                    "y": -5.0,
+                    "z": 1.0,
                     "speed": 0.5,
                     "yaw_mode": 1
                 }
@@ -49,9 +49,9 @@ def main():
             {
                 "behavior": "go_to", 
                 "args": {
-                    "_x": -5.0,
-                    "_y": 5.0,
-                    "_z": 1.0,
+                    "x": -5.0,
+                    "y": 5.0,
+                    "z": 1.0,
                     "speed": 0.5,
                     "yaw_mode": 1
                 }
@@ -59,9 +59,9 @@ def main():
             {
                 "behavior": "go_to", 
                 "args": {
-                    "_x": -5.0,
-                    "_y": -5.0,
-                    "_z": 1.0,
+                    "x": -5.0,
+                    "y": -5.0,
+                    "z": 1.0,
                     "speed": 0.5,
                     "yaw_mode": 1
                 }
@@ -69,9 +69,9 @@ def main():
             {
                 "behavior": "go_to", 
                 "args": {
-                    "_x": 0.0,
-                    "_y": 0.0,
-                    "_z": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 1.0,
                     "speed": 0.5,
                     "yaw_mode": 1
                 }
@@ -94,7 +94,7 @@ def main():
 
     interpreter.drone.arm()
     interpreter.drone.offboard()
-    interpreter.perform_mission(debug=True)
+    interpreter.perform_mission()
 
     print("Mission completed!")
     interpreter.shutdown()
