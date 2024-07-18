@@ -71,7 +71,7 @@ done
 
 for ns in "${drone_ns[@]}"
 do
-  tmuxinator start -n ${ns} -p tmuxinator/session.yml drone_namespace=${ns} simulation_config=${simulation_config} behavior_tree=${behavior_tree} &
+  tmuxinator start -n ${ns} -p tmuxinator/aerostack2.yml drone_namespace=${ns} simulation_config=${simulation_config} behavior_tree=${behavior_tree} &
   wait
 done
 
