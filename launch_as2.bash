@@ -2,9 +2,9 @@
 
 usage() {
     echo "  options:"
-    echo "      -m: multi agent. Default not set"
+    echo "      -m: multi agent (only needed to be set for simulation). Default not set"
     echo "      -n: select drones namespace to launch, values are comma separated. By default, it will get all drones from world description file"
-    echo "      -s: if set, the simulation will not be launched. Default launch simulation"
+    echo "      -c: if set, the real crazyflie interface will be launched instead of the simulation. Defaults to false"
     echo "      -g: launch using gnome-terminal instead of tmux. Default not set"
 }
 
@@ -23,7 +23,7 @@ while getopts "mn:sg" opt; do
     n )
       drones_namespace_comma="${OPTARG}"
       ;;
-    s )
+    c )
       launch_simulation="false"
       ;;
     g )
@@ -44,16 +44,39 @@ while getopts "mn:sg" opt; do
   esac
 done
 
-# Set simulation world description config file
-if [[ ${swarm} == "true" ]]; then
-  simulation_config="config/world_swarm.yaml"
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+CONFIG_SIM="${SCRIPT_DIR}/config_sim"
+CONFIG_REAL="${SCRIPT_DIR}/config_real"
+
+config_folder=""
+simulation_config_file=""
+if [[ ${launch_simulation} == "true" ]]; then
+  config_folder="${CONFIG_SIM}"
 else
-  simulation_config="config/world.yaml"
+  config_folder="${CONFIG_REAL}"
 fi
 
-# If no drone namespaces are provided, get them from the world description config file
+drone_config="${config_folder}/config/config.yaml"
+
+# Set simulation world description config file
+if [[ ${swarm} == "true" ]]; then
+  simulation_config_file="${CONFIG_SIM}/config/world_swarm.yaml"
+else
+  simulation_config_file="${CONFIG_SIM}/config/world.yaml"
+fi
+
+
+# If no drone namespaces are provided, get them from the world description config file 
 if [ -z "$drones_namespace_comma" ]; then
-  drones_namespace_comma=$(python3 utils/get_drones.py -p ${simulation_config} --sep ',')
+
+  if [[ ${launch_simulation} == "true" ]]; then
+    dnamespace_lookup_file="${simulation_config_file}"
+  else
+    dnamespace_lookup_file="${drone_config}"
+  fi
+
+  drones_namespace_comma=$(python3 utils/get_drones.py -p ${dnamespace_lookup_file} --sep ',')
 fi
 IFS=',' read -r -a drone_namespaces <<< "$drones_namespace_comma"
 
@@ -72,9 +95,13 @@ for namespace in ${drone_namespaces[@]}; do
   if [[ ${namespace} == ${drone_namespaces[0]} && ${launch_simulation} == "true" ]]; then
     base_launch="true"
   fi
-  eval "tmuxinator ${tmuxinator_mode} -n ${namespace} -p tmuxinator/aerostack2.yaml \
+  eval "tmuxinator ${tmuxinator_mode} -n ${namespace} -p ${SCRIPT_DIR}/tmuxinator/aerostack2.yaml \
     drone_namespace=${namespace} \
-    simulation_config_file=${simulation_config} \
+    script_folder=${SCRIPT_DIR} \
+    simulation=${launch_simulation} \
+    config_dir=${config_folder}/config \
+    config_file=${drone_config} \
+    simulation_config_file=${simulation_config_file} \
     base_launch=${base_launch} \
     ${tmuxinator_end}"
 
@@ -86,5 +113,5 @@ if [[ ${use_gnome} == "false" ]]; then
   tmux attach-session -t ${drone_namespaces[0]}
 # If tmp_file exists, remove it
 elif [[ -f ${tmp_file} ]]; then
-  rm ${tmp_file}
+  rm "${tmp_file}"
 fi

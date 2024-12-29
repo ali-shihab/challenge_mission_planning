@@ -1,9 +1,11 @@
 <%
 # Input parameters
 drone_namespace = @settings["drone_namespace"]
+config_folder   = @settings["config_folder"]
 keyboard_teleop = @settings["keyboard_teleop"] == "true"
 rviz            = @settings["rviz"] == "true"
 rosbag          = @settings["rosbag"] == "true"
+mocap4ros2      = @settings["mocap4ros2"] == "true"
 %>
 
 name: ground_station
@@ -32,10 +34,16 @@ windows:
       <%- if rviz %>
         - ros2 launch as2_visualization swarm_viz.launch.py
             namespace_list:=<%= drone_namespace %>
-            rviz_config:=config_ground_station/rviz2_config.rviz
+            rviz_config:=<%= config_folder %>/rviz2_config.rviz
             drone_model:=quadrotor_base
             use_sim_time:=true
       <%- end %>
       <%- if rosbag %>
         - ./rosbag/record_rosbag.bash <%= drone_namespace %>
+      <%- end %>
+      <%- if mocap4ros2 %>
+        - ros2 launch mocap4r2_optitrack_driver optitrack2.launch.py
+            namespace:=mocap
+            config_file:=<%= config_folder %>/mocap4r2_optitrack.yaml
+        - sleep 1; ros2 lifecycle set /mocap/mocap4r2_optitrack_driver_node activate
       <%- end %>
