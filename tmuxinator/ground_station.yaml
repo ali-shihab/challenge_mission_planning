@@ -6,12 +6,13 @@ keyboard_teleop = @settings["keyboard_teleop"] == "true"
 rviz            = @settings["rviz"] == "true"
 rosbag          = @settings["rosbag"] == "true"
 mocap4ros2      = @settings["mocap4ros2"] == "true"
+script_folder   = @settings["script_folder"] 
 %>
 
 name: ground_station
 attach: false
 root: ./
-pre_window: tmux set mouse on
+pre_window: source <%= script_folder %>/setup.bash; tmux set mouse on
 windows:
 
   # Mission monitoring
@@ -36,8 +37,10 @@ windows:
         - ros2 launch as2_visualization swarm_viz.launch.py
             namespace_list:=<%= drone_namespace %>
             rviz_config:=<%= config_folder %>/rviz2_config.rviz
-            drone_model:=quadrotor_base
+            drone_model:=crazyflie
             use_sim_time:=true
+        - ros2 launch led_ring_visualizer led_ring_viz.launch.py
+            namespace_list:=<%= drone_namespace %>
       <%- end %>
       <%- if rosbag %>
         - ./rosbag/record_rosbag.bash <%= drone_namespace %>

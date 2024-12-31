@@ -115,6 +115,7 @@ eval "tmuxinator ${tmuxinator_mode} -n ground_station -p tmuxinator/ground_stati
   rviz=${rviz} \
   rosbag=${rosbag} \
   mocap4ros2=${mocap4ros2} \
+  script_folder=${SCRIPT_DIR} \
   ${tmuxinator_end}"
 
 # Attach to tmux session
