@@ -76,23 +76,23 @@ void LedRingPlugin::Configure(const gz::sim::Entity &_entity,
 	}
 
 	// // Create Publisher and Subscriber for ROS2 to interact with this
-	this->publisher_name = this->robot_namespace + "/leds/status";
-	this->led_status_pub = node.Advertise<ignition::msgs::Float_V>(this->publisher_name);
-	if (!this->led_status_pub)
-	{
-		ignerr << "Error advertising topic [" << this->publisher_name << "]" << std::endl;
-		return;
-	}
+	// this->publisher_name = this->robot_namespace + "/leds/status";
+	// this->led_status_pub = node.Advertise<ignition::msgs::Float_V>(this->publisher_name);
+	// if (!this->led_status_pub)
+	// {
+	// 	ignerr << "Error advertising topic [" << this->publisher_name << "]" << std::endl;
+	// 	return;
+	// }
 
-	this->subscription_name = this->robot_namespace+"/leds/control";
-	if(!this->node.Subscribe(this->subscription_name, &LedRingPlugin::OnLedMsg, this))
-	{
-		ignerr << "Error subscribing to topic [" << this->subscription_name << "]" << std::endl;
-		return;
-	}
+	// this->subscription_name = this->robot_namespace+"/leds/control";
+	// if(!this->node.Subscribe(this->subscription_name, &LedRingPlugin::OnLedMsg, this))
+	// {
+	// 	ignerr << "Error subscribing to topic [" << this->subscription_name << "]" << std::endl;
+	// 	return;
+	// }
 
-	ignerr << "Publisher initialised on " << this->subscription_name << std::endl;
-	ignerr << "Subscriber initialised on " << this->publisher_name<< std::endl;
+	// ignerr << "Publisher initialised on " << this->subscription_name << std::endl;
+	// ignerr << "Subscriber initialised on " << this->publisher_name<< std::endl;
 }
 
 void LedRingPlugin::OnLedMsg(const ignition::msgs::Float_V &leds) {
@@ -313,7 +313,7 @@ void LedRingPlugin::PreUpdate(const gz::sim::UpdateInfo &_info, gz::sim::EntityC
 				return true;  // Continue iteration
 			});
 
-			led_status_pub.Publish(pub_msg);
+			// led_status_pub.Publish(pub_msg);
 		}
 	}
 

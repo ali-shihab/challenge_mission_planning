@@ -30,9 +30,14 @@ public:
         this->declare_parameter<std::string>("frame_id", "earth");
         frame_id = this->get_parameter("frame_id").as_string();
 
+
         // Initialize subscribers and publisher
         for (const auto &namespace_ : robot_namespaces_) {
             std::string topic = "/" + namespace_ + "/leds";
+
+            std_msgs::msg::UInt16MultiArray::SharedPtr msg = std::make_shared<std_msgs::msg::UInt16MultiArray>();
+            this->led_data[namespace_] = msg;
+
             auto callback = [this, namespace_](std_msgs::msg::UInt16MultiArray::SharedPtr msg) {
                 this->led_data[namespace_] = msg;
             };

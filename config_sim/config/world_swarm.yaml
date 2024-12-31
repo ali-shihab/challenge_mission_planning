@@ -4,21 +4,21 @@ origin:
     longitude: -3.883197
     altitude: 100.0
 drones:
-  - model_type: "quadrotor_base"
+  - model_type: "crazyflie_led_ring"
     model_name: "drone0"
     flight_time: 60
     xyz:
       - -2.0
       - 0.0
       - 0.2
-  - model_type: "quadrotor_base"
+  - model_type: "crazyflie_led_ring"
     model_name: "drone1"
     flight_time: 60
     xyz:
       - 2.0
       - 0.0
       - 0.2
-  - model_type: "quadrotor_base"
+  - model_type: "crazyflie_led_ring"
     model_name: "drone2"
     flight_time: 60
     xyz:
