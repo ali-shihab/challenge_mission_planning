@@ -11,9 +11,6 @@ drones:
       - -2.0
       - 0.0
       - 0.2
-    payload:
-      - model_type: "gps"
-        model_name: "gps"
   - model_type: "quadrotor_base"
     model_name: "drone1"
     flight_time: 60
@@ -21,9 +18,6 @@ drones:
       - 2.0
       - 0.0
       - 0.2
-    payload:
-      - model_type: "gps"
-        model_name: "gps"
   - model_type: "quadrotor_base"
     model_name: "drone2"
     flight_time: 60
@@ -31,7 +25,4 @@ drones:
       - 0.0
       - 0.0
       - 0.2
-    payload:
-      - model_type: "gps"
-        model_name: "gps"
 

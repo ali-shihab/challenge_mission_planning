@@ -53,6 +53,10 @@ config_folder=""
 simulation_config_file=""
 if [[ ${launch_simulation} == "true" ]]; then
   config_folder="${CONFIG_SIM}"
+  # Ensure this folders gazebo packages are on the path for both aerostack2 and gazebo to read...
+  export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:"${config_folder}/gazebo/models"
+  export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:"${config_folder}/gazebo/models"
+  export AS2_EXTRA_DRONE_MODELS=crazyflie_led_ring
 else
   config_folder="${CONFIG_REAL}"
 fi

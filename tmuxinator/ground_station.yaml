@@ -11,6 +11,7 @@ mocap4ros2      = @settings["mocap4ros2"] == "true"
 name: ground_station
 attach: false
 root: ./
+pre_window: tmux set mouse on
 windows:
 
   # Mission monitoring
