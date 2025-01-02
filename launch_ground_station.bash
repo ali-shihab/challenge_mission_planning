@@ -23,7 +23,7 @@ drones_namespace_comma=""
 use_gnome="false"
 
 # Parse command line arguments
-while getopts "mtvrn:g" opt; do
+while getopts "mctvrn:g" opt; do
   case ${opt} in
     m )
       swarm="true"

@@ -45,7 +45,7 @@ TAKE_OFF_SPEED = 1.0  # Max speed in m/s
 SLEEP_TIME = 0.5  # Sleep time between behaviors in seconds
 SPEED = 1.0  # Max speed in m/s
 HEIGHT = 1.0  # Height in meters
-DIM = 2.0
+DIM = 0.5
 PATH = [
     [-DIM, DIM, HEIGHT],
     [-DIM, -DIM, HEIGHT],
@@ -170,6 +170,7 @@ if __name__ == '__main__':
     success = drone_start(uav)
     if success:
         success = drone_run(uav)
+    # sleep(5.0)
     success = drone_end(uav)
 
     uav.shutdown()

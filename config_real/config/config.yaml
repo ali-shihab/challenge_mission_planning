@@ -13,6 +13,8 @@
       # # Motion Capture
       # external_odom: true
       # external_odom_topic: "self_localization/pose"
+      multi_ranger_deck: true  # Availability of multi ranger deck
+
 
   # State Estimator
   state_estimator:
@@ -48,7 +50,7 @@
 drone0:
   platform:
     ros__parameters:
-      uri: radio://0/80/2M/E7E7E7E701
+      uri: radio://0/80/2M/E7E7E7E7E7
   # # Motion Capture
   # state_estimator:
   #   ros__parameters:

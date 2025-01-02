@@ -15,7 +15,7 @@ launch_simulation="true"
 use_gnome="false"
 
 # Arg parser
-while getopts "mn:sg" opt; do
+while getopts "mn:cg" opt; do
   case ${opt} in
     m )
       swarm="true"
@@ -96,7 +96,7 @@ fi
 # Launch aerostack2 for each drone namespace
 for namespace in ${drone_namespaces[@]}; do
   base_launch="false"
-  if [[ ${namespace} == ${drone_namespaces[0]} && ${launch_simulation} == "true" ]]; then
+  if [[ ${namespace} == ${drone_namespaces[0]} ]]; then
     base_launch="true"
   fi
   eval "tmuxinator ${tmuxinator_mode} -n ${namespace} -p ${SCRIPT_DIR}/tmuxinator/aerostack2.yaml \
