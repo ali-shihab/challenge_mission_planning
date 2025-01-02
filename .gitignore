@@ -1,4 +1,4 @@
 rosbags/*
 .vscode/*
 log*
-config_sim/config/world.yaml
+config_sim/world/*
