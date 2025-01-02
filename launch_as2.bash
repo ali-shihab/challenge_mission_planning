@@ -2,23 +2,23 @@
 
 usage() {
     echo "  options:"
-    echo "      -m: multi agent (only needed to be set for simulation). Default not set"
+    echo "      -s: scenario to run. Defaults to 'maps/scenario1.yaml'"
     echo "      -n: select drones namespace to launch, values are comma separated. By default, it will get all drones from world description file"
     echo "      -c: if set, the real crazyflie interface will be launched instead of the simulation. Defaults to false"
     echo "      -g: launch using gnome-terminal instead of tmux. Default not set"
 }
 
 # Initialize variables with default values
-swarm="false"
+scenario_file="maps/scenario1.yaml"
 drones_namespace_comma=""
 launch_simulation="true"
 use_gnome="false"
 
 # Arg parser
-while getopts "mn:cg" opt; do
+while getopts "s:n:cg" opt; do
   case ${opt} in
-    m )
-      swarm="true"
+    s )
+      scenario_file="${OPTARG}"
       ;;
     n )
       drones_namespace_comma="${OPTARG}"
@@ -62,14 +62,7 @@ else
 fi
 
 drone_config="${config_folder}/config/config.yaml"
-
-# Set simulation world description config file
-if [[ ${swarm} == "true" ]]; then
-  simulation_config_file="${CONFIG_SIM}/config/world_swarm.yaml"
-else
-  simulation_config_file="${CONFIG_SIM}/config/world.yaml"
-fi
-
+simulation_config_file="${CONFIG_SIM}/config/world.yaml"
 
 # If no drone namespaces are provided, get them from the world description config file 
 if [ -z "$drones_namespace_comma" ]; then
