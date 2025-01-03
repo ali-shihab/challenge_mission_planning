@@ -136,8 +136,9 @@ def write_world_config(scenario, model_type, world_name, output_folder, world_fi
     # As in config_sim/gazebo/models all aruco models are idX4_marker
     for key, viewpoint in scenario.get('viewpoint_poses', {}).items():
         marker_pose = calculate_marker_pose(viewpoint, marker_distance)
+        model_type = f"aruco_id{(key%8) + 1}4_marker"
         world_config['objects'].append({
-            "model_type": f"aruco_id{key}4_marker",
+            "model_type": model_type,
             "model_name": f"id{key}",
             "xyz": [marker_pose['x'], marker_pose['y'], marker_pose['z']],
             "rpy": [0, math.pi/2.0, viewpoint['w'] - math.pi]

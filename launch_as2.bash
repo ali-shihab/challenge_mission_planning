@@ -10,7 +10,7 @@ usage() {
 }
 
 # Initialize variables with default values
-scenario_file="maps/scenario1.yaml"
+scenario_file="scenarios/scenario1.yaml"
 drones_namespace_comma=""
 launch_simulation="true"
 use_gnome="false"
