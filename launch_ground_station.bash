@@ -2,7 +2,6 @@
 
 usage() {
     echo "  options:"
-    echo "      -m: multi agent. Default not set"
     echo "      -c: if set, the real crazyflie interface will be launched instead of the simulation. Defaults to false"
     echo "      -t: launch keyboard teleoperation. Default not launch"
     echo "      -v: open rviz. Default not launch"
@@ -14,7 +13,6 @@ usage() {
 
 # Initialize variables with default values
 mocap4ros2="false"
-swarm="false"
 launch_simulation="true"
 keyboard_teleop="false"
 rviz="false"
@@ -23,11 +21,8 @@ drones_namespace_comma=""
 use_gnome="false"
 
 # Parse command line arguments
-while getopts "mctvrn:g" opt; do
+while getopts "ctvrn:g" opt; do
   case ${opt} in
-    m )
-      swarm="true"
-      ;;
     c )
       launch_simulation="false"
       ;;
@@ -78,12 +73,7 @@ fi
 drone_config="${config_folder}/config/config.yaml"
 
 # Set simulation world description config file
-if [[ ${swarm} == "true" ]]; then
-  simulation_config_file="${CONFIG_SIM}/config/world_swarm.yaml"
-else
-  simulation_config_file="${CONFIG_SIM}/config/world.yaml"
-fi
-
+simulation_config_file="${CONFIG_SIM}/config/world.yaml"
 
 # If no drone namespaces are provided, get them from the world description config file 
 if [ -z "$drones_namespace_comma" ]; then
