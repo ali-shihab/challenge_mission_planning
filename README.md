@@ -88,8 +88,10 @@ cd /mission_planning_ws/src/challenge_mission_planning
 
 ## Execution
 
+![gazebo_rviz](docs/images/gazebo_rviz.png)
+
 ### 1. Launch aerostack2 nodes for each drone
-To launch aerostack2 nodes for each drone, execute once the following command:
+To launch aerostack2 nodes for each drone, execute once the following command in a terminal from the root folder of this repository:
 
 ```bash
 ./launch_as2.bash
