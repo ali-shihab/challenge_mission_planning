@@ -111,7 +111,7 @@ def write_world_config(scenario, model_type, world_name, output_folder, world_fi
                     {
                         "model_name": "hd_camera",
                         "model_type": "hd_camera",
-                        "rpy": [0.0, 1.58, 0.0]
+                        "rpy": [0.0, 0.0, 0.0]
                     }
                 ]
             }

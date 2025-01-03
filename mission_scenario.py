@@ -36,6 +36,7 @@ __license__ = 'BSD-3-Clause'
 
 import argparse
 from time import sleep
+import time
 import yaml
 
 from as2_python_api.drone_interface import DroneInterface
@@ -163,8 +164,13 @@ if __name__ == '__main__':
 
     success = drone_start(uav)
     try:
+        start_time = time.time()
         if success:
             success = drone_run(uav, scenario)
+        duration = time.time() - start_time
+        print("---------------------------------")
+        print(f"Tour of {args.scenario} took {duration} seconds")
+        print("---------------------------------")
     except KeyboardInterrupt as e:
         pass
     # sleep(5.0)

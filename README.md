@@ -109,10 +109,12 @@ To launch aerostack2 nodes for the ground station, execute once the following co
 ./launch_ground_station.bash
 ```
 
+This launches the visualisation (rviz2) and monitoring elements of the aerostack2 stack. You will be able to monitor the camera views from this command. 
+
 The flags for the components launcher are:
 
 - **-t**: launch keyboard teleoperation. Default not launch
-- **-v**: open rviz. Default not launch
+- **-v**: open rviz. Launches by default
 - **-r**: record rosbag. Default not launch
 - **-n**: drone namespaces, comma separated. Default get from world description config file
 - **-g**: launch using gnome-terminal instead of tmux. Default not set
@@ -147,6 +149,7 @@ There are several missions that can be executed:
   ```bash
   python3 mission.py scenarios/scenario1.yaml
   ```
+  By default scenario1 takes 145 seconds to run! 
 
 ### 4. End the execution
 
