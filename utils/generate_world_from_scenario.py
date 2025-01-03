@@ -9,7 +9,7 @@ from jinja2 import Template
 SDF_TEMPLATE = """<?xml version="1.0" ?>
 <sdf version="1.6">
   <model name="{{ model_name }}">
-    <static>false</static>
+    <static>true</static>
     <link name="link">
       <visual name="visual">
         <geometry>
