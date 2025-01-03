@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e
 
 usage() {
     echo "  options:"
@@ -49,8 +50,6 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 CONFIG_SIM="${SCRIPT_DIR}/config_sim"
 CONFIG_REAL="${SCRIPT_DIR}/config_real"
 
-config_folder=""
-simulation_config_file=""
 if [[ ${launch_simulation} == "true" ]]; then
   config_folder="${CONFIG_SIM}"
   # Ensure this folders gazebo packages are on the path for both aerostack2 and gazebo to read...
@@ -62,7 +61,13 @@ else
 fi
 
 drone_config="${config_folder}/config/config.yaml"
-simulation_config_file="${CONFIG_SIM}/config/world.yaml"
+
+# Generate Simulated World from Configuration
+simulation_config_folder="${CONFIG_SIM}/world"
+simulation_config_file="${simulation_config_folder}/world.yaml"
+python3 "${SCRIPT_DIR}/utils/generate_world_from_scenario.py" "${scenario_file}" "${simulation_config_folder}"
+export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:"${CONFIG_SIM}/world/models"
+export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:"${CONFIG_SIM}/world/models"
 
 # If no drone namespaces are provided, get them from the world description config file 
 if [ -z "$drones_namespace_comma" ]; then
