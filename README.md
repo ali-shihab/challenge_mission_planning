@@ -65,6 +65,7 @@ source /opt/ros/humble/setup.bash
 mkdir -p /mission_planning_ws/src
 cd /mission_planning_ws/src
 git clone https://github.com/UCL-MSC-RAI-COMP0240/aerostack2.git
+git clone https://github.com/MOCAP4ROS2-Project/mocap4r2_msgs
 git clone https://github.com/UCL-MSC-RAI-COMP0240/as2_platform_crazyflie
 ```
 
