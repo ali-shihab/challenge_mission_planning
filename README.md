@@ -150,7 +150,7 @@ There are several missions that can be executed:
   ```
 - **AS2 Python API sample scenario mission**: You can execute a mission that used AS2 Python API and gives an initial simple solution to solving the challenge, launching the mission with:
   ```bash
-  python3 mission.py scenarios/scenario1.yaml
+  python3 mission_scenario.py scenarios/scenario1.yaml
   ```
   By default scenario1 takes 145 seconds to run! 
 
