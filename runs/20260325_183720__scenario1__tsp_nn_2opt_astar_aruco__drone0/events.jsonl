@@ -1,0 +1,3 @@
+{"t_wall": 1774463840.3032374, "t_rel": 0.00022292137145996094, "event": "run_started", "payload": {"run_dir": "runs/20260325_183720__scenario1__tsp_nn_2opt_astar_aruco__drone0", "odom_topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1774463842.75628, "t_rel": 2.4532651901245117, "event": "telemetry_topic_types", "payload": {"topic": "/drone0/self_localization/pose", "types": ["geometry_msgs/msg/PoseStamped"]}}
+{"t_wall": 1774463842.7577329, "t_rel": 2.4547181129455566, "event": "telemetry_subscribed", "payload": {"msg_type": "geometry_msgs/msg/PoseStamped", "topic": "/drone0/self_localization/pose"}}

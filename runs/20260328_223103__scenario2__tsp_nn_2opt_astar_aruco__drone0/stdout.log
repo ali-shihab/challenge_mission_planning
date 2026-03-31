@@ -1,0 +1,12 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: False
+End mission
+Land
+Land success: False
+Manual
+Manual success: True
+Disarm
+Disarm success: True

@@ -1,0 +1,30 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 2 using straight with 1 subgoals
+Viewpoint done
+Go to 1 using straight with 1 subgoals
+Viewpoint done
+Go to 3 using straight with 1 subgoals
+Viewpoint done
+Go to 4 using straight with 1 subgoals
+Viewpoint done
+Go to 5 using straight with 1 subgoals
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario4.yaml took 80.36001539230347 seconds
+---------------------------------
+Returning to start pose: [-0.016402755802875688, -0.031555711850515616, 1.0851151147300973], yaw=0.0013670888240094267
+Return-to-start verified: True
+End mission
+Land
+Land success: True
+Manual
+Manual success: True
+Disarm
+Disarm success: False

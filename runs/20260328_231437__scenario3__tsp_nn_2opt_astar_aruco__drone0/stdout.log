@@ -1,0 +1,46 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 7 using astar with 2 subgoals
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [44, 14]
+Detected IDs: [44, 14]
+Detected IDs: [44, 14]
+Detected IDs: [84, 44, 14, 64]
+Detected IDs: [84, 44, 14, 64]
+Detected IDs: [64, 44, 14]
+Detected IDs: [64, 44, 14]
+Detected IDs: [84, 64, 14, 44]
+Viewpoint done
+Go to 10 using astar with 2 subgoals
+Detected IDs: [64, 44, 14]
+Detected IDs: [64]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+---------------------------------
+Tour of scenarios/scenario3.yaml took 30.508445739746094 seconds
+---------------------------------
+End mission
+Land
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Land success: True
+Manual
+Manual success: True
+Disarm
+Disarm success: False

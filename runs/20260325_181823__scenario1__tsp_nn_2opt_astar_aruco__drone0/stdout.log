@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/mission_scenario_6.py", line 994, in <module>
+    tmp_tracker = ArucoTracker(image_topic=args.aruco_topic, dictionary=cv2.aruco.DICT_4x4_50)
+AttributeError: module 'cv2.aruco' has no attribute 'DICT_4x4_50'. Did you mean: 'DICT_4X4_50'?
+Exception ignored in: <module 'threading' from '/usr/lib/python3.10/threading.py'>
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1567, in _shutdown
+    lock.acquire()
+KeyboardInterrupt: 

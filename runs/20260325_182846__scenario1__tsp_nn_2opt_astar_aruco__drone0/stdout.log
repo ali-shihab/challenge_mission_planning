@@ -1,0 +1,40 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 1 using astar with 1 subgoals
+Viewpoint done
+Go to 2 using astar with 2 subgoals
+Viewpoint done
+Go to 6 using astar with 2 subgoals
+Viewpoint done
+Go to 10 using astar with 2 subgoals
+Viewpoint done
+Go to 4 using astar with 2 subgoals
+Viewpoint done
+Go to 7 using astar with 4 subgoals
+Viewpoint done
+Go to 5 using astar with 2 subgoals
+Viewpoint done
+Go to 3 using astar with 2 subgoals
+Viewpoint done
+Go to 8 using astar with 2 subgoals
+Viewpoint done
+Go to 9 using astar with 2 subgoals
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario1.yaml took 152.39838933944702 seconds
+---------------------------------
+Returning to start pose: [-9.394247622524398, -8.62129472092351, 1.0860001800369645], yaw=2.0094923653294905
+Return-to-start verified: True
+End mission
+Land
+Land success: True
+Manual
+Manual success: True
+Disarm
+Disarm success: False

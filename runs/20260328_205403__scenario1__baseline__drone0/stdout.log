@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_generator_py/import_type_support_impl.py", line 46, in import_type_support
+    return importlib.import_module(module_name, package=pkg_name)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'as2_msgs.as2_msgs_s__rosidl_typesupport_c'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/mission_scenario_6.py", line 986, in <module>
+    uav = DroneInterface(
+  File "/home/alishihab/project_gazebo_ws/build/as2_python_api/as2_python_api/drone_interface.py", line 59, in __init__
+    super().__init__(drone_id=drone_id, verbose=verbose,
+  File "/home/alishihab/project_gazebo_ws/build/as2_python_api/as2_python_api/drone_interface_base.py", line 99, in __init__
+    self.info_sub = self.create_subscription(
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1373, in create_subscription
+    check_is_valid_msg_type(msg_type)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/type_support.py", line 35, in check_is_valid_msg_type
+    check_for_type_support(msg_type)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/type_support.py", line 29, in check_for_type_support
+    msg_or_srv_type.__class__.__import_type_support__()
+  File "/home/alishihab/project_gazebo_ws/install/as2_msgs/local/lib/python3.10/dist-packages/as2_msgs/msg/_platform_info.py", line 29, in __import_type_support__
+    module = import_type_support('as2_msgs')
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rosidl_generator_py/import_type_support_impl.py", line 48, in import_type_support
+    raise UnsupportedTypeSupport(pkg_name)
+rosidl_generator_py.import_type_support_impl.UnsupportedTypeSupport: Could not import 'rosidl_typesupport_c' for package 'as2_msgs'
+Exception ignored in: <function DroneInterfaceBase.__del__ at 0x7ffffbff3490>
+Traceback (most recent call last):
+  File "/home/alishihab/project_gazebo_ws/build/as2_python_api/as2_python_api/drone_interface_base.py", line 122, in __del__
+    self.shutdown()
+  File "/home/alishihab/project_gazebo_ws/build/as2_python_api/as2_python_api/drone_interface_base.py", line 242, in shutdown
+    self.destroy_subscription(self.info_sub)
+AttributeError: 'DroneInterface' object has no attribute 'info_sub'

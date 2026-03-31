@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "duration_s": 133.6948914527893,
+  "path_length_m": 77.526181003692,
+  "mean_speed_mps": 0.5931599771878032,
+  "max_speed_mps": 2.2269624730923354,
+  "num_samples": 1283,
+  "scenario_path": "scenarios/scenario2.yaml",
+  "drone_namespace": "drone0",
+  "planner": "tsp_nn_2opt",
+  "git_commit": "94fe6a3"
+}

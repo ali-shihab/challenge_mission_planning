@@ -1,0 +1,29 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 7 using astar with 2 subgoals
+Detected IDs: [84]
+Detected IDs: [84]
+Viewpoint done
+Go to 5 using astar with 2 subgoals
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [84]
+End mission
+Land
+Land success: False
+Manual
+Manual exception: failed to create client: rcl node's context is invalid, at ./src/rcl/node.c:428
+Disarm
+Disarm exception: failed to create client: rcl node's context is invalid, at ./src/rcl/node.c:428
