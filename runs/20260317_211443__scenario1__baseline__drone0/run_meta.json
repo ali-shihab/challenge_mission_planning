@@ -1,0 +1,12 @@
+{
+  "scenario_path": "scenarios/scenario1.yaml",
+  "drone_namespace": "drone0",
+  "planner": "baseline",
+  "use_sim_time": true,
+  "verbose": false,
+  "started_at_utc": "2026-03-17T21:14:43Z",
+  "git_commit": "94fe6a3",
+  "extra": {
+    "script": "mission_scenario.py"
+  }
+}

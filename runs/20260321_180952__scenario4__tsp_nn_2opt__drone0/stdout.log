@@ -1,0 +1,33 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 2 with path facing {'p': 0.0, 'r': 0.0, 'w': 1.6305815614785684, 'x': -3.0250592007277266, 'y': 2.1675690135685635, 'z': 4.960370278833439}
+Go to success: True
+Go to done
+Go to 1 with path facing {'p': 0.0, 'r': 0.0, 'w': 0.3979872883969711, 'x': -7.449624492499818, 'y': 3.922469308326491, 'z': 1.5962364861783431}
+Go to success: True
+Go to done
+Go to 3 with path facing {'p': 0.0, 'r': 0.0, 'w': 2.6301980050473843, 'x': -9.661614169814069, 'y': -7.057304300982377, 'z': 3.062045099587818}
+Go to success: True
+Go to done
+Go to 4 with path facing {'p': 0.0, 'r': 0.0, 'w': 2.233399383881462, 'x': 8.284789538853097, 'y': -7.969800201932924, 'z': 1.170624871149223}
+Go to success: True
+Go to done
+Go to 5 with path facing {'p': 0.0, 'r': 0.0, 'w': 0.4700661003013556, 'x': 8.827092270096244, 'y': -1.454571518555479, 'z': 4.078529317618816}
+Go to success: True
+Go to done
+---------------------------------
+Tour of scenarios/scenario4.yaml took 71.74871635437012 seconds
+---------------------------------
+Returning to start pose: [-0.09213853794570166, 0.03726200789507073, 1.0872100605668014], yaw=0.005994138309653937
+Return-to-start success: True
+End mission
+Land
+Land success: True
+Manual
+Manual success: True

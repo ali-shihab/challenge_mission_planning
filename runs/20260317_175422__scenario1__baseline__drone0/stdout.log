@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/mission_scenario_2.py", line 169, in <module>
+    logger.attach_ros(node)
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/mission_logging/run_logger.py", line 171, in attach_ros
+    node.create_subscription(Odometry, self.odom_topic, self._on_odom, qos)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1377, in create_subscription
+    subscription_object = _rclpy.Subscription(
+rclpy._rclpy_pybind11.RCLError: Failed to create subscription: invalid allocator, at ./src/rcl/subscription.c:219
+Exception ignored in: <module 'threading' from '/usr/lib/python3.10/threading.py'>
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1567, in _shutdown
+    lock.acquire()
+KeyboardInterrupt: 

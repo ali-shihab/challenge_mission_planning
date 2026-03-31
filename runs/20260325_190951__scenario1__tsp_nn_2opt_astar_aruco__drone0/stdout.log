@@ -1,0 +1,17 @@
+Start mission
+Arm
+IMAGE CALLBACK TRIGGERED
+IMAGE CALLBACK TRIGGERED
+Arm success: True
+Offboard
+Offboard success: False
+End mission
+Land
+Land success: False
+Manual
+IMAGE CALLBACK TRIGGERED
+IMAGE CALLBACK TRIGGERED
+Manual success: True
+Disarm
+IMAGE CALLBACK TRIGGERED
+Disarm success: True

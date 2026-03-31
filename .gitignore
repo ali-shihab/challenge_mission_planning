@@ -1,4 +1,16 @@
-rosbags/*
-.vscode/*
-log*
-config_sim/world/*
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+*.so
+
+# Run artifacts (keep for now so results are tracked)
+# runs/
+
+# Editor artifacts
+.vscode/
+*.swp
+*~

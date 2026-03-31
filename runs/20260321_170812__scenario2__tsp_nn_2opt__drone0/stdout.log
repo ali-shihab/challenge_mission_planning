@@ -1,0 +1,46 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 4 with path facing {'p': 0.0, 'r': 0.0, 'w': 1.204759421027625, 'x': 6.261218473109661, 'y': -3.198459833760081, 'z': 4.624466860754518}
+Go to success: True
+Go to done
+Go to 10 with path facing {'p': 0.0, 'r': 0.0, 'w': 1.8007441564597053, 'x': -1.0865178821882324, 'y': -3.2720008586449367, 'z': 3.8348034195685092}
+Go to success: True
+Go to done
+Go to 6 with path facing {'p': 0.0, 'r': 0.0, 'w': 1.9990364529599072, 'x': -1.8943990331339151, 'y': -7.865232535165381, 'z': 2.1549628429834047}
+Go to success: True
+Go to done
+Go to 2 with path facing {'p': 0.0, 'r': 0.0, 'w': 0.6739798877938239, 'x': -1.8381304380425938, 'y': -8.268355600522536, 'z': 2.095158840112253}
+Go to success: True
+Go to done
+Go to 1 with path facing {'p': 0.0, 'r': 0.0, 'w': 2.0117667618825146, 'x': -9.511677901734114, 'y': -8.693788325283045, 'z': 2.225522150447064}
+Go to success: True
+Go to done
+Go to 9 with path facing {'p': 0.0, 'r': 0.0, 'w': 2.6389330506315014, 'x': -9.608510085286571, 'y': -0.6721059421127933, 'z': 2.2202778425179672}
+Go to success: True
+Go to done
+Go to 8 with path facing {'p': 0.0, 'r': 0.0, 'w': 0.7635735036185931, 'x': 0.08364208906300696, 'y': 5.055460014695878, 'z': 1.4766771339411582}
+Go to success: True
+Go to done
+Go to 5 with path facing {'p': 0.0, 'r': 0.0, 'w': 0.3964455738218549, 'x': 4.435547282505572, 'y': 6.528842820973907, 'z': 3.165363943919049}
+Go to success: True
+Go to done
+Go to 7 with path facing {'p': 0.0, 'r': 0.0, 'w': 1.3158483990797623, 'x': 8.172652776216378, 'y': 7.628628232527937, 'z': 2.2253065531106473}
+Go to success: True
+Go to done
+Go to 3 with path facing {'p': 0.0, 'r': 0.0, 'w': 1.8226051020243188, 'x': 1.7533727744086391, 'y': 9.73164864913337, 'z': 4.497183545523486}
+Go to success: True
+Go to done
+---------------------------------
+Tour of scenarios/scenario2.yaml took 103.623126745224 seconds
+---------------------------------
+End mission
+Land
+Land success: True
+Manual
+Manual success: True

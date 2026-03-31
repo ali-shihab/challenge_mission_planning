@@ -1,0 +1,41 @@
+{"t_wall": 1774115771.8495135, "t_rel": 0.00029730796813964844, "event": "run_started", "payload": {"run_dir": "runs/20260321_175611__scenario2__baseline__drone0", "odom_topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1774115775.0529625, "t_rel": 3.2037465572357178, "event": "telemetry_topic_types", "payload": {"topic": "/drone0/self_localization/pose", "types": ["geometry_msgs/msg/PoseStamped"]}}
+{"t_wall": 1774115775.053487, "t_rel": 3.204270839691162, "event": "telemetry_subscribed", "payload": {"msg_type": "geometry_msgs/msg/PoseStamped", "topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1774115775.0573723, "t_rel": 3.2081563472747803, "event": "scenario_loaded", "payload": {"keys": ["drone_start_pose", "name", "obstacles", "viewpoint_poses"]}}
+{"t_wall": 1774115775.0575242, "t_rel": 3.208307981491089, "event": "arm_start", "payload": {}}
+{"t_wall": 1774115776.1656046, "t_rel": 4.3163886070251465, "event": "arm_done", "payload": {"success": true}}
+{"t_wall": 1774115776.1663427, "t_rel": 4.317126512527466, "event": "offboard_start", "payload": {}}
+{"t_wall": 1774115776.790784, "t_rel": 4.94156813621521, "event": "offboard_done", "payload": {"success": true}}
+{"t_wall": 1774115776.7910702, "t_rel": 4.941854238510132, "event": "takeoff_start", "payload": {"height": 1.0, "speed": 1.0}}
+{"t_wall": 1774115778.910259, "t_rel": 7.061042785644531, "event": "takeoff_done", "payload": {"success": true}}
+{"t_wall": 1774115780.9122636, "t_rel": 9.063047409057617, "event": "start_pose_captured", "payload": {"start_pose": {"x": -0.032180043568546056, "y": -0.01861069544085869, "z": 1.0851467381540887, "yaw": 0.004670049713379033}}}
+{"t_wall": 1774115780.9123938, "t_rel": 9.063177585601807, "event": "ordering_computed", "payload": {"strategy": "input", "ordering_start": {"x": -0.032180043568546056, "y": -0.01861069544085869, "z": 1.0851467381540887}, "original_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "ordered_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "estimated_length_before_m": 125.88914339441618, "estimated_length_after_m": 125.88914339441618, "estimated_improvement_m": 0.0}}
+{"t_wall": 1774115780.9125745, "t_rel": 9.063358306884766, "event": "mission_waypoints_loaded", "payload": {"num_waypoints": 10, "ordered_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}}
+{"t_wall": 1774115780.9125962, "t_rel": 9.063380002975464, "event": "goto_start", "payload": {"index": 0, "viewpoint_id": 1, "goal": [-9.511677901734114, -8.693788325283045, 2.225522150447064], "yaw": 2.0117667618825146, "speed": 1.0}}
+{"t_wall": 1774115793.9136746, "t_rel": 22.06445837020874, "event": "goto_done", "payload": {"index": 0, "viewpoint_id": 1, "success": true, "duration_s": 13.00102186203003}}
+{"t_wall": 1774115794.4142468, "t_rel": 22.565031051635742, "event": "goto_start", "payload": {"index": 1, "viewpoint_id": 2, "goal": [-1.8381304380425938, -8.268355600522536, 2.095158840112253], "yaw": 0.6739798877938239, "speed": 1.0}}
+{"t_wall": 1774115806.5675435, "t_rel": 34.71832728385925, "event": "goto_done", "payload": {"index": 1, "viewpoint_id": 2, "success": true, "duration_s": 12.152754783630371}}
+{"t_wall": 1774115807.0690563, "t_rel": 35.21984028816223, "event": "goto_start", "payload": {"index": 2, "viewpoint_id": 3, "goal": [1.7533727744086391, 9.73164864913337, 4.497183545523486], "yaw": 1.8226051020243188, "speed": 1.0}}
+{"t_wall": 1774115831.9061587, "t_rel": 60.05694246292114, "event": "goto_done", "payload": {"index": 2, "viewpoint_id": 3, "success": true, "duration_s": 24.836953163146973}}
+{"t_wall": 1774115832.4065425, "t_rel": 60.557326555252075, "event": "goto_start", "payload": {"index": 3, "viewpoint_id": 4, "goal": [6.261218473109661, -3.198459833760081, 4.624466860754518], "yaw": 1.204759421027625, "speed": 1.0}}
+{"t_wall": 1774115850.6378102, "t_rel": 78.78859424591064, "event": "goto_done", "payload": {"index": 3, "viewpoint_id": 4, "success": true, "duration_s": 18.231048583984375}}
+{"t_wall": 1774115851.1386673, "t_rel": 79.28945136070251, "event": "goto_start", "payload": {"index": 4, "viewpoint_id": 5, "goal": [4.435547282505572, 6.528842820973907, 3.165363943919049], "yaw": 0.3964455738218549, "speed": 1.0}}
+{"t_wall": 1774115866.1259303, "t_rel": 94.27671432495117, "event": "goto_done", "payload": {"index": 4, "viewpoint_id": 5, "success": true, "duration_s": 14.987076759338379}}
+{"t_wall": 1774115866.626377, "t_rel": 94.77716159820557, "event": "goto_start", "payload": {"index": 5, "viewpoint_id": 6, "goal": [-1.8943990331339151, -7.865232535165381, 2.1549628429834047], "yaw": 1.9990364529599072, "speed": 1.0}}
+{"t_wall": 1774115885.340323, "t_rel": 113.49110674858093, "event": "goto_done", "payload": {"index": 5, "viewpoint_id": 6, "success": true, "duration_s": 18.709153175354004}}
+{"t_wall": 1774115885.8411977, "t_rel": 113.9919822216034, "event": "goto_start", "payload": {"index": 6, "viewpoint_id": 7, "goal": [8.172652776216378, 7.628628232527937, 2.2253065531106473], "yaw": 1.3158483990797623, "speed": 1.0}}
+{"t_wall": 1774115907.5170615, "t_rel": 135.66784524917603, "event": "goto_done", "payload": {"index": 6, "viewpoint_id": 7, "success": true, "duration_s": 21.675575733184814}}
+{"t_wall": 1774115908.0192518, "t_rel": 136.1700358390808, "event": "goto_start", "payload": {"index": 7, "viewpoint_id": 8, "goal": [0.08364208906300696, 5.055460014695878, 1.4766771339411582], "yaw": 0.7635735036185931, "speed": 1.0}}
+{"t_wall": 1774115920.1922042, "t_rel": 148.3429880142212, "event": "goto_done", "payload": {"index": 7, "viewpoint_id": 8, "success": true, "duration_s": 12.17280650138855}}
+{"t_wall": 1774115920.6929882, "t_rel": 148.84377217292786, "event": "goto_start", "payload": {"index": 8, "viewpoint_id": 9, "goal": [-9.608510085286571, -0.6721059421127933, 2.2202778425179672], "yaw": 2.6389330506315014, "speed": 1.0}}
+{"t_wall": 1774115934.9144053, "t_rel": 163.06518936157227, "event": "goto_done", "payload": {"index": 8, "viewpoint_id": 9, "success": true, "duration_s": 14.221112728118896}}
+{"t_wall": 1774115935.4151614, "t_rel": 163.5659453868866, "event": "goto_start", "payload": {"index": 9, "viewpoint_id": 10, "goal": [-1.0865178821882324, -3.2720008586449367, 3.8348034195685092], "yaw": 1.8007441564597053, "speed": 1.0}}
+{"t_wall": 1774115947.5874782, "t_rel": 175.7382619380951, "event": "goto_done", "payload": {"index": 9, "viewpoint_id": 10, "success": true, "duration_s": 12.172075271606445}}
+{"t_wall": 1774115948.0899785, "t_rel": 176.2407624721527, "event": "mission_duration", "payload": {"duration_s": 167.17586469650269, "success": true}}
+{"t_wall": 1774115948.090139, "t_rel": 176.24092292785645, "event": "return_to_start_start", "payload": {"start_pose": {"x": -0.032180043568546056, "y": -0.01861069544085869, "z": 1.0851467381540887, "yaw": 0.004670049713379033}}}
+{"t_wall": 1774115954.1366978, "t_rel": 182.28748178482056, "event": "return_to_start_done", "payload": {"success": true, "duration_s": 6.046387434005737, "goal": [-0.032180043568546056, -0.01861069544085869, 1.0851467381540887], "yaw": 0.004670049713379033}}
+{"t_wall": 1774115955.1372895, "t_rel": 183.2880735397339, "event": "land_start", "payload": {"speed": 0.5}}
+{"t_wall": 1774115960.1712046, "t_rel": 188.32198858261108, "event": "land_done", "payload": {"success": true}}
+{"t_wall": 1774115960.171492, "t_rel": 188.3222758769989, "event": "manual_start", "payload": {}}
+{"t_wall": 1774115961.3212717, "t_rel": 189.47205567359924, "event": "manual_done", "payload": {"success": true}}
+{"t_wall": 1774115961.5833318, "t_rel": 189.73411583900452, "event": "run_finished", "payload": {"success": true, "ended_reason": "normal", "ended_at_utc": "2026-03-21T17:59:21Z"}}

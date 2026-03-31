@@ -1,0 +1,33 @@
+Exception in thread Thread-2 (<lambda>):
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/mission_scenario_6.py", line 1009, in <lambda>
+    target=lambda: rclpy.spin(aruco_node),
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+Start mission
+Arm
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 751, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 740, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 723, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 642, in _wait_for_ready_callbacks
+    if wt in waitables and wt.is_ready(wait_set):
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/qos_event.py", line 90, in is_ready
+    if wait_set.is_ready('event', self._event_index):
+IndexError: wait set index too big
+Arm success: True
+Offboard
+Offboard success: False
+End mission
+Land
+Land success: False
+Manual
+Manual success: True
+Disarm
+Disarm success: True

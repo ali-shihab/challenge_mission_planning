@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/mission_scenario_6.py", line 1004, in <module>
+    if aruco_tracker.attached is False:
+AttributeError: 'ArucoTracker' object has no attribute 'attached'. Did you mean: '_attached'?
+Exception ignored in: <module 'threading' from '/usr/lib/python3.10/threading.py'>
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1567, in _shutdown
+    lock.acquire()
+KeyboardInterrupt: 

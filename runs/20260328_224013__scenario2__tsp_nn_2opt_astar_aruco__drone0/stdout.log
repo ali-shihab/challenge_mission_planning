@@ -1,0 +1,199 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 4 using astar with 2 subgoals
+Detected IDs: [84, 64]
+Detected IDs: [84, 44, 64]
+Detected IDs: [84, 44, 64]
+Detected IDs: [44, 84, 64]
+Detected IDs: [44, 84, 64]
+Detected IDs: [84, 44]
+Detected IDs: [44, 84]
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [84, 64]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Viewpoint done
+Go to 10 using astar with 2 subgoals
+Detected IDs: [54]
+Detected IDs: [44, 54]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44, 64]
+Detected IDs: [44]
+Detected IDs: [44, 14]
+Detected IDs: [44, 14]
+Detected IDs: [44, 14]
+Detected IDs: [44, 14]
+Detected IDs: [44, 14]
+Detected IDs: [44, 14]
+Detected IDs: [44, 14, 34]
+Detected IDs: [14, 34]
+Detected IDs: [44, 14, 34]
+Detected IDs: [44, 34, 14]
+Detected IDs: [44, 14, 34]
+Viewpoint done
+Detected IDs: [44, 34, 14]
+Detected IDs: [44, 34, 14]
+Go to 6 using astar with 2 subgoals
+Detected IDs: [44, 14, 34]
+Detected IDs: [24]
+Detected IDs: [74]
+Detected IDs: [24, 74]
+Detected IDs: [24, 74]
+Viewpoint done
+Go to 2 using astar with 2 subgoals
+Detected IDs: [24, 74]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [84, 34]
+Detected IDs: [84, 34]
+Detected IDs: [34]
+Viewpoint done
+Go to 1 using astar with 2 subgoals
+Detected IDs: [84, 64, 34]
+Detected IDs: [84, 34]
+Detected IDs: [14, 34, 34]
+Detected IDs: [24, 74]
+Detected IDs: [24, 74]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24, 24]
+Detected IDs: [24, 24]
+Detected IDs: [24, 24]
+Detected IDs: [24, 24]
+Detected IDs: [24, 24]
+Detected IDs: [24, 24]
+Viewpoint done
+Go to 9 using astar with 2 subgoals
+Detected IDs: [24, 24]
+Detected IDs: [24, 24]
+Detected IDs: [24, 24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Viewpoint done
+Detected IDs: [24]
+Go to 8 using astar with 3 subgoals
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [14]
+Detected IDs: [14, 64]
+Detected IDs: [14]
+Detected IDs: [64, 44, 14]
+Detected IDs: [64, 14]
+Detected IDs: [64, 14]
+Detected IDs: [64, 14]
+Detected IDs: [14, 64]
+Detected IDs: [14, 64]
+Detected IDs: [14]
+Detected IDs: [64, 14]
+Detected IDs: [64, 14]
+Detected IDs: [64, 14]
+Detected IDs: [14, 84, 64, 44]
+Detected IDs: [84, 64, 14]
+Detected IDs: [14, 64, 44]
+Detected IDs: [44, 14, 64]
+Detected IDs: [14, 64, 44]
+Detected IDs: [14, 64]
+Detected IDs: [14, 64]
+Detected IDs: [14, 64]
+Detected IDs: [14, 64]
+Detected IDs: [84, 14, 64]
+Detected IDs: [84, 14, 64]
+Viewpoint done
+Detected IDs: [84, 14, 64]
+Go to 5 using astar with 2 subgoals
+Detected IDs: [84, 14, 64]
+Detected IDs: [84, 14, 64]
+Detected IDs: [64]
+Detected IDs: [84, 64]
+Detected IDs: [84, 64]
+Detected IDs: [64, 84]
+Detected IDs: [64, 84]
+Detected IDs: [64, 84]
+Detected IDs: [64, 84]
+Detected IDs: [64, 84]
+Detected IDs: [84, 64]
+Detected IDs: [64, 84]
+Detected IDs: [84, 64]
+Detected IDs: [84, 64]
+Detected IDs: [64]
+Viewpoint done
+Detected IDs: [64]
+Go to 7 using astar with 2 subgoals
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [84, 64]
+Detected IDs: [84, 64]
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [84]
+Viewpoint done
+Detected IDs: [84]
+Go to 3 using astar with 2 subgoals
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario2.yaml took 153.34787487983704 seconds
+---------------------------------
+Returning to start pose: [0.010627776396509612, 0.013150492646218285, 1.0886679495071068], yaw=0.00017595855634854423
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [84, 64]
+Detected IDs: [84, 64]
+Detected IDs: [84, 64]
+Detected IDs: [84, 64]
+Detected IDs: [84]
+Detected IDs: [84]
+Return-to-start verified: True
+End mission
+Land
+Land success: True
+Manual
+Manual success: True
+Disarm
+Disarm success: False

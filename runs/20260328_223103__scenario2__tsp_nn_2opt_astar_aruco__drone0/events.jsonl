@@ -1,0 +1,17 @@
+{"t_wall": 1774737063.8069944, "t_rel": 0.001020193099975586, "event": "run_started", "payload": {"run_dir": "runs/20260328_223103__scenario2__tsp_nn_2opt_astar_aruco__drone0", "odom_topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1774737065.3398395, "t_rel": 1.5338640213012695, "event": "telemetry_topic_types", "payload": {"topic": "/drone0/self_localization/pose", "types": ["geometry_msgs/msg/PoseStamped"]}}
+{"t_wall": 1774737065.345691, "t_rel": 1.5397155284881592, "event": "telemetry_subscribed", "payload": {"msg_type": "geometry_msgs/msg/PoseStamped", "topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1774737065.3628309, "t_rel": 1.5568552017211914, "event": "scenario_loaded", "payload": {"keys": ["drone_start_pose", "name", "obstacles", "viewpoint_poses"]}}
+{"t_wall": 1774737065.3630478, "t_rel": 1.5570721626281738, "event": "arm_start", "payload": {}}
+{"t_wall": 1774737066.6318054, "t_rel": 2.8258299827575684, "event": "arm_done", "payload": {"success": true}}
+{"t_wall": 1774737066.6320844, "t_rel": 2.826108932495117, "event": "offboard_start", "payload": {}}
+{"t_wall": 1774737067.2470002, "t_rel": 3.4410247802734375, "event": "offboard_done", "payload": {"success": false}}
+{"t_wall": 1774737067.2484903, "t_rel": 3.442514657974243, "event": "land_start", "payload": {"speed": 0.5}}
+{"t_wall": 1774737067.2526104, "t_rel": 3.446634531021118, "event": "land_watchdog_start", "payload": {"goal": [0.0, 0.0, 0.0], "yaw": 0.0, "timeout_s": 30.0, "stuck_timeout_s": 10.0, "progress_epsilon_m": 0.05, "initial_grace_s": 1.0}}
+{"t_wall": 1774737067.4530659, "t_rel": 3.647089958190918, "event": "land_watchdog_done", "payload": {"elapsed_s": 0.20045781135559082, "thread_success": false}}
+{"t_wall": 1774737067.4532788, "t_rel": 3.6473031044006348, "event": "land_done", "payload": {"success": false, "duration_s": 0.20045781135559082, "reason": null}}
+{"t_wall": 1774737067.4533432, "t_rel": 3.647367238998413, "event": "manual_start", "payload": {}}
+{"t_wall": 1774737068.4853964, "t_rel": 4.6794211864471436, "event": "manual_done", "payload": {"success": true}}
+{"t_wall": 1774737068.4856215, "t_rel": 4.679645538330078, "event": "disarm_start", "payload": {}}
+{"t_wall": 1774737069.1617424, "t_rel": 5.355767011642456, "event": "disarm_done", "payload": {"success": true}}
+{"t_wall": 1774737069.499964, "t_rel": 5.69398832321167, "event": "run_finished", "payload": {"success": false, "ended_reason": "normal", "ended_at_utc": "2026-03-28T22:31:09Z"}}

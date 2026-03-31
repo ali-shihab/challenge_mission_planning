@@ -1,0 +1,201 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Detected IDs: [54]
+Detected IDs: [54, 24]
+Run mission
+Go to 7 using astar with 2 subgoals
+Detected IDs: [54]
+Detected IDs: [74, 44]
+Detected IDs: [84, 34]
+Viewpoint done
+Detected IDs: [84, 34]
+Detected IDs: [84, 34]
+Detected IDs: [84, 34]
+Go to 10 using astar with 2 subgoals
+Detected IDs: [54, 34, 24]
+Detected IDs: [24, 54, 34]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [44, 74]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Viewpoint done
+Go to 4 using astar with 2 subgoals
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [54]
+Viewpoint done
+Go to 17 using astar with 2 subgoals
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Viewpoint done
+Detected IDs: [24]
+Go to 6 using astar with 2 subgoals
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [74]
+Detected IDs: [74, 24]
+Detected IDs: [74, 24]
+Detected IDs: [24]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Viewpoint done
+Detected IDs: [74]
+Go to 18 using astar with 2 subgoals
+Detected IDs: [34, 24]
+Viewpoint done
+Go to 1 using astar with 2 subgoals
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [24]
+Detected IDs: [74, 24]
+Detected IDs: [74, 24]
+Viewpoint done
+Go to 15 using astar with 2 subgoals
+Detected IDs: [74]
+Detected IDs: [24]
+Detected IDs: [84, 34]
+Detected IDs: [84, 34]
+Detected IDs: [84, 34]
+Viewpoint done
+Detected IDs: [84, 34]
+Go to 16 using astar with 2 subgoals
+Detected IDs: [34, 84]
+Detected IDs: [34]
+Detected IDs: [34, 24, 84]
+Detected IDs: [54, 34, 84]
+Detected IDs: [24, 54, 34, 84]
+Detected IDs: [54, 14]
+Detected IDs: [54, 14]
+Detected IDs: [54, 14]
+Viewpoint done
+Detected IDs: [14, 54]
+Go to 19 using astar with 2 subgoals
+Detected IDs: [54, 14]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Viewpoint done
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Go to 20 using astar with 2 subgoals
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Viewpoint done
+Go to 3 using astar with 2 subgoals
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [44, 54]
+Viewpoint done
+Go to 14 using astar with 2 subgoals
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Viewpoint done
+Detected IDs: [74]
+Go to 2 using astar with 2 subgoals
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74, 34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Viewpoint done
+Go to 9 using astar with 2 subgoals
+Detected IDs: [54, 34, 24]
+Detected IDs: [54, 34, 24, 24]
+Detected IDs: [54, 34, 24, 24]
+Detected IDs: [54, 34, 24, 24]
+Detected IDs: [24, 54, 24]
+Detected IDs: [24, 54, 24]
+Detected IDs: [24, 54, 24]
+Viewpoint done
+Go to 13 using astar with 2 subgoals
+Detected IDs: [74, 54, 44]
+Detected IDs: [74, 44, 54, 44]
+Detected IDs: [44, 74, 54, 34]
+Detected IDs: [44, 74, 54, 34]
+Detected IDs: [44, 74, 54, 34]
+Detected IDs: [44, 74, 54, 34]
+Detected IDs: [64]
+Viewpoint done
+Go to 8 using astar with 2 subgoals
+Detected IDs: [74, 64]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [24, 54]
+Detected IDs: [54, 34]
+Detected IDs: [14, 54]
+Detected IDs: [14, 54]
+Detected IDs: [14]
+Viewpoint done
+Go to 5 using astar with 2 subgoals
+Detected IDs: [14]
+Detected IDs: [64]
+Detected IDs: [64, 14]
+Viewpoint done
+Go to 11 using astar with 2 subgoals
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [44]
+Detected IDs: [44]
+Viewpoint done
+Go to 12 using astar with 2 subgoals
+Detected IDs: [34]
+Detected IDs: [34, 44, 24]
+Detected IDs: [34, 44, 24]
+Detected IDs: [34, 54, 44]
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario3.yaml took 231.2327675819397 seconds
+---------------------------------
+Returning to start pose: [-0.004121986092937472, 0.0005312217569039523, 1.0873072342599086], yaw=-0.00013920869180817375
+Detected IDs: [54]
+Return-to-start verified: True
+End mission
+Land
+Detected IDs: [54, 24]
+Land success: True
+Manual
+Manual success: True
+Disarm
+Disarm success: False
