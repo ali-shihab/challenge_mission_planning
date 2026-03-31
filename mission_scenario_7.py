@@ -34,9 +34,9 @@ from planners.path_utils import (
 )
 
 TAKE_OFF_HEIGHT = 1.0
-TAKE_OFF_SPEED = 2.0
+TAKE_OFF_SPEED = 1.0
 SLEEP_TIME = 0.05
-SPEED = 1.0
+SPEED = 2.0
 LAND_SPEED = 0.5
 
 
