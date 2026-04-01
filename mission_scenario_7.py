@@ -1067,9 +1067,8 @@ if __name__ == '__main__':
     drone_namespace = args.namespace
     verbosity = args.verbose
     use_sim_time = args.use_sim_time
-    global SPEED
     if args.speed is not None:
-        SPEED = args.speed
+        SPEED = args.speed  # module-level assignment
 
     print(f'Running mission for drone {drone_namespace}')
     print(f'Reading scenario {args.scenario}')
