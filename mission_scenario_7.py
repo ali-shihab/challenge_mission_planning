@@ -674,6 +674,54 @@ def execute_subgoals(
         )
 
         if not wd["thread_returned"]:
+            if not is_final:
+                err = pose_error_to_goal(logger, goal, yaw)
+                if err is not None and err.get("pos_err_m", float("inf")) <= subgoal_pos_tolerance_m:
+                    # Stop the ongoing GoTo cleanly so background thread exits
+                    try:
+                        drone_interface.go_to.stop()
+                    except Exception:
+                        pass
+                    sleep(0.5)
+                    # Ascend to clear obstacles before proceeding to next subgoal
+                    cur_pose = get_latest_pose(logger)
+                    if cur_pose is not None and cur_pose.get("z", 0) > 0.5:
+                        ascent_z = cur_pose["z"] + 2.0
+                        ascent_goal = [cur_pose["x"], cur_pose["y"], ascent_z]
+                        logger.event("close_enough_ascent_start", {
+                            "viewpoint_index": viewpoint_index,
+                            "viewpoint_id": viewpoint_id,
+                            "subgoal_index": sub_idx,
+                            "from_z": cur_pose["z"],
+                            "to_z": ascent_z,
+                        })
+                        ascent_wd = monitored_goto(
+                            drone_interface=drone_interface,
+                            logger=logger,
+                            action_name=f"vp{viewpoint_index}_sg{sub_idx}_ascent",
+                            goal_xyz=ascent_goal,
+                            goal_yaw=yaw,
+                            speed=SPEED,
+                            timeout_s=20.0,
+                            stuck_timeout_s=8.0,
+                            progress_epsilon_m=progress_epsilon_m,
+                        )
+                        logger.event("close_enough_ascent_done", {
+                            "viewpoint_index": viewpoint_index,
+                            "viewpoint_id": viewpoint_id,
+                            "subgoal_index": sub_idx,
+                            "ascent_success": bool(ascent_wd.get("thread_returned") and ascent_wd.get("thread_success")),
+                        })
+                    logger.event("subgoal_done", {
+                        "viewpoint_index": viewpoint_index,
+                        "viewpoint_id": viewpoint_id,
+                        "subgoal_index": sub_idx,
+                        "success": True,
+                        "reason": "close_enough_skip",
+                        "duration_s": wd["elapsed_s"],
+                    })
+                    sleep(0.1)
+                    continue
             logger.event("subgoal_done", {
                 "viewpoint_index": viewpoint_index,
                 "viewpoint_id": viewpoint_id,
@@ -1025,7 +1073,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--goto_timeout_s', type=float, default=45.0,
                         help='Hard timeout per go-to command')
-    parser.add_argument('--stuck_timeout_s', type=float, default=6.0,
+    parser.add_argument('--stuck_timeout_s', type=float, default=15.0,
                         help='Fail if no meaningful progress for this long')
     parser.add_argument('--progress_epsilon_m', type=float, default=0.15,
                         help='Movement threshold counted as progress')
