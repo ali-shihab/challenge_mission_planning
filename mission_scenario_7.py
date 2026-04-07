@@ -24,14 +24,21 @@ import cv2
 from mission_logging.run_logger import RunLogger
 from mission_perception.aruco_tracker import ArucoTracker
 from planners.ordering import build_ordered_mission
-from planners.grid_map import GridConfig, build_occupancy_grid_from_scenario
-from planners.astar import astar_search
+from planners.grid_map import GridConfig, build_occupancy_grid_from_scenario, build_occupancy_grid_3d_from_scenario
+from planners.astar import astar_search, astar_search_3d
 from planners.path_utils import (
     cells_to_world_path,
+    cells_to_world_path_3d,
     simplify_world_path,
+    simplify_world_path_3d,
     densify_stride,
     build_subgoals_from_xy_path,
+    build_subgoals_from_3d_path,
 )
+try:
+    from planners.rrts import RRTStarPlanner
+except ImportError:
+    RRTStarPlanner = None  # type: ignore
 
 TAKE_OFF_HEIGHT = 1.0
 TAKE_OFF_SPEED = 1.0
@@ -541,71 +548,82 @@ def plan_local_path(
             },
         }
 
-    if local_planner != "astar":
-        raise ValueError(f"Unknown local planner: {local_planner}")
-
-    flight_z = max(start_xyz[2], goal_xyz[2], TAKE_OFF_HEIGHT)
-    if prebuilt_grid is not None:
-        grid = prebuilt_grid
-    else:
-        grid = build_occupancy_grid_from_scenario(
-            scenario,
-            start_xy=(start_xyz[0], start_xyz[1]),
-            flight_z=flight_z,
-            config=GridConfig(
-                resolution_m=grid_resolution,
-                inflation_m=obstacle_inflation_m,
-                bounds_margin_m=grid_margin_m,
-            ),
-        )
-
-    start_cell = grid.world_to_grid(start_xyz[0], start_xyz[1])
-    goal_cell = grid.world_to_grid(goal_xyz[0], goal_xyz[1])
-
-    cells = astar_search(grid, start_cell, goal_cell)
-    if cells is None:
+    if local_planner == "astar":
+        # 3D A* planning
+        if prebuilt_grid is not None:
+            grid3d = prebuilt_grid
+        else:
+            grid3d = build_occupancy_grid_3d_from_scenario(
+                scenario,
+                start_xyz=(start_xyz[0], start_xyz[1], start_xyz[2]),
+                config=GridConfig(
+                    resolution_m=grid_resolution,
+                    inflation_m=obstacle_inflation_m,
+                    bounds_margin_m=grid_margin_m,
+                ),
+            )
+        start_cell3 = grid3d.world_to_grid(start_xyz[0], start_xyz[1], start_xyz[2])
+        goal_cell3 = grid3d.world_to_grid(goal_xyz[0], goal_xyz[1], goal_xyz[2])
+        cells3 = astar_search_3d(grid3d, start_cell3, goal_cell3)
+        if cells3 is None:
+            return {
+                "planner": "astar",
+                "subgoals": [],
+                "debug": {
+                    "failure": "no_path_found",
+                    "start_cell": start_cell3,
+                    "goal_cell": goal_cell3,
+                },
+            }
+        raw_3d = cells_to_world_path_3d(grid3d, cells3)
+        simplified_3d = simplify_world_path_3d(grid3d, raw_3d)
+        if not simplified_3d:
+            simplified_3d = [(goal_xyz[0], goal_xyz[1], goal_xyz[2])]
+        goal_tuple = (goal_xyz[0], goal_xyz[1], goal_xyz[2])
+        if simplified_3d[-1] != goal_tuple:
+            simplified_3d[-1] = goal_tuple
+        subgoals = build_subgoals_from_3d_path(path_3d=simplified_3d, final_yaw=goal_yaw)
         return {
             "planner": "astar",
-            "subgoals": [],
+            "subgoals": subgoals,
             "debug": {
-                "failure": "no_path_found",
-                "start_cell": start_cell,
-                "goal_cell": goal_cell,
+                "num_raw_points": len(raw_3d),
+                "num_simplified_points": len(simplified_3d),
+                "start_cell": start_cell3,
+                "goal_cell": goal_cell3,
+                "grid_nx": grid3d.nx,
+                "grid_ny": grid3d.ny,
+                "grid_nz": grid3d.nz,
+                "num_occupied": len(grid3d.occupied),
+                "grid_resolution": grid_resolution,
+                "obstacle_inflation_m": obstacle_inflation_m,
             },
         }
 
-    raw_xy = cells_to_world_path(grid, cells)
-    simplified_xy = simplify_world_path(grid, raw_xy)
-    simplified_xy = densify_stride(simplified_xy, stride=path_stride)
+    if local_planner == "rrts":
+        # RRT* 3D planning
+        if RRTStarPlanner is None:
+            raise ImportError("planners/rrts.py not found; cannot use --local_planner rrts")
+        obstacles = list(scenario.get("obstacles", {}).values())
+        margin = max(grid_margin_m, 2.0)
+        bx = (min(start_xyz[0], goal_xyz[0]) - margin, max(start_xyz[0], goal_xyz[0]) + margin)
+        by = (min(start_xyz[1], goal_xyz[1]) - margin, max(start_xyz[1], goal_xyz[1]) + margin)
+        bz = (max(0.0, min(start_xyz[2], goal_xyz[2]) - margin), max(start_xyz[2], goal_xyz[2]) + margin)
+        planner = RRTStarPlanner(
+            obstacles=obstacles, bounds=(bx, by, bz),
+            step_size=grid_resolution, inflation=obstacle_inflation_m,
+        )
+        path_3d = planner.plan(start=tuple(start_xyz), goal=tuple(goal_xyz))
+        if not path_3d:
+            return {"planner": "rrts", "subgoals": [], "debug": {"failure": "no_path_found"}}
+        subgoals = build_subgoals_from_3d_path(path_3d=path_3d, final_yaw=goal_yaw)
+        return {
+            "planner": "rrts",
+            "subgoals": subgoals,
+            "debug": {"num_waypoints": len(path_3d), "obstacle_inflation_m": obstacle_inflation_m},
+        }
 
-    if not simplified_xy:
-        simplified_xy = [(goal_xyz[0], goal_xyz[1])]
-
-    if simplified_xy[-1] != (goal_xyz[0], goal_xyz[1]):
-        simplified_xy[-1] = (goal_xyz[0], goal_xyz[1])
-
-    subgoals = build_subgoals_from_xy_path(
-        path_xy=simplified_xy,
-        start_z=start_xyz[2],
-        goal_z=goal_xyz[2],
-        final_yaw=goal_yaw,
-    )
-
-    return {
-        "planner": "astar",
-        "subgoals": subgoals,
-        "debug": {
-            "num_raw_points": len(raw_xy),
-            "num_simplified_points": len(simplified_xy),
-            "start_cell": start_cell,
-            "goal_cell": goal_cell,
-            "grid_width": grid.width,
-            "grid_height": grid.height,
-            "num_occupied": len(grid.occupied),
-            "grid_resolution": grid_resolution,
-            "obstacle_inflation_m": obstacle_inflation_m,
-        },
-    }
+    raise ValueError(f"Unknown local planner: {local_planner}")
 
 
 def expected_marker_id_for_viewpoint(
@@ -643,8 +661,14 @@ def execute_subgoals(
     inspection_timeout_s: float,
     inspection_recent_window_s: float,
     inspection_min_count: int,
+    replan_fn=None,
 ) -> bool:
+    """Execute subgoals with optional mid-flight replanning on stuck detection.
+
+    replan_fn: optional callable(current_pose, remaining_subgoals) -> List[Dict] | None
+    """
     final_verification: Optional[Dict[str, Any]] = None
+    _replanned: bool = False  # Only replan once per viewpoint
 
     for sub_idx, sg in enumerate(subgoals):
         is_final = sub_idx == len(subgoals) - 1
@@ -683,35 +707,6 @@ def execute_subgoals(
                     except Exception:
                         pass
                     sleep(0.5)
-                    # Ascend to clear obstacles before proceeding to next subgoal
-                    cur_pose = get_latest_pose(logger)
-                    if cur_pose is not None and cur_pose.get("z", 0) > 0.5:
-                        ascent_z = cur_pose["z"] + 2.0
-                        ascent_goal = [cur_pose["x"], cur_pose["y"], ascent_z]
-                        logger.event("close_enough_ascent_start", {
-                            "viewpoint_index": viewpoint_index,
-                            "viewpoint_id": viewpoint_id,
-                            "subgoal_index": sub_idx,
-                            "from_z": cur_pose["z"],
-                            "to_z": ascent_z,
-                        })
-                        ascent_wd = monitored_goto(
-                            drone_interface=drone_interface,
-                            logger=logger,
-                            action_name=f"vp{viewpoint_index}_sg{sub_idx}_ascent",
-                            goal_xyz=ascent_goal,
-                            goal_yaw=yaw,
-                            speed=SPEED,
-                            timeout_s=20.0,
-                            stuck_timeout_s=8.0,
-                            progress_epsilon_m=progress_epsilon_m,
-                        )
-                        logger.event("close_enough_ascent_done", {
-                            "viewpoint_index": viewpoint_index,
-                            "viewpoint_id": viewpoint_id,
-                            "subgoal_index": sub_idx,
-                            "ascent_success": bool(ascent_wd.get("thread_returned") and ascent_wd.get("thread_success")),
-                        })
                     logger.event("subgoal_done", {
                         "viewpoint_index": viewpoint_index,
                         "viewpoint_id": viewpoint_id,
@@ -722,6 +717,60 @@ def execute_subgoals(
                     })
                     sleep(0.1)
                     continue
+            # Replanning trigger: if stuck (not just timed out), replan once
+            if (
+                not _replanned
+                and replan_fn is not None
+                and wd.get("watchdog_reason") == "stuck_no_progress"
+                and not is_final
+            ):
+                cur_pose = get_latest_pose(logger)
+                if cur_pose is not None:
+                    remaining = subgoals[sub_idx:]
+                    logger.event("replan_trigger", {
+                        "viewpoint_index": viewpoint_index,
+                        "viewpoint_id": viewpoint_id,
+                        "subgoal_index": sub_idx,
+                        "reason": "stuck_no_progress",
+                    })
+                    new_subgoals = None
+                    try:
+                        new_subgoals = replan_fn(cur_pose, remaining)
+                    except Exception as e:
+                        logger.event("replan_failed", {
+                            "viewpoint_index": viewpoint_index,
+                            "viewpoint_id": viewpoint_id,
+                            "error": str(e),
+                        })
+                    if new_subgoals:
+                        _replanned = True
+                        logger.event("replan_success", {
+                            "viewpoint_index": viewpoint_index,
+                            "viewpoint_id": viewpoint_id,
+                            "num_new_subgoals": len(new_subgoals),
+                        })
+                        return execute_subgoals(
+                            drone_interface=drone_interface,
+                            logger=logger,
+                            aruco_tracker=aruco_tracker,
+                            viewpoint_index=viewpoint_index,
+                            viewpoint_id=viewpoint_id,
+                            expected_marker_id=expected_marker_id,
+                            subgoals=new_subgoals,
+                            goto_timeout_s=goto_timeout_s,
+                            stuck_timeout_s=stuck_timeout_s,
+                            progress_epsilon_m=progress_epsilon_m,
+                            subgoal_pos_tolerance_m=subgoal_pos_tolerance_m,
+                            final_pos_tolerance_m=final_pos_tolerance_m,
+                            yaw_tolerance_deg=yaw_tolerance_deg,
+                            dwell_s=dwell_s,
+                            require_pose_verified=require_pose_verified,
+                            require_aruco_verified=require_aruco_verified,
+                            inspection_timeout_s=inspection_timeout_s,
+                            inspection_recent_window_s=inspection_recent_window_s,
+                            inspection_min_count=inspection_min_count,
+                            replan_fn=None,
+                        )
             logger.event("subgoal_done", {
                 "viewpoint_index": viewpoint_index,
                 "viewpoint_id": viewpoint_id,
@@ -870,19 +919,13 @@ def drone_run(
     verified_count = 0
 
 
-    # Build occupancy grid once for the whole mission (reused per leg)
+    # Build 3D occupancy grid once for the whole mission (reused per leg)
     _global_grid = None
     if local_planner == "astar":
-        from planners.grid_map import GridConfig, build_occupancy_grid_from_scenario as _build_grid
-        import math as _math
-        _all_vp = list(viewpoints.values())
-        _max_z = max((float(v["z"]) for v in _all_vp), default=TAKE_OFF_HEIGHT)
-        _flight_z_global = max(_max_z, TAKE_OFF_HEIGHT)
-        logger.event("global_grid_build_start", {"flight_z": _flight_z_global})
-        _global_grid = _build_grid(
+        logger.event("global_grid_build_start", {"mode": "3d"})
+        _global_grid = build_occupancy_grid_3d_from_scenario(
             scenario,
-            start_xy=(0.0, 0.0),
-            flight_z=_flight_z_global,
+            start_xyz=(0.0, 0.0, TAKE_OFF_HEIGHT),
             config=GridConfig(
                 resolution_m=grid_resolution,
                 inflation_m=obstacle_inflation_m,
@@ -890,8 +933,9 @@ def drone_run(
             ),
         )
         logger.event("global_grid_build_done", {
-            "width": _global_grid.width,
-            "height": _global_grid.height,
+            "nx": _global_grid.nx,
+            "ny": _global_grid.ny,
+            "nz": _global_grid.nz,
             "num_occupied": len(_global_grid.occupied),
         })
 
@@ -946,6 +990,32 @@ def drone_run(
 
         print(f"Go to {vpid} using {local_planner} with {len(local_plan['subgoals'])} subgoals")
 
+        # Build replanning closure for this viewpoint
+        _current_vp = vp
+        _current_planner = local_planner
+        _current_grid = _global_grid
+        _current_scenario = scenario
+
+        def _replan_fn(cur_pose, _remaining_sg,
+                       _vp=_current_vp, _lp=_current_planner,
+                       _grid=_current_grid, _scen=_current_scenario):
+            try:
+                plan = plan_local_path(
+                    logger=logger,
+                    scenario=_scen,
+                    current_pose=cur_pose,
+                    target_vp=_vp,
+                    local_planner=_lp,
+                    grid_resolution=grid_resolution,
+                    obstacle_inflation_m=obstacle_inflation_m,
+                    grid_margin_m=grid_margin_m,
+                    path_stride=path_stride,
+                    prebuilt_grid=_grid,
+                )
+                return plan.get("subgoals") or None
+            except Exception:
+                return None
+
         ok = execute_subgoals(
             drone_interface=drone_interface,
             logger=logger,
@@ -966,6 +1036,7 @@ def drone_run(
             inspection_timeout_s=inspection_timeout_s,
             inspection_recent_window_s=inspection_recent_window_s,
             inspection_min_count=inspection_min_count,
+            replan_fn=_replan_fn,
         )
         if not ok:
             return False
@@ -1060,8 +1131,10 @@ if __name__ == '__main__':
                         help='Fallback start z for ordering if live pose is unavailable')
 
     parser.add_argument('--local_planner', type=str, default='straight',
-                        choices=['straight', 'astar'],
-                        help='Local planner between viewpoints')
+                        choices=['straight', 'astar', 'rrts'],
+                        help='Local planner between viewpoints (straight/astar/rrts)')
+    parser.add_argument('--use_astar_distances', action='store_true', default=False,
+                        help='Use A*-path distances for TSP ordering (slower but more accurate)')
     parser.add_argument('--grid_resolution', type=float, default=0.5,
                         help='XY occupancy grid resolution in meters')
     parser.add_argument('--obstacle_inflation_m', type=float, default=0.8,
@@ -1222,6 +1295,10 @@ if __name__ == '__main__':
                 scenario,
                 strategy=args.ordering,
                 start=ordering_start,
+                use_astar_distances=getattr(args, 'use_astar_distances', False),
+                grid_resolution=args.grid_resolution,
+                inflation_m=args.obstacle_inflation_m,
+                bounds_margin_m=args.grid_margin_m,
             )
 
             logger.event("ordering_computed", {
