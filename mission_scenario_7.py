@@ -1038,20 +1038,27 @@ def drone_run(
             inspection_min_count=inspection_min_count,
             replan_fn=_replan_fn,
         )
-        if not ok:
-            return False
-
-        verified_count += 1
-        print("Viewpoint done")
+        if ok:
+            verified_count += 1
+            print("Viewpoint done")
+        else:
+            logger.event("viewpoint_skipped", {
+                "viewpoint_index": idx,
+                "viewpoint_id": vpid,
+                "reason": "execute_subgoals_failed",
+            })
+            print(f"Viewpoint {vpid} failed (action timeout/sim quirk), continuing to next")
         sleep(SLEEP_TIME)
 
+    all_visited = (verified_count == len(ordered_ids))
     logger.event("mission_verification_summary", {
         "verified_count": verified_count,
         "total_waypoints": len(ordered_ids),
+        "all_visited": all_visited,
         "require_pose_verified": require_pose_verified,
         "require_aruco_verified": require_aruco_verified,
     })
-    return True
+    return all_visited
 
 
 def drone_end(
@@ -1107,9 +1114,6 @@ if __name__ == '__main__':
                         help='Enable verbose output')
     parser.add_argument('-s', '--use_sim_time', action='store_true', default=True,
                         help='Use simulation time')
-
-    parser.add_argument('--planner', type=str, default='baseline',
-                        help='Planner label to store in logs')
     parser.add_argument('--runs_root', type=str, default='runs',
                         help='Root directory for run artifacts')
     parser.add_argument('--odom_topic', type=str, default=None,
@@ -1204,7 +1208,7 @@ if __name__ == '__main__':
     logger = RunLogger(
         scenario_path=args.scenario,
         drone_namespace=drone_namespace,
-        planner=args.planner,
+        planner=args.local_planner,
         use_sim_time=use_sim_time,
         verbose=verbosity,
         runs_root=args.runs_root,
