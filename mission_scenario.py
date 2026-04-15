@@ -8,11 +8,8 @@ __license__ = 'BSD-3-Clause'
 import argparse
 import math
 import os
-import subprocess
-import sys
 import threading
 import time
-from pathlib import Path
 from time import sleep
 from typing import Any, Dict, Optional
 
@@ -72,93 +69,7 @@ def read_scenario(file_path: str) -> dict:
         return yaml.safe_load(file)
 
 
-_SCRIPT_DIR = Path(__file__).parent
 
-
-def _find_model_sdf(model_type: str) -> Optional[str]:
-    """Search GZ_SIM_RESOURCE_PATH (and known fallback dirs) for {model_type}/{model_type}.sdf."""
-    gz_path = os.environ.get('GZ_SIM_RESOURCE_PATH', '')
-    search_paths = [p for p in gz_path.split(':') if p] + [
-        str(_SCRIPT_DIR / 'config_sim' / 'gazebo' / 'models'),
-        str(_SCRIPT_DIR / 'config_sim' / 'world' / 'models'),
-    ]
-    for base in search_paths:
-        candidate = Path(base) / model_type / f'{model_type}.sdf'
-        if candidate.is_file():
-            return str(candidate)
-    return None
-
-
-def respawn_scenario_objects(scenario_file: str, world_name: str = 'empty') -> None:
-    """Delete existing scenario objects from Gazebo and respawn from the given scenario file."""
-    world_config_dir = _SCRIPT_DIR / 'config_sim' / 'world'
-    world_file = world_config_dir / 'world.yaml'
-
-    # Read current world.yaml to know what to remove
-    old_object_names: list = []
-    if world_file.exists():
-        with open(world_file) as f:
-            old_world = yaml.safe_load(f) or {}
-        old_object_names = [obj['model_name'] for obj in old_world.get('objects', [])]
-
-    # Regenerate world.yaml and obstacle SDF models from the new scenario
-    subprocess.run(
-        [sys.executable,
-         str(_SCRIPT_DIR / 'utils' / 'generate_world_from_scenario.py'),
-         scenario_file,
-         str(world_config_dir)],
-        check=True,
-    )
-
-    # Ensure generated obstacle models are on the Gazebo resource path
-    models_dir = str(world_config_dir / 'models')
-    gz_path = os.environ.get('GZ_SIM_RESOURCE_PATH', '')
-    if models_dir not in gz_path:
-        os.environ['GZ_SIM_RESOURCE_PATH'] = gz_path + ':' + models_dir
-
-    # Remove old objects from the running Gazebo world
-    for name in old_object_names:
-        subprocess.run(
-            ['ign', 'service',
-             '-s', f'/world/{world_name}/remove',
-             '--reqtype', 'ignition.msgs.Entity',
-             '--reptype', 'ignition.msgs.Boolean',
-             '--timeout', '2000',
-             '--req', f'name: "{name}" type: 2'],
-            capture_output=True,
-        )
-
-    # Spawn new objects from the regenerated world.yaml
-    with open(world_file) as f:
-        new_world = yaml.safe_load(f) or {}
-
-    for obj in new_world.get('objects', []):
-        model_type = obj['model_type']
-        model_name = obj['model_name']
-        xyz = obj['xyz']
-        rpy = obj['rpy']
-
-        sdf_file = _find_model_sdf(model_type)
-        if sdf_file is None:
-            print(f'WARNING: SDF not found for model type {model_type!r}, skipping spawn')
-            continue
-
-        subprocess.run(
-            ['ros2', 'run', 'ros_gz_sim', 'create',
-             '-world', world_name,
-             '-file', sdf_file,
-             '-name', model_name,
-             '-allow_renaming', 'false',
-             '-x', str(xyz[0]),
-             '-y', str(xyz[1]),
-             '-z', str(xyz[2]),
-             '-R', str(rpy[0]),
-             '-P', str(rpy[1]),
-             '-Y', str(rpy[2])],
-            capture_output=True,
-        )
-
-    print(f'Gazebo world respawned from {scenario_file}')
 
 
 def get_latest_pose(logger: RunLogger) -> Optional[Dict[str, float]]:
@@ -1189,8 +1100,6 @@ if __name__ == '__main__':
     parser.add_argument('--return_to_start_on_failure', action='store_true', default=False,
                         help='Also attempt return-to-start on failed/interrupted runs')
 
-    parser.add_argument('--no_respawn_world', action='store_true', default=False,
-                        help='Skip Gazebo world respawn (use when not running in simulation)')
 
     args = parser.parse_args()
 
@@ -1204,9 +1113,6 @@ if __name__ == '__main__':
     print(f'Reading scenario {args.scenario}')
     scenario = read_scenario(args.scenario)
 
-    if not args.no_respawn_world:
-        print('Respawning Gazebo world objects for scenario...')
-        respawn_scenario_objects(args.scenario)
 
     rclpy.init()
 

@@ -1,0 +1,16 @@
+{"t_wall": 1775809766.6682975, "t_rel": 0.0020232200622558594, "event": "run_started", "payload": {"run_dir": "runs/20260410_082926__scenario3__rrts__drone0", "odom_topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1775809768.5675344, "t_rel": 1.9012598991394043, "event": "telemetry_topic_types", "payload": {"topic": "/drone0/self_localization/pose", "types": ["geometry_msgs/msg/PoseStamped"]}}
+{"t_wall": 1775809768.571127, "t_rel": 1.9048526287078857, "event": "telemetry_subscribed", "payload": {"msg_type": "geometry_msgs/msg/PoseStamped", "topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1775809768.5770917, "t_rel": 1.9108171463012695, "event": "scenario_loaded", "payload": {"keys": ["drone_start_pose", "name", "obstacles", "viewpoint_poses"]}}
+{"t_wall": 1775809768.5772717, "t_rel": 1.910996913909912, "event": "arm_start", "payload": {}}
+{"t_wall": 1775809915.816889, "t_rel": 149.15061473846436, "event": "keyboard_interrupt", "payload": {}}
+{"t_wall": 1775809915.82293, "t_rel": 149.1566562652588, "event": "land_start", "payload": {"speed": 0.5}}
+{"t_wall": 1775809915.8332808, "t_rel": 149.1670060157776, "event": "land_watchdog_start", "payload": {"goal": [0.0, 0.0, 0.0], "yaw": 0.0, "timeout_s": 30.0, "stuck_timeout_s": 10.0, "progress_epsilon_m": 0.05, "initial_grace_s": 1.0}}
+{"t_wall": 1775809925.8601825, "t_rel": 159.19390869140625, "event": "land_watchdog_stuck", "payload": {"elapsed_s": 10.026773452758789, "seconds_since_progress": 10.026773452758789, "stuck_timeout_s": 10.0, "goal_error": {"pos_err_m": 9.79735748612793, "yaw_err_rad": 2.595494412522315, "yaw_err_deg": 148.71087558731568, "pose": {"x": -9.783135660558889, "y": -0.4431970797446739, "z": 0.2864379629061187, "yaw": 2.595494412522315}}}}
+{"t_wall": 1775809925.8642247, "t_rel": 159.1979501247406, "event": "land_watchdog_abort", "payload": {"elapsed_s": 10.03096055984497, "watchdog_reason": "stuck_no_progress"}}
+{"t_wall": 1775809925.8827827, "t_rel": 159.2165081501007, "event": "land_done", "payload": {"success": false, "duration_s": 10.03096055984497, "reason": "stuck_no_progress"}}
+{"t_wall": 1775809925.882954, "t_rel": 159.21667957305908, "event": "manual_start", "payload": {}}
+{"t_wall": 1775809925.898317, "t_rel": 159.23204231262207, "event": "manual_exception", "payload": {"type": "RCLError", "msg": "failed to create client: rcl node's context is invalid, at ./src/rcl/node.c:428"}}
+{"t_wall": 1775809925.9147704, "t_rel": 159.24849605560303, "event": "disarm_start", "payload": {}}
+{"t_wall": 1775809925.9193106, "t_rel": 159.2530357837677, "event": "disarm_exception", "payload": {"type": "RCLError", "msg": "failed to create client: rcl node's context is invalid, at ./src/rcl/node.c:428"}}
+{"t_wall": 1775809925.9721277, "t_rel": 159.30585312843323, "event": "run_finished", "payload": {"success": false, "ended_reason": "keyboard_interrupt", "ended_at_utc": "2026-04-10T08:32:05Z"}}

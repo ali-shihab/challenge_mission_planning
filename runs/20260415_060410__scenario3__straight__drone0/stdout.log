@@ -1,0 +1,79 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 1 using straight with 1 subgoals
+  ✗ ArUco marker 24 NOT seen at viewpoint 1
+Viewpoint done
+Go to 2 using straight with 1 subgoals
+  ✗ ArUco marker 34 NOT seen at viewpoint 2
+Viewpoint done
+Go to 3 using straight with 1 subgoals
+  ✗ ArUco marker 44 NOT seen at viewpoint 3
+Viewpoint done
+Go to 4 using straight with 1 subgoals
+  ✗ ArUco marker 54 NOT seen at viewpoint 4
+Viewpoint done
+Go to 5 using straight with 1 subgoals
+  ✗ ArUco marker 64 NOT seen at viewpoint 5
+Viewpoint done
+Go to 6 using straight with 1 subgoals
+Viewpoint 6 failed (action timeout/sim quirk), continuing to next
+Go to 7 using straight with 1 subgoals
+  ✗ ArUco marker 84 NOT seen at viewpoint 7
+Viewpoint done
+Go to 8 using straight with 1 subgoals
+  ✗ ArUco marker 14 NOT seen at viewpoint 8
+Viewpoint done
+Go to 9 using straight with 1 subgoals
+  ✗ ArUco marker 24 NOT seen at viewpoint 9
+Viewpoint done
+Go to 10 using straight with 1 subgoals
+  ✗ ArUco marker 34 NOT seen at viewpoint 10
+Viewpoint done
+Go to 11 using straight with 1 subgoals
+  ✗ ArUco marker 44 NOT seen at viewpoint 11
+Viewpoint done
+Go to 12 using straight with 1 subgoals
+  ✗ ArUco marker 54 NOT seen at viewpoint 12
+Viewpoint done
+Go to 13 using straight with 1 subgoals
+  ✗ ArUco marker 64 NOT seen at viewpoint 13
+Viewpoint done
+Go to 14 using straight with 1 subgoals
+  ✗ ArUco marker 74 NOT seen at viewpoint 14
+Viewpoint done
+Go to 15 using straight with 1 subgoals
+  ✗ ArUco marker 84 NOT seen at viewpoint 15
+Viewpoint done
+Go to 16 using straight with 1 subgoals
+  ✗ ArUco marker 14 NOT seen at viewpoint 16
+Viewpoint done
+Go to 17 using straight with 1 subgoals
+  ✗ ArUco marker 24 NOT seen at viewpoint 17
+Viewpoint done
+Go to 18 using straight with 1 subgoals
+  ✗ ArUco marker 34 NOT seen at viewpoint 18
+Viewpoint done
+Go to 19 using straight with 1 subgoals
+  ✗ ArUco marker 44 NOT seen at viewpoint 19
+Viewpoint done
+Go to 20 using straight with 1 subgoals
+  ✗ ArUco marker 54 NOT seen at viewpoint 20
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario3.yaml took 262.076651096344 seconds
+---------------------------------
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Return-to-start failed: stuck_no_progress
+End mission
+Land
+Land success: False
+Manual
+Manual exception: failed to create client: rcl node's context is invalid, at ./src/rcl/node.c:428
+Disarm
+Disarm exception: failed to create client: rcl node's context is invalid, at ./src/rcl/node.c:428

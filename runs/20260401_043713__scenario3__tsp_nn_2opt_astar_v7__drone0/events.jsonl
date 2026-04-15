@@ -1,0 +1,5 @@
+{"t_wall": 1775018233.9236279, "t_rel": 0.002496957778930664, "event": "run_started", "payload": {"run_dir": "runs/20260401_043713__scenario3__tsp_nn_2opt_astar_v7__drone0", "odom_topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1775018237.1553485, "t_rel": 3.234208822250366, "event": "telemetry_topic_types", "payload": {"topic": "/drone0/self_localization/pose", "types": ["geometry_msgs/msg/PoseStamped"]}}
+{"t_wall": 1775018237.1649005, "t_rel": 3.243760824203491, "event": "telemetry_subscribed", "payload": {"msg_type": "geometry_msgs/msg/PoseStamped", "topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1775018237.1669369, "t_rel": 3.2457971572875977, "event": "scenario_loaded", "payload": {"keys": ["drone_start_pose", "name", "obstacles", "viewpoint_poses"]}}
+{"t_wall": 1775018237.1672025, "t_rel": 3.246062755584717, "event": "arm_start", "payload": {}}

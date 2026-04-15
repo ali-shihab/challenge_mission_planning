@@ -1,0 +1,1 @@
+{"t_wall": 1775007813.5826974, "t_rel": 0.0016548633575439453, "event": "run_started", "payload": {"run_dir": "runs/20260401_014333__scenario4__tsp_nn_2opt_astar_v7__drone0", "odom_topic": "/drone0/self_localization/pose"}}

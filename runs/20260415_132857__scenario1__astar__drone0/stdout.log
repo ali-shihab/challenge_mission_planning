@@ -1,0 +1,32 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 4 using astar with 2 subgoals
+  ✗ ArUco marker 54 NOT seen at viewpoint 4
+Viewpoint done
+Go to 10 using astar with 2 subgoals
+  ✗ ArUco marker 34 NOT seen at viewpoint 10
+Viewpoint done
+Go to 6 using astar with 2 subgoals
+  ✗ ArUco marker 74 NOT seen at viewpoint 6
+Viewpoint done
+Go to 2 using astar with 2 subgoals
+  ✗ ArUco marker 34 NOT seen at viewpoint 2
+Viewpoint done
+Go to 1 using astar with 2 subgoals
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Traceback (most recent call last):
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/./mission_scenario.py", line 1381, in <module>
+    _ = drone_return_to_start(
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/./mission_scenario.py", line 471, in drone_return_to_start
+    wd = monitored_goto(
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/./mission_scenario.py", line 440, in monitored_goto
+    return run_blocking_action_with_watchdog(
+  File "/home/alishihab/mission_planning_ws/src/challenge_mission_planning/./mission_scenario.py", line 347, in run_blocking_action_with_watchdog
+    time.sleep(poll_s)
+KeyboardInterrupt

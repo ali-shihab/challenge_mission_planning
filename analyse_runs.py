@@ -110,6 +110,20 @@ def load_all_runs(runs_root: Path):
                     except Exception:
                         pass
 
+        # Extract tour_time_s from mission_duration event (takeoff -> last viewpoint)
+        tour_time_s = None
+        if events_path.exists():
+            with open(events_path) as f3:
+                for line in f3:
+                    try:
+                        ev = json.loads(line)
+                        if ev.get("event") == "mission_duration":
+                            tour_time_s = ev["payload"].get("duration_s")
+                    except Exception:
+                        pass
+        if tour_time_s is None:
+            tour_time_s = m.get("duration_s", 0.0)
+
         runs.append({
             "dir": d.name,
             "scenario": scenario,
@@ -117,12 +131,12 @@ def load_all_runs(runs_root: Path):
             "ordering": ordering,
             "dt": dt_str,
             "success": m.get("success", False),
-            "duration_s": m.get("duration_s", 0.0),
+            "duration_s": tour_time_s,
             "path_length_m": m.get("path_length_m", 0.0),
-            # Effective speed = distance / time (holistic, comparable across planners)
+            # Effective speed = distance / tour time (comparable across planners)
             "effective_speed_mps": (
-                m.get("path_length_m", 0.0) / m.get("duration_s", 1.0)
-                if m.get("duration_s", 0.0) > 1.0 else 0.0
+                m.get("path_length_m", 0.0) / tour_time_s
+                if tour_time_s > 1.0 else 0.0
             ),
             "aruco_verified": aruco_verified,
             "trajectory": traj,
@@ -155,7 +169,7 @@ def mean_std(values):
 def plot_bar_metrics(groups, scenarios, planners, out_path):
     """Three-panel bar chart: mission time, path distance, effective speed."""
     metrics_keys = ["duration_s", "path_length_m", "effective_speed_mps"]
-    metrics_labels = ["Mission Time (s)", "Path Distance (m)", "Effective Speed (m/s)"]
+    metrics_labels = ["Tour Time (s)", "Path Distance (m)", "Effective Speed (m/s)"]
     metrics_fmt = [".0f", ".1f", ".2f"]
 
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
@@ -263,7 +277,7 @@ def plot_paths(groups, scenarios, planners, scenario_data, out_path_template):
 
 def plot_boxplots(groups, scenarios, planners, out_path):
     """Box-and-whisker: distribution of mission times across 5 runs."""
-    metrics = [("duration_s", "Mission Time (s)"), ("path_length_m", "Path Distance (m)")]
+    metrics = [("duration_s", "Tour Time (s)"), ("path_length_m", "Path Distance (m)")]
     fig, axes = plt.subplots(len(metrics), len(scenarios), figsize=(14, 7), squeeze=False)
     fig.suptitle("Run-to-Run Variability (5 runs per condition)", fontsize=12, fontweight="bold")
 

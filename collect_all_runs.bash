@@ -17,7 +17,7 @@ source "$REPO/setup.bash"
 PYTHON="python3"
 MISSION="$REPO/mission_scenario.py"
 ARUCO_TOPIC="/drone0/sensor_measurements/hd_camera/image_raw"
-N=5
+N=1
 NS="drone0"
 
 run_scenario() {
