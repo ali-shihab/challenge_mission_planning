@@ -6,7 +6,7 @@ origin:
 drones:
   - model_type: "crazyflie_led_ring" # "quadrotor_base" also works if you want a bigger drone
     model_name: "drone0"
-    flight_time: 99999
+    flight_time: 60
     xyz:
       - 0.0
       - 0.0
