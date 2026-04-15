@@ -24,8 +24,8 @@ class RRTStarPlanner:
     rewire_radius : neighbourhood radius for rewiring (m)
     inflation : obstacle inflation margin (m)
     """
-    def __init__(self, obstacles, bounds, step_size=0.5, max_iter=2000,
-                 goal_bias=0.1, rewire_radius=1.5, inflation=0.5):
+    def __init__(self, obstacles, bounds, step_size=0.5, max_iter=3000,
+                 goal_bias=0.15, rewire_radius=2.0, inflation=0.4):
         self.bounds=bounds; self.step_size=step_size; self.max_iter=max_iter
         self.goal_bias=goal_bias; self.rewire_radius=rewire_radius; self.inflation=inflation
         self._aabbs=[]
