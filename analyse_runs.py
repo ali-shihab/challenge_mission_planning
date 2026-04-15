@@ -35,13 +35,13 @@ SCENARIO_LABELS = {
 }
 
 PLANNER_LABELS = {
-    "baseline": "Baseline\n(straight, input)",
+    "straight": "Baseline\n(straight, input)",
     "astar":    "A* + 2-opt",
     "rrts":     "RRT* + 2-opt",
 }
 
 PLANNER_COLORS = {
-    "baseline": "#4878CF",
+    "straight": "#4878CF",
     "astar":    "#6ACC65",
     "rrts":     "#D65F5F",
 }
@@ -340,7 +340,25 @@ def main():
     # Filter: only the most recent run planner naming convention
     # (astar, rrts, baseline)
     SCENARIOS = ["scenario1", "scenario2", "scenario3", "scenario4"]
-    PLANNERS  = ["baseline", "astar", "rrts"]
+    # "baseline" in old code was logged as "straight" in new code
+    PLANNERS  = ["straight", "astar", "rrts"]
+    PLANNER_DISPLAY = {"straight": "Baseline", "astar": "A*+2-opt", "rrts": "RRT*+2-opt"}
+
+    # Only include runs from the current git commit (post-tuning runs)
+    import subprocess
+    try:
+        current_commit = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"], text=True
+        ).strip()
+    except Exception:
+        current_commit = None
+
+    if current_commit:
+        before = len(all_runs)
+        all_runs = [r for r in all_runs if r.get("git_commit", "").startswith(current_commit)]
+        print(f"  Filtered to current commit ({current_commit}): {len(all_runs)}/{before} runs")
+    else:
+        print("  WARNING: could not determine current commit, using all runs")
 
     groups = group_runs(all_runs, SCENARIOS, PLANNERS)
 

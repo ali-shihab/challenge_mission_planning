@@ -106,7 +106,7 @@ def write_world_config(scenario, model_type, world_name, output_folder, world_fi
                 "model_name": "drone0",
                 "xyz": [0.0, 0.0, 0.5],
                 "rpy": [0, 0, 0.0],
-                "flight_time": 60,
+                "flight_time": 99999,
                 "payload": [
                     {
                         "model_name": "hd_camera",
