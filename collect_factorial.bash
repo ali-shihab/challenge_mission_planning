@@ -47,7 +47,16 @@ N_REPEATS=3
 SCENARIOS="1 2 3 4"
 RRT_ITER=3000
 DRY_RUN=0
+HEADLESS=0
 NS="drone0"
+
+# Headless is OFF by default and is a temporary, self-reverting change.
+# The GUI setting lives in tmuxinator/aerostack2.yaml; --headless edits it for
+# the duration of the batch and restores it on ANY exit (normal, error, Ctrl-C).
+# If a previous run was killed hard, the stale backup is detected and restored
+# at startup, so the repo is never left silently headless.
+TMUXCONF="$REPO/tmuxinator/aerostack2.yaml"
+TMUXBAK="$REPO/tmuxinator/.aerostack2.yaml.prebatch"
 
 ORDERINGS=("input" "nn_2opt")
 PLANNERS=("straight" "astar" "rrts")
@@ -76,6 +85,7 @@ while [[ $# -gt 0 ]]; do
     -n|--repeats)   N_REPEATS="$2"; shift 2 ;;
     -s|--scenarios) SCENARIOS="$2";  shift 2 ;;
     -i|--rrt-iter)  RRT_ITER="$2";   shift 2 ;;
+    --headless)     HEADLESS=1;      shift ;;
     --dry-run)      DRY_RUN=1;       shift ;;
     -h|--help)      sed -n '2,40p' "$0"; exit 0 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
@@ -87,6 +97,33 @@ mkdir -p "$LOGDIR"
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 log() { echo "[$(date +%H:%M:%S)] $*"; }
+
+restore_gui() {
+  if [[ -f "$TMUXBAK" ]]; then
+    mv -f "$TMUXBAK" "$TMUXCONF"
+    log "GUI setting restored in tmuxinator/aerostack2.yaml"
+  fi
+}
+
+enable_headless() {
+  cp "$TMUXCONF" "$TMUXBAK"
+  if grep -q 'headless:=' "$TMUXCONF"; then
+    sed -i 's/headless:=false/headless:=true/' "$TMUXCONF"
+  else
+    # insert the argument into the launch_simulation.py invocation
+    sed -i 's|\(ros2 launch as2_gazebo_assets launch_simulation.py\)|\1\n            headless:=true|' "$TMUXCONF"
+  fi
+  grep -q 'headless:=true' "$TMUXCONF" \
+    && log "HEADLESS enabled for this batch (will auto-restore on exit)" \
+    || { log "ERROR: could not enable headless; restoring and aborting"; restore_gui; exit 1; }
+}
+
+# Recover from a previously killed batch that never got to restore.
+if [[ -f "$TMUXBAK" ]]; then
+  echo "NOTE: found a leftover pre-batch backup of tmuxinator/aerostack2.yaml"
+  echo "      (a previous batch was killed before it could restore). Restoring now."
+  mv -f "$TMUXBAK" "$TMUXCONF"
+fi
 
 # Per-run mission timeout: scenario 3 has 20 viewpoints so needs a bigger budget.
 timeout_for_scenario() {
@@ -181,6 +218,7 @@ echo "   ordering  : ${ORDERINGS[*]}"
 echo "   planner   : ${PLANNERS[*]}"
 echo "   repeats   : $N_REPEATS"
 echo "   RRT* iter : $RRT_ITER"
+echo "   headless  : $( ((HEADLESS)) && echo 'yes (temporary, auto-restored)' || echo 'no (GUI)' )"
 echo "   cells     : $TOTAL total, $TODO remaining"
 echo "   estimate  : ~$(( TODO * 6 / 60 ))h$(( (TODO * 6) % 60 ))m  (~6 min/run incl. sim restart)"
 echo "   ledger    : $LEDGER"
@@ -199,7 +237,12 @@ set +u
 source "$REPO/setup.bash" >/dev/null 2>&1
 set -u
 
-trap 'echo; log "interrupted — tearing down"; teardown; exit 130' INT TERM
+# EXIT covers every path out of the script, so the GUI setting is always put
+# back: normal completion, error, or Ctrl-C.
+trap 'restore_gui' EXIT
+trap 'echo; log "interrupted — tearing down"; teardown; restore_gui; exit 130' INT TERM
+
+(( HEADLESS )) && enable_headless
 
 # ── execute ──────────────────────────────────────────────────────────────────
 DONE=0
