@@ -42,6 +42,7 @@ TAKE_OFF_SPEED = 2.0
 SLEEP_TIME = 0.05
 SPEED = 3.0
 LAND_SPEED = 0.5
+RRT_MAX_ITER = 3000  # RRT* sampling budget per segment; overridden by --rrt_max_iter
 
 
 def yaw_wrap(angle: float) -> float:
@@ -523,6 +524,7 @@ def plan_local_path(
         planner = RRTStarPlanner(
             obstacles=obstacles, bounds=(bx, by, bz),
             step_size=grid_resolution, inflation=obstacle_inflation_m,
+            max_iter=RRT_MAX_ITER,
         )
         path_3d = planner.plan(start=tuple(start_xyz), goal=tuple(goal_xyz))
         if not path_3d:
@@ -531,7 +533,7 @@ def plan_local_path(
         return {
             "planner": "rrts",
             "subgoals": subgoals,
-            "debug": {"num_waypoints": len(path_3d), "obstacle_inflation_m": obstacle_inflation_m},
+            "debug": {"num_waypoints": len(path_3d), "obstacle_inflation_m": obstacle_inflation_m, "rrt_max_iter": RRT_MAX_ITER},
         }
 
     raise ValueError(f"Unknown local planner: {local_planner}")
@@ -1053,6 +1055,8 @@ if __name__ == '__main__':
     parser.add_argument('--local_planner', type=str, default='straight',
                         choices=['straight', 'astar', 'rrts'],
                         help='Local planner between viewpoints (straight/astar/rrts)')
+    parser.add_argument('--rrt_max_iter', type=int, default=3000,
+                        help='RRT* sampling iterations per segment (default 3000)')
     parser.add_argument('--use_astar_distances', action='store_true', default=False,
                         help='Use A*-path distances for TSP ordering (slower but more accurate)')
     parser.add_argument('--grid_resolution', type=float, default=0.5,
@@ -1108,6 +1112,7 @@ if __name__ == '__main__':
     use_sim_time = args.use_sim_time
     if args.speed is not None:
         SPEED = args.speed  # module-level assignment
+    RRT_MAX_ITER = args.rrt_max_iter  # module-level assignment
 
     print(f'Running mission for drone {drone_namespace}')
     print(f'Reading scenario {args.scenario}')
@@ -1130,6 +1135,7 @@ if __name__ == '__main__':
             "script": "mission_scenario.py",
             "ordering": args.ordering,
             "local_planner": args.local_planner,
+            "rrt_max_iter": args.rrt_max_iter,
             "fallback_ordering_start": {
                 "x": args.start_x,
                 "y": args.start_y,
