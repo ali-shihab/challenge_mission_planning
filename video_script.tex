@@ -105,10 +105,10 @@ The straight-line baseline reaches two thirds of the viewpoints and never once f
 Ordering drives efficiency. Holding the planner fixed, 2-opt cuts path length by 38 to 50 per cent in the first three scenarios, and cuts tour time in every comparison where both configurations actually finished --- nine out of twelve.
 
 \timecode{2:42}
-The obstacle-aware planners do the opposite. A-star adds up to 40 seconds. On time alone they look worse than flying straight.
+The obstacle-aware planners push efficiency the other way. A-star adds up to 40 seconds. On time alone they look worse than flying straight.
 
 \timecode{2:52}
-But look at the success column. Straight-line flight hits zero per cent in two conditions. A-star completes every one of its twenty-four runs. That's what it buys you: not speed, reliability.
+Now look at the success column. Straight-line flight hits zero per cent in two conditions. A-star completes every one of its twenty-four runs. The seconds it costs you are buying reliability.
 
 \timecode{3:06}
 One caution --- where success is below a hundred per cent, the times and distances aren't comparable. That 105-metre baseline quit early. Read success first.
@@ -146,7 +146,7 @@ A-star and RRT-star came within a metre of each other on path, so RRT-star's con
 \cue{Drone landing at origin, or the four-scenario path figure}
 
 \timecode{3:26}
-``So the two components do different jobs. Ordering makes the mission efficient. Obstacle-aware planning makes it finish. A system tuned on time alone would have picked the one that never finishes the job.
+``So the two components do different jobs. Ordering makes the mission efficient; obstacle-aware planning gets it finished. Tune on time alone and you end up choosing the configuration that leaves the survey incomplete.
 
 \timecode{3:39}
 A-star is the better default. Same path quality as RRT-star here, comparable time, and it's the only configuration that completed all twenty-four runs. Next would be tuning RRT-star's sample budget and adding smooth trajectory generation. Thanks for watching.''

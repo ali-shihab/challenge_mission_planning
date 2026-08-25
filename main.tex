@@ -13,6 +13,8 @@
 \usepackage{cite}
 \usepackage{float}
 \usepackage{parskip}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
 
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
 
@@ -40,7 +42,7 @@ It splits into two coupled sub-problems: a \emph{tour ordering} problem, a varia
 
 \textbf{Tour ordering.} File order produces tours that cross themselves repeatedly (Figure~\ref{fig:paths}, left panel). Nearest-neighbour construction~\cite{lawler1985travelling} with 2-opt refinement~\cite{croes1958method} runs offline before any flight command. Edge weights are straight-line Euclidean distance rather than true obstacle-aware path length: computing the latter needs $O(n^2)$ planner invocations to build the cost matrix (190 for 20 viewpoints) before the drone leaves the ground. Euclidean weights underestimate edges passing through obstacles, so ordering is slightly optimistic in cluttered scenes, but the approximation is cheap and the resulting tours proved good enough that the error never dominated.
 
-\textbf{A\textsuperscript{*} local planning.} Straight-line execution flies the drone into obstacles when a viewpoint sits behind one. A 3D A\textsuperscript{*} planner~\cite{hart1968formal} over a voxel grid with obstacle inflation replaces this. A\textsuperscript{*} was preferred to Dijkstra~\cite{dijkstra1959note} because the Euclidean heuristic expands far fewer nodes in these mostly-open scenarios at no cost to optimality. A greedy line-of-sight pass~\cite{daniel2010theta} then drops intermediate grid waypoints wherever a direct free segment exists. I dropped Dubins paths~\cite{dubins1957curves} on kinematic grounds: a multirotor has no minimum turning radius and can yaw on the spot, so a Dubins model imposes a constraint the vehicle does not have.
+\textbf{A\textsuperscript{*} local planning.} Straight-line execution flies the drone into obstacles when a viewpoint sits behind one, so I replaced it with 3D A\textsuperscript{*}~\cite{hart1968formal} over an inflated voxel grid. I preferred A\textsuperscript{*} to Dijkstra~\cite{dijkstra1959note} because the Euclidean heuristic expands far fewer nodes in these mostly-open scenarios at no cost to optimality, then added a greedy line-of-sight pass~\cite{daniel2010theta} to drop intermediate grid waypoints wherever a direct free segment exists. I ruled out Dubins paths~\cite{dubins1957curves} on kinematic grounds: a multirotor has no minimum turning radius and can yaw on the spot, so a Dubins model imposes a constraint the vehicle does not have.
 
 \textbf{RRT\textsuperscript{*} local planning.} RRT\textsuperscript{*} samples directly in continuous $\mathbb{R}^3$~\cite{karaman2011sampling,lavalle1998rapidly} and converges asymptotically on the optimal path, which should give shorter, less angular routes than a grid can express.
 
@@ -52,11 +54,53 @@ I rebuilt it as a \textbf{full $2\times3$ factorial}: ordering $\in$ \{file orde
 
 \subsection{System Architecture and Parameters}
 
-The same scenario YAML drives both simulator and planner. A generator expands it into a Gazebo world, emitting one SDF box per obstacle and an ArUco marker 1\,m in front of each viewpoint along its yaw axis, so planner geometry and flown geometry cannot diverge. Aerostack2 (AS2)~\cite{fernandez2023aerostack2} spawns the quadrotor and exposes the behaviour interface.
+Figure~\ref{fig:arch} shows the pipeline. A generator expands the scenario YAML into a Gazebo world, emitting one SDF box per obstacle and an ArUco marker 1\,m in front of each viewpoint along its yaw axis, so planner geometry and flown geometry cannot diverge. Aerostack2 (AS2)~\cite{fernandez2023aerostack2} spawns the quadrotor and exposes the behaviour interface.
 
-The planner parses the same YAML, builds the occupancy grid, and computes the tour and all local paths \emph{offline} before streaming waypoints to the AS2 \texttt{GoTo} action server. No planning occurs in flight, so planning cost never appears in any timing metric. Obstacle avoidance is consequently a design-time property: obstacles are inflated by 0.4\,m when the grid is built and every waypoint issued is already known to be clear. There is no reactive avoidance, which is acceptable for a static, fully-mapped environment but would not be for an unmapped structure.
+The planner parses that same YAML, builds the occupancy grid, and computes the tour and all local paths \emph{offline} before streaming waypoints to the AS2 \texttt{GoTo} server, so planning cost never enters any timing metric. Avoidance is therefore a design-time property: obstacles are inflated by 0.4\,m when the grid is built, and every waypoint issued is already known to be clear. Nothing reacts at runtime, which suits a static mapped environment and would not suit an unmapped structure.
 
-A verification thread polls TF at 10\,Hz and marks a viewpoint reached once the tolerances in Table~\ref{tab:params} are met. Marker detection runs OpenCV \texttt{aruco}~\cite{garrido2014automatic} on the onboard camera stream. Watchdogs bound every blocking action: a leg is abandoned after 20\,s without positional progress, and the arm, offboard and takeoff calls each carry an explicit timeout. Each run writes a timestamped directory containing the pose trajectory sampled at a pinned 50\,Hz, a JSONL event log recording every arrival, tolerance check and marker detection with timestamps, and a metrics summary. Every figure in this report traces back to those logs.
+A verification thread polls TF at 10\,Hz and marks a viewpoint reached once the tolerances in Table~\ref{tab:params} are met; detection runs OpenCV \texttt{aruco}~\cite{garrido2014automatic} on the onboard camera. Watchdogs bound every blocking action: a leg is abandoned after 20\,s without progress, and the arm, offboard and takeoff calls each carry an explicit timeout. Each run writes a timestamped directory with the trajectory sampled at a pinned 50\,Hz, a JSONL log of every arrival, tolerance check and detection, and a metrics summary. Every figure here traces back to those logs.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw, rounded corners=2pt, minimum height=7mm, align=center, inner xsep=4pt},
+  off/.style={box, fill=black!4},
+  sim/.style={box, fill=black!10},
+  ar/.style={-{Latex[length=2mm]}, thick},
+  node distance=3.5mm
+]
+\node[off] (yaml) {scenario\\YAML};
+\node[off, right=9mm of yaml] (gen) {world\\generator};
+\node[sim, right=9mm of gen] (gz) {Ignition Gazebo\\obstacles + ArUco};
+\node[sim, right=9mm of gz] (as2) {AS2 platform\\+ behaviours};
+
+\node[off, below=8mm of yaml] (grid) {occupancy grid\\(0.5\,m, +0.4\,m infl.)};
+\node[off, right=7mm of grid] (tsp) {NN + 2-opt\\ordering};
+\node[off, right=7mm of tsp] (loc) {local planner\\straight / A* / RRT*};
+\node[box, right=7mm of loc, fill=black!4] (goto) {\texttt{GoTo}\\waypoints};
+
+\node[box, below=8mm of tsp, fill=black!4] (ver) {pose check 10\,Hz\\+ ArUco detect};
+\node[box, right=7mm of ver, fill=black!4] (log) {JSONL events\\trajectory 50\,Hz};
+
+\draw[ar] (yaml) -- (gen);
+\draw[ar] (gen) -- (gz);
+\draw[ar] (gz) -- (as2);
+\draw[ar] (yaml) -- (grid);
+\draw[ar] (grid) -- (tsp);
+\draw[ar] (tsp) -- (loc);
+\draw[ar] (loc) -- (goto);
+\draw[ar] (goto.east) -- ++(6mm,0) |- (as2.south east);
+\draw[ar] (as2.south) -- ++(0,-4mm) -| (log.north);
+\draw[ar] (ver) -- (log);
+\draw[ar] (as2.south west) -- ++(-3mm,-6mm) -| (ver.north);
+
+\node[anchor=west, font=\scriptsize\itshape] at ([yshift=3.5mm]grid.north west) {offline, before takeoff};
+\node[anchor=west, font=\scriptsize\itshape] at ([yshift=3.5mm]ver.north west) {in flight};
+\end{tikzpicture}
+\caption{Pipeline. One YAML drives both the world and the planner, so the geometry planned against is the geometry flown.}
+\label{fig:arch}
+\end{figure}
 
 \begin{table}[H]
 \centering\small
@@ -80,7 +124,7 @@ Dwell at viewpoint & 0.2\,s     & ArUco inspection window              & 5\,s \\
 \section{Results and Discussion}
 % ─────────────────────────────────────────────────────────────────────────────
 
-Table~\ref{tab:results} reports all 24 cells as mean $\pm$ s.d.\ over three runs. \emph{Success} is the fraction of runs reaching every viewpoint; \emph{ArUco} is the fraction of viewpoints whose marker was positively identified. Six further runs failed in the harness (a wedged simulator startup) and were retried rather than recorded, since such a failure reflects the test rig, not the planner.
+Table~\ref{tab:results} reports all 24 cells as mean $\pm$ s.d.\ over three runs. \emph{Success} is the fraction of runs reaching every viewpoint; \emph{ArUco} the fraction of viewpoints whose marker was identified. Six further runs wedged during simulator startup; I retried those rather than recording them, since a failure of the test rig says nothing about the planner.
 
 \begin{table}[H]
 \centering\footnotesize
@@ -136,27 +180,41 @@ Table~\ref{tab:results} reports all 24 cells as mean $\pm$ s.d.\ over three runs
   \label{fig:reliability}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{report_figs/fig_altitude.png}
+  \caption{Altitude against tour progress. Grey band = obstacle height envelope; both planners clear obstacles vertically as well as laterally.}
+  \label{fig:altitude}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{report_figs/fig_effects.png}
+  \caption{Main effects. Left: ordering, planner fixed. Right: planner, ordering fixed, as change in success rate.}
+  \label{fig:effects}
+\end{figure}
+
 \subsection{Discussion}
 
 \paragraph{Ordering dominates, and it is now isolated.} Nine of the twelve ordering comparisons pit two fully-successful configurations against each other; the other three involve a baseline that never completed and are excluded, for the reason given below. Across those nine, NN+2-opt reduces path length by 38.5--49.5\% in Scenarios~1--3 (Figure~\ref{fig:paths}) and cuts tour time in every one, by 3.9\,s to 88.3\,s. Scenario~4 barely moves at $-4$\%: with five viewpoints there is almost nothing left to reorder. This is the largest effect I measured, and unlike the earlier confounded comparison it belongs to ordering alone.
 
-\paragraph{Local planners cost time and distance.} Restricting again to comparisons where both configurations completed, A\textsuperscript{*} \emph{lengthens} the path in all five (+4.4 to +8.8\,m) and increases tour time in all five, by 5.2\,s to 40.4\,s. RRT\textsuperscript{*} behaves identically (+2.3 to +9.1\,m, +1.7 to +42.0\,s). This is the expected price of routing around obstacles rather than through them. Read on time alone, the obstacle-aware planners look strictly worse than straight-line flight, and the earlier confounded design concealed this by crediting the planner with the ordering's gains.
+\paragraph{Local planners cost time and distance.} Restricting again to comparisons where both configurations completed, A\textsuperscript{*} \emph{lengthens} the path in all five (+4.4 to +8.8\,m) and increases tour time in all five, by 5.2\,s to 40.4\,s; RRT\textsuperscript{*} behaves the same way (+2.3 to +9.1\,m, +1.7 to +42.0\,s). Figure~\ref{fig:effects} shows both decompositions. This is the expected price of detouring around obstacles, and on time alone the obstacle-aware planners look strictly worse than straight-line flight. My earlier confounded design hid that, because it credited the planner with the ordering's gains.
 
-\paragraph{The planners buy completion, not speed.} Figure~\ref{fig:reliability} makes the point directly. Straight-line flight fails outright where obstacles obstruct viewpoints: 0\% success in Scenario~2 under file ordering, and 33\% and 0\% in Scenario~4. A\textsuperscript{*} completes every run in all eight conditions; RRT\textsuperscript{*} completes all but Scenario~4 under file ordering (67\%). Obstacle-aware planning therefore does not make the drone faster, it converts an unreliable system into a reliable one for a modest time cost. Scenario~4 looks like an exception, since A\textsuperscript{*} records 73.4\,s against the baseline's 77.3\,s, but that baseline never finished a single run and its timing is no more comparable than its distance.
+\paragraph{Where the planners earn their cost.} Figure~\ref{fig:reliability} shows it. Straight-line flight fails outright where obstacles obstruct viewpoints: 0\% success in Scenario~2 under file ordering, and 33\% and 0\% in Scenario~4. A\textsuperscript{*} completes every run in all eight conditions, RRT\textsuperscript{*} all but Scenario~4 under file ordering (67\%). The time penalty above therefore buys reliability, which for an inspection survey is the property that matters. Scenario~4 might look like an exception, since A\textsuperscript{*} records 73.4\,s against the baseline's 77.3\,s, but that baseline finished no runs at all and its timing is as meaningless as its distance.
 
-\paragraph{Read success before distance.} Scenario~2 file-order straight-line records 105.4\,m against A\textsuperscript{*}'s 156.0\,m, which looks decisive until coverage is read: it visited 53\% of viewpoints. It flew less because it did less. Any comparison involving a sub-100\% cell is void, which is why those cells are daggered in Table~\ref{tab:results}.
+\paragraph{Read success before distance.} Scenario~2 file-order straight-line records 105.4\,m against A\textsuperscript{*}'s 156.0\,m, which looks decisive until coverage is read: it visited 53\% of viewpoints. It flew less because it did less. Any comparison involving a sub-100\% cell is void, and those cells are daggered in Table~\ref{tab:results}. Figure~\ref{fig:altitude} shows the vertical dimension the top-down plots omit.
 
 \paragraph{A\textsuperscript{*} versus RRT\textsuperscript{*}.} Their paths sit within 1\,m of each other in most cells, so the continuous-space advantage I expected from RRT\textsuperscript{*} never appeared at 3000 samples per segment. On time they trade places by scenario, mostly inside one standard deviation, and several cells carry deviations of 8--47\,s, so I report those gaps as ties rather than results. On reliability A\textsuperscript{*} is the clear choice: it alone completed all 24 of its runs, whereas RRT\textsuperscript{*} lost a third of its Scenario~4 file-order runs with a spread of $\pm46.8$\,s, consistent with its sampling struggling in fragmented free space.
 
 \subsection{Limitations and Improvements}
 
-The 0.5\,m voxel treats any obstacle-adjacent cell as blocked regardless of true clearance, forcing wide detours in Scenario~4; an adaptive octree would refine resolution only near surfaces. Three runs per cell resolves large effects but leaves 5--10\,s differences ambiguous. No collision instrumentation exists, so obstacle strikes were inferred from altitude traces and watchdog aborts rather than measured; a clearance sensor would make the safety claim quantitative. RRT\textsuperscript{*}'s sample budget was fixed at 3000 and never tuned, which plausibly explains why it failed to beat A\textsuperscript{*} on path length. Finally, both planners emit waypoint sequences the controller executes with a stop at each transition; minimum-snap trajectory generation~\cite{mellinger2011minimum} would smooth the velocity profile across the whole tour.
+The 0.5\,m voxel treats any obstacle-adjacent cell as blocked regardless of true clearance, forcing wide detours in Scenario~4; an adaptive octree would refine resolution only near surfaces. Three runs per cell resolves large effects but leaves 5--10\,s differences ambiguous. No collision instrumentation exists, so strikes were inferred from altitude traces and watchdog aborts; a clearance sensor would make the safety claim quantitative. I fixed RRT\textsuperscript{*}'s sample budget at 3000 and never tuned it, which plausibly explains why it failed to beat A\textsuperscript{*} on path length. Both planners also emit waypoints the controller executes with a stop at each transition, where minimum-snap generation~\cite{mellinger2011minimum} would smooth the whole velocity profile.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Conclusions}
 % ─────────────────────────────────────────────────────────────────────────────
 
-A $2\times3$ factorial over four scenarios, 72 runs, separates two effects that a conventional comparison conflates. Tour ordering drives efficiency: NN+2-opt cuts path length by 38--50\% and tour time in every valid comparison. Obstacle-aware planning does the opposite, adding 4--9\,m and 5--40\,s, yet it is the reason the mission finishes at all, lifting success from 0\% to 100\% where straight-line flight fails. The two are complementary, not competing, and a system tuned on time alone would have picked the configuration that never completes the job. For an inspection client this matters more than the seconds: an unfinished survey has no value, however quickly it was flown.
+A $2\times3$ factorial over four scenarios, 72 runs, separates two effects that a conventional comparison conflates. Tour ordering drives efficiency: NN+2-opt cuts path length by 38--50\% and tour time in every valid comparison. Obstacle-aware planning works against efficiency, adding 4--9\,m and 5--40\,s, while lifting mission success from 0\% to 100\% in the conditions where straight-line flight fails. The two components serve different ends, and selecting on time alone would favour the configuration that leaves the survey unfinished. For an inspection client an incomplete survey has no value, however quickly it was flown.
 
 A\textsuperscript{*} is the better default of the two planners: path quality indistinguishable from RRT\textsuperscript{*} here, comparable time, and the only planner to complete all 24 of its runs. Future work should tune the RRT\textsuperscript{*} sample budget before concluding anything about continuous-space planning, add clearance instrumentation, and apply kinodynamic trajectory optimisation to recover the time avoidance costs.
 
