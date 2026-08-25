@@ -1,0 +1,20 @@
+{
+  "scenario_path": "scenarios/scenario2.yaml",
+  "drone_namespace": "drone0",
+  "planner": "tsp_nn_2opt",
+  "use_sim_time": true,
+  "verbose": false,
+  "started_at_utc": "2026-03-21T17:08:12Z",
+  "git_commit": "94fe6a3",
+  "extra": {
+    "script": "mission_scenario.py",
+    "ordering": "nn_2opt",
+    "ordering_start": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 1.0
+    },
+    "estimated_length_before_m": 125.9330917737137,
+    "estimated_length_after_m": 63.68946535234847
+  }
+}

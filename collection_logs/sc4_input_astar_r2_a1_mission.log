@@ -1,0 +1,50 @@
+[INFO] [1787034711.486450880] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787034712.113981508] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787034713.759090013] [drone0.drone0_interface]: set_arming_state not immediately available (DDS discovery may be pending)
+[WARN] [1787034723.797708575] [drone0.drone0_interface]: set_arming_state call timed out after 10s (DDS discovery may be slow)
+[WARN] [1787034724.327597576] [drone0.drone0_interface]: Goal Rejected
+[WARN] [1787034725.292413661] [drone0.drone0_interface]: set_offboard_mode returned failure (may be state/already armed)
+[WARN] [1787034725.912522505] [drone0.drone0_interface]: set_arming_state returned failure (may be state/already armed)
+Running mission for drone drone0
+Reading scenario scenarios/scenario4.yaml
+Start mission
+Arm
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Arm success: False
+End mission
+Land
+Land success: False
+Manual
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Manual success: False
+Disarm
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Disarm success: False
+[RunLogger] Saved run to: runs/20260818_063151__scenario4__astar__drone0
+[RunLogger] Summary: {
+  "success": false,
+  "duration_s": 15.050857782363892,
+  "path_length_m": 0.0,
+  "mean_speed_mps": 0.0,
+  "max_speed_mps": 0.0,
+  "num_samples": 467,
+  "scenario_path": "scenarios/scenario4.yaml",
+  "drone_namespace": "drone0",
+  "planner": "astar",
+  "git_commit": "c8238b6"
+}
+Exit with failure (reason: normal)

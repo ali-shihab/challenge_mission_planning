@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "duration_s": 247.60377883911133,
+  "path_length_m": 134.55488695783296,
+  "mean_speed_mps": 0.5465308704199384,
+  "max_speed_mps": 2.1167037475697246,
+  "num_samples": 2409,
+  "scenario_path": "scenarios/scenario1.yaml",
+  "drone_namespace": "drone0",
+  "planner": "baseline",
+  "git_commit": "94fe6a3"
+}

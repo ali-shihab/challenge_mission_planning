@@ -1,0 +1,128 @@
+[INFO] [1787033882.190948605] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787033882.792374165] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787034021.549519984] [drone0.drone0_interface]: set_arming_state returned failure (may be state/already armed)
+Running mission for drone drone0
+Reading scenario scenarios/scenario4.yaml
+Start mission
+Arm
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Detected IDs: [64]
+Take Off success: True
+Run mission
+Go to 1 using straight with 1 subgoals
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 1
+============================================================
+Viewpoint done
+Go to 2 using straight with 1 subgoals
+Detected IDs: [24]
+Viewpoint 2 failed (action timeout/sim quirk), continuing to next
+Go to 3 using straight with 1 subgoals
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Viewpoint 3 failed (action timeout/sim quirk), continuing to next
+Go to 4 using straight with 1 subgoals
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Viewpoint 4 failed (action timeout/sim quirk), continuing to next
+Go to 5 using straight with 1 subgoals
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Viewpoint 5 failed (action timeout/sim quirk), continuing to next
+---------------------------------
+Tour of scenarios/scenario4.yaml took 115.21281003952026 seconds
+---------------------------------
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Return-to-start verified: True
+End mission
+Land
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Land success: True
+Manual
+Detected IDs: [64]
+Detected IDs: [64]
+Manual success: True
+Disarm
+Detected IDs: [64]
+Detected IDs: [64]
+Disarm success: False
+[RunLogger] Saved run to: runs/20260818_061801__scenario4__straight__drone0
+[RunLogger] Summary: {
+  "success": false,
+  "duration_s": 139.98577761650085,
+  "path_length_m": 45.76079562335489,
+  "mean_speed_mps": 0.340719920961359,
+  "max_speed_mps": 11.18895829854286,
+  "num_samples": 4952,
+  "scenario_path": "scenarios/scenario4.yaml",
+  "drone_namespace": "drone0",
+  "planner": "straight",
+  "git_commit": "c8238b6"
+}
+Exit with failure (reason: normal)

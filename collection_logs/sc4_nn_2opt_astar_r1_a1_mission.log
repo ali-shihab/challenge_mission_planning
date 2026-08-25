@@ -1,0 +1,110 @@
+[INFO] [1787036236.370192566] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787036236.957211952] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787036238.078755875] [drone0.drone0_interface]: TakeoffBehavior Not Available
+[WARN] [1787036326.375491528] [drone0.drone0_interface]: set_arming_state returned failure (may be state/already armed)
+Running mission for drone drone0
+Reading scenario scenarios/scenario4.yaml
+Start mission
+Arm
+Detected IDs: [64]
+Arm success: True
+Offboard
+Detected IDs: [64]
+Offboard success: True
+Take Off
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Take Off success: True
+Detected IDs: [64]
+Run mission
+Go to 2 using astar with 2 subgoals
+Detected IDs: [64]
+Detected IDs: [34]
+Detected IDs: [34]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 2
+============================================================
+Viewpoint done
+Detected IDs: [34]
+Go to 1 using astar with 6 subgoals
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 1
+============================================================
+Viewpoint done
+Go to 3 using astar with 3 subgoals
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [44]
+Detected IDs: [44]
+
+============================================================
+  ✓ ArUco MARKER 44 VERIFIED at viewpoint 3
+============================================================
+Viewpoint done
+Go to 4 using astar with 3 subgoals
+Detected IDs: [44]
+Detected IDs: [54]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 4
+============================================================
+Viewpoint done
+Go to 5 using astar with 2 subgoals
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [64]
+Detected IDs: [64]
+
+============================================================
+  ✓ ArUco MARKER 64 VERIFIED at viewpoint 5
+============================================================
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario4.yaml took 68.925954580307 seconds
+---------------------------------
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Return-to-start verified: True
+Detected IDs: [64]
+Detected IDs: [64]
+End mission
+Land
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Land success: True
+Manual
+Detected IDs: [64]
+Detected IDs: [64]
+Manual success: True
+Disarm
+Disarm success: False
+[RunLogger] Saved run to: runs/20260818_065715__scenario4__astar__drone0
+[RunLogger] Summary: {
+  "success": true,
+  "duration_s": 91.14940786361694,
+  "path_length_m": 70.97504091009036,
+  "mean_speed_mps": 0.8215848817101588,
+  "max_speed_mps": 6.605782154425334,
+  "num_samples": 3258,
+  "scenario_path": "scenarios/scenario4.yaml",
+  "drone_namespace": "drone0",
+  "planner": "astar",
+  "git_commit": "c8238b6"
+}
+Clean exit

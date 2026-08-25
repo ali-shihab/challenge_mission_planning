@@ -1,0 +1,141 @@
+[INFO] [1787035383.474170119] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787035384.078348082] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787035385.186289616] [drone0.drone0_interface]: TakeoffBehavior Not Available
+[WARN] [1787035387.046952354] [drone0.drone0_interface]: LandBehavior Not Available
+Running mission for drone drone0
+Reading scenario scenarios/scenario4.yaml
+Start mission
+Arm
+Detected IDs: [64]
+Detected IDs: [64]
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Take Off success: True
+Detected IDs: [64]
+Detected IDs: [64]
+Run mission
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Go to 1 using rrts with 3 subgoals
+Detected IDs: [64]
+Detected IDs: [24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 1
+============================================================
+Viewpoint done
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Go to 2 using rrts with 4 subgoals
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [64]
+Detected IDs: [34]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 2
+============================================================
+Viewpoint done
+Go to 3 using rrts with 2 subgoals
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [44]
+Detected IDs: [44]
+
+============================================================
+  ✓ ArUco MARKER 44 VERIFIED at viewpoint 3
+============================================================
+Viewpoint done
+Go to 4 using rrts with 2 subgoals
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [54]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 4
+============================================================
+Viewpoint done
+Go to 5 using rrts with 2 subgoals
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+
+============================================================
+  ✓ ArUco MARKER 64 VERIFIED at viewpoint 5
+============================================================
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario4.yaml took 73.94432067871094 seconds
+---------------------------------
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Return-to-start verified: True
+Detected IDs: [64]
+End mission
+Land
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Land success: False
+Manual
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Manual success: True
+Disarm
+Detected IDs: [64]
+Disarm success: True
+Detected IDs: [64]
+[RunLogger] Saved run to: runs/20260818_064302__scenario4__rrts__drone0
+[RunLogger] Summary: {
+  "success": true,
+  "duration_s": 104.43504810333252,
+  "path_length_m": 74.39549473593135,
+  "mean_speed_mps": 0.7619360394121971,
+  "max_speed_mps": 6.3091569082019925,
+  "num_samples": 3679,
+  "scenario_path": "scenarios/scenario4.yaml",
+  "drone_namespace": "drone0",
+  "planner": "rrts",
+  "git_commit": "c8238b6"
+}
+Clean exit

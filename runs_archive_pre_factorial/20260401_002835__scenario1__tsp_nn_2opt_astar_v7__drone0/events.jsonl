@@ -1,0 +1,9 @@
+{"t_wall": 1775003315.6659753, "t_rel": 0.0019011497497558594, "event": "run_started", "payload": {"run_dir": "runs/20260401_002835__scenario1__tsp_nn_2opt_astar_v7__drone0", "odom_topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1775003317.722075, "t_rel": 2.057999849319458, "event": "telemetry_topic_types", "payload": {"topic": "/drone0/self_localization/pose", "types": ["geometry_msgs/msg/PoseStamped"]}}
+{"t_wall": 1775003317.7236083, "t_rel": 2.059532880783081, "event": "telemetry_subscribed", "payload": {"msg_type": "geometry_msgs/msg/PoseStamped", "topic": "/drone0/self_localization/pose"}}
+{"t_wall": 1775003317.7255743, "t_rel": 2.0614988803863525, "event": "scenario_loaded", "payload": {"keys": ["drone_start_pose", "name", "obstacles", "viewpoint_poses"]}}
+{"t_wall": 1775003317.725787, "t_rel": 2.061711549758911, "event": "arm_start", "payload": {}}
+{"t_wall": 1775003318.0460403, "t_rel": 2.381965398788452, "event": "arm_done", "payload": {"success": true}}
+{"t_wall": 1775003318.0467906, "t_rel": 2.3827154636383057, "event": "offboard_start", "payload": {}}
+{"t_wall": 1775003318.2609317, "t_rel": 2.5968573093414307, "event": "offboard_done", "payload": {"success": true}}
+{"t_wall": 1775003318.2615905, "t_rel": 2.59751558303833, "event": "takeoff_start", "payload": {"height": 1.0, "speed": 1.0}}

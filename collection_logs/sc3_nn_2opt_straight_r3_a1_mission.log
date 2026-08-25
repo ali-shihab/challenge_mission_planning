@@ -1,0 +1,31 @@
+[INFO] [1787031850.890728575] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787031851.621695300] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787031862.792670465] [drone0.drone0_interface]: set_arming_state call timed out after 10s (DDS discovery may be slow)
+[WARN] [1787031863.244802284] [drone0.drone0_interface]: Goal Rejected
+[WARN] [1787031864.150857520] [drone0.drone0_interface]: set_offboard_mode returned failure (may be state/already armed)
+Running mission for drone drone0
+Reading scenario scenarios/scenario3.yaml
+Start mission
+Arm
+Arm success: False
+End mission
+Land
+Land success: False
+Manual
+Manual success: False
+Disarm
+Disarm success: True
+[RunLogger] Saved run to: runs/20260818_054409__scenario3__straight__drone0
+[RunLogger] Summary: {
+  "success": false,
+  "duration_s": 15.238476037979126,
+  "path_length_m": 0.10148233091141488,
+  "mean_speed_mps": 0.008622831087448785,
+  "max_speed_mps": 0.3487841507444263,
+  "num_samples": 436,
+  "scenario_path": "scenarios/scenario3.yaml",
+  "drone_namespace": "drone0",
+  "planner": "straight",
+  "git_commit": "c8238b6"
+}
+Exit with failure (reason: normal)

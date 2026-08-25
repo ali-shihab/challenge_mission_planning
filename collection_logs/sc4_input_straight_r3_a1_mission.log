@@ -1,0 +1,100 @@
+[INFO] [1787034356.110086338] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787034356.724671907] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787034357.860173873] [drone0.drone0_interface]: TakeoffBehavior Not Available
+[WARN] [1787034470.463232788] [drone0.drone0_interface]: set_arming_state returned failure (may be state/already armed)
+Running mission for drone drone0
+Reading scenario scenarios/scenario4.yaml
+Start mission
+Arm
+Detected IDs: [64]
+Detected IDs: [64]
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 1 using straight with 1 subgoals
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 1
+============================================================
+Viewpoint done
+Go to 2 using straight with 1 subgoals
+Detected IDs: [24]
+Viewpoint 2 failed (action timeout/sim quirk), continuing to next
+Go to 3 using straight with 1 subgoals
+Viewpoint 3 failed (action timeout/sim quirk), continuing to next
+Go to 4 using straight with 1 subgoals
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [54]
+Detected IDs: [54]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 4
+============================================================
+Viewpoint done
+Go to 5 using straight with 1 subgoals
+Detected IDs: [54]
+Detected IDs: [64]
+Detected IDs: [64]
+
+============================================================
+  ✓ ArUco MARKER 64 VERIFIED at viewpoint 5
+============================================================
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario4.yaml took 89.88581156730652 seconds
+---------------------------------
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Return-to-start verified: True
+Detected IDs: [64]
+Detected IDs: [64]
+End mission
+Land
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Land success: True
+Manual
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Manual success: True
+Disarm
+Disarm success: False
+[RunLogger] Saved run to: runs/20260818_062555__scenario4__straight__drone0
+[RunLogger] Summary: {
+  "success": false,
+  "duration_s": 115.04254484176636,
+  "path_length_m": 63.19904797275978,
+  "mean_speed_mps": 0.5637926614916874,
+  "max_speed_mps": 13.393981753772293,
+  "num_samples": 4104,
+  "scenario_path": "scenarios/scenario4.yaml",
+  "drone_namespace": "drone0",
+  "planner": "straight",
+  "git_commit": "c8238b6"
+}
+Exit with failure (reason: normal)

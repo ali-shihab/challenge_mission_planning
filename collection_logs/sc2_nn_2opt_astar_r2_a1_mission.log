@@ -1,0 +1,182 @@
+[INFO] [1787022320.977509976] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787022321.583482644] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787022322.681197805] [drone0.drone0_interface]: TakeoffBehavior Not Available
+[WARN] [1787022454.507043669] [drone0.drone0_interface]: set_arming_state returned failure (may be state/already armed)
+Running mission for drone drone0
+Reading scenario scenarios/scenario2.yaml
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 4 using astar with 2 subgoals
+Detected IDs: [84, 64]
+Detected IDs: [64]
+Detected IDs: [84, 64]
+Detected IDs: [54]
+Detected IDs: [54]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 4
+============================================================
+Viewpoint done
+Detected IDs: [54]
+Go to 10 using astar with 2 subgoals
+Detected IDs: [54]
+Detected IDs: [44, 54]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44, 14, 34]
+Detected IDs: [44, 14, 34]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [14]
+Detected IDs: [44, 34, 14]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 10
+============================================================
+Viewpoint done
+Go to 6 using astar with 2 subgoals
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [74]
+Detected IDs: [24, 74]
+Detected IDs: [24, 74]
+
+============================================================
+  ✓ ArUco MARKER 74 VERIFIED at viewpoint 6
+============================================================
+Viewpoint done
+Go to 2 using astar with 2 subgoals
+Detected IDs: [84, 34]
+Detected IDs: [34]
+Detected IDs: [84, 34]
+Detected IDs: [34]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 2
+============================================================
+Viewpoint done
+Detected IDs: [84, 34]
+Go to 1 using astar with 2 subgoals
+Detected IDs: [24, 74]
+Detected IDs: [24]
+Detected IDs: [24, 24]
+Detected IDs: [24, 24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 1
+============================================================
+Viewpoint done
+Go to 9 using astar with 2 subgoals
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 9
+============================================================
+Viewpoint done
+Go to 8 using astar with 2 subgoals
+Detected IDs: [24]
+Detected IDs: [14, 64]
+Detected IDs: [84, 64, 14]
+Detected IDs: [64, 14]
+Detected IDs: [64, 14]
+Detected IDs: [84, 14, 64]
+Detected IDs: [84, 14, 64, 44]
+Detected IDs: [84, 14, 64, 44]
+Detected IDs: [84, 64]
+Detected IDs: [84, 64]
+Detected IDs: [84, 64]
+Detected IDs: [14, 84, 64]
+
+============================================================
+  ✓ ArUco MARKER 14 VERIFIED at viewpoint 8
+============================================================
+Viewpoint done
+Go to 5 using astar with 2 subgoals
+Detected IDs: [14, 84, 64]
+Detected IDs: [14, 64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [84, 64]
+Detected IDs: [64]
+Detected IDs: [64]
+
+============================================================
+  ✓ ArUco MARKER 64 VERIFIED at viewpoint 5
+============================================================
+Viewpoint done
+Go to 7 using astar with 2 subgoals
+Detected IDs: [64]
+Detected IDs: [84]
+Detected IDs: [84]
+
+============================================================
+  ✓ ArUco MARKER 84 VERIFIED at viewpoint 7
+============================================================
+Viewpoint done
+Go to 3 using astar with 2 subgoals
+Detected IDs: [84]
+Detected IDs: [44]
+Detected IDs: [44]
+
+============================================================
+  ✓ ArUco MARKER 44 VERIFIED at viewpoint 3
+============================================================
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario2.yaml took 107.6093156337738 seconds
+---------------------------------
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Detected IDs: [44]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [84]
+Return-to-start verified: True
+End mission
+Land
+Land success: True
+Manual
+Manual success: True
+Disarm
+Disarm success: False
+[RunLogger] Saved run to: runs/20260818_030520__scenario2__astar__drone0
+[RunLogger] Summary: {
+  "success": true,
+  "duration_s": 134.20453453063965,
+  "path_length_m": 94.95281782552232,
+  "mean_speed_mps": 0.7247828446949143,
+  "max_speed_mps": 5.815531639066004,
+  "num_samples": 4779,
+  "scenario_path": "scenarios/scenario2.yaml",
+  "drone_namespace": "drone0",
+  "planner": "astar",
+  "git_commit": "c8238b6"
+}
+Clean exit

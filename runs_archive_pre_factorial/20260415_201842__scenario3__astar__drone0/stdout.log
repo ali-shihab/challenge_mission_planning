@@ -1,0 +1,29 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Detected IDs: [64]
+Offboard success: True
+Take Off
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Take Off success: True
+Run mission
+Go to 7 using astar with 2 subgoals
+  ✗ ArUco marker 84 NOT seen at viewpoint 7
+Viewpoint done
+Go to 10 using astar with 2 subgoals
+Detected IDs: [64]
+  ✗ ArUco marker 34 NOT seen at viewpoint 10
+Viewpoint done
+Go to 4 using astar with 2 subgoals
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Return-to-start failed: stuck_no_progress
+End mission
+Land
+Land success: False
+Manual
+Manual exception: failed to create client: rcl node's context is invalid, at ./src/rcl/node.c:428
+Disarm
+Disarm exception: failed to create client: rcl node's context is invalid, at ./src/rcl/node.c:428

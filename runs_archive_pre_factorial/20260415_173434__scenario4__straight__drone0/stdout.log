@@ -1,0 +1,72 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 1 using straight with 1 subgoals
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 1
+============================================================
+Viewpoint done
+Go to 2 using straight with 1 subgoals
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Viewpoint 2 failed (action timeout/sim quirk), continuing to next
+Go to 3 using straight with 1 subgoals
+  ✗ ArUco marker 44 NOT seen at viewpoint 3
+Viewpoint done
+Go to 4 using straight with 1 subgoals
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [54]
+Detected IDs: [54]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 4
+============================================================
+Viewpoint done
+Detected IDs: [54]
+Go to 5 using straight with 1 subgoals
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+
+============================================================
+  ✓ ArUco MARKER 64 VERIFIED at viewpoint 5
+============================================================
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario4.yaml took 89.68942761421204 seconds
+---------------------------------
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Detected IDs: [64]
+Return-to-start verified: True
+Detected IDs: [64]
+End mission
+Land
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Land success: True
+Manual
+Detected IDs: [64]
+Manual success: True
+Disarm
+Disarm success: False

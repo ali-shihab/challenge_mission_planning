@@ -1,0 +1,33 @@
+[INFO] [1787032749.990011238] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787032750.589518834] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787032751.877761109] [drone0.drone0_interface]: set_arming_state not immediately available (DDS discovery may be pending)
+[WARN] [1787032761.925309848] [drone0.drone0_interface]: set_arming_state call timed out after 10s (DDS discovery may be slow)
+[WARN] [1787032762.449124502] [drone0.drone0_interface]: Goal Rejected
+[WARN] [1787032763.411720287] [drone0.drone0_interface]: set_offboard_mode returned failure (may be state/already armed)
+[WARN] [1787032764.028359580] [drone0.drone0_interface]: set_arming_state returned failure (may be state/already armed)
+Running mission for drone drone0
+Reading scenario scenarios/scenario3.yaml
+Start mission
+Arm
+Arm success: False
+End mission
+Land
+Land success: False
+Manual
+Manual success: False
+Disarm
+Disarm success: False
+[RunLogger] Saved run to: runs/20260818_055909__scenario3__astar__drone0
+[RunLogger] Summary: {
+  "success": false,
+  "duration_s": 14.571503162384033,
+  "path_length_m": 0.0,
+  "mean_speed_mps": 0.0,
+  "max_speed_mps": 0.0,
+  "num_samples": 498,
+  "scenario_path": "scenarios/scenario3.yaml",
+  "drone_namespace": "drone0",
+  "planner": "astar",
+  "git_commit": "c8238b6"
+}
+Exit with failure (reason: normal)

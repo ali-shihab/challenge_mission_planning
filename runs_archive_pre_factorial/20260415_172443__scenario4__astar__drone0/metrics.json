@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "duration_s": 114.66573238372803,
+  "path_length_m": 69.86646076280353,
+  "mean_speed_mps": 1.838183202778178,
+  "max_speed_mps": 144.90870710248834,
+  "num_samples": 6037,
+  "scenario_path": "scenarios/scenario4.yaml",
+  "drone_namespace": "drone0",
+  "planner": "astar",
+  "git_commit": "2d13e4c"
+}

@@ -1,0 +1,285 @@
+[INFO] [1787031354.594861341] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787031355.198253588] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787031493.991655789] [drone0.drone0_interface]: set_arming_state returned failure (may be state/already armed)
+Running mission for drone drone0
+Reading scenario scenarios/scenario3.yaml
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Detected IDs: [54]
+Detected IDs: [54]
+Take Off success: True
+Run mission
+Go to 7 using straight with 1 subgoals
+Detected IDs: [54, 24]
+Detected IDs: [84, 34]
+Detected IDs: [84, 34]
+
+============================================================
+  ✓ ArUco MARKER 84 VERIFIED at viewpoint 7
+============================================================
+Viewpoint done
+Go to 10 using straight with 1 subgoals
+Detected IDs: [44]
+Detected IDs: [34]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 10
+============================================================
+Viewpoint done
+Go to 4 using straight with 1 subgoals
+Detected IDs: [54]
+Detected IDs: [54, 24]
+Detected IDs: [24]
+Detected IDs: [54, 24]
+Detected IDs: [54]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 4
+============================================================
+Viewpoint done
+Go to 17 using straight with 1 subgoals
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 17
+============================================================
+Viewpoint done
+Go to 6 using straight with 1 subgoals
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+
+============================================================
+  ✓ ArUco MARKER 74 VERIFIED at viewpoint 6
+============================================================
+Viewpoint done
+Go to 18 using straight with 1 subgoals
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [34, 24]
+Detected IDs: [34, 24]
+Detected IDs: [34, 24]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 18
+============================================================
+Viewpoint done
+Go to 1 using straight with 1 subgoals
+Detected IDs: [34, 24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 1
+============================================================
+Viewpoint done
+Go to 15 using straight with 1 subgoals
+Detected IDs: [24]
+Detected IDs: [84]
+Detected IDs: [84, 34]
+
+============================================================
+  ✓ ArUco MARKER 84 VERIFIED at viewpoint 15
+============================================================
+Viewpoint done
+Go to 16 using straight with 1 subgoals
+Detected IDs: [84, 34]
+Detected IDs: [84]
+Detected IDs: [84, 24]
+Detected IDs: [84, 24]
+Detected IDs: [34, 24, 84]
+Detected IDs: [84, 34, 24]
+Detected IDs: [24, 34, 84]
+Detected IDs: [54, 34, 24, 84]
+Detected IDs: [84, 54, 14]
+Detected IDs: [84, 54, 14]
+Detected IDs: [14, 84, 54]
+
+============================================================
+  ✓ ArUco MARKER 14 VERIFIED at viewpoint 16
+============================================================
+Viewpoint done
+Go to 19 using straight with 1 subgoals
+Detected IDs: [34, 14]
+Detected IDs: [34, 14]
+Detected IDs: [44]
+Detected IDs: [44]
+
+============================================================
+  ✓ ArUco MARKER 44 VERIFIED at viewpoint 19
+============================================================
+Viewpoint done
+Go to 20 using straight with 1 subgoals
+Detected IDs: [44]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 20
+============================================================
+Viewpoint done
+Go to 3 using straight with 1 subgoals
+Detected IDs: [54]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44, 54]
+
+============================================================
+  ✓ ArUco MARKER 44 VERIFIED at viewpoint 3
+============================================================
+Viewpoint done
+Go to 14 using straight with 1 subgoals
+Detected IDs: [74]
+
+============================================================
+  ✓ ArUco MARKER 74 VERIFIED at viewpoint 14
+============================================================
+Viewpoint done
+Go to 2 using straight with 1 subgoals
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [34]
+Detected IDs: [74, 34]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 2
+============================================================
+Viewpoint done
+Go to 9 using straight with 1 subgoals
+Detected IDs: [34, 74]
+Detected IDs: [34, 74]
+Detected IDs: [74, 34]
+Detected IDs: [74, 34]
+Detected IDs: [34, 84, 84, 14]
+Detected IDs: [54, 24, 84, 14, 84]
+Detected IDs: [54, 24]
+Detected IDs: [24, 24, 54]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 9
+============================================================
+Viewpoint done
+Detected IDs: [24]
+Go to 13 using straight with 1 subgoals
+Detected IDs: [24]
+Detected IDs: [54, 24, 24]
+Detected IDs: [24, 54, 34, 24]
+Detected IDs: [24, 84, 54, 84]
+Detected IDs: [54, 44, 84, 84]
+Detected IDs: [54, 44, 84, 84]
+Detected IDs: [54, 44]
+Detected IDs: [44, 74, 44, 54]
+Detected IDs: [44, 74, 44, 54]
+Detected IDs: [44, 74, 54, 34]
+Detected IDs: [44, 74, 54, 34]
+Detected IDs: [44, 74, 34, 84]
+Detected IDs: [54, 44, 74, 34]
+Detected IDs: [44, 74, 64]
+Detected IDs: [64, 34]
+
+============================================================
+  ✓ ArUco MARKER 64 VERIFIED at viewpoint 13
+============================================================
+Viewpoint done
+Go to 8 using straight with 1 subgoals
+Detected IDs: [34, 54]
+Detected IDs: [24, 84, 54]
+Detected IDs: [24, 54, 14]
+Detected IDs: [14]
+Detected IDs: [14]
+Detected IDs: [14]
+
+============================================================
+  ✓ ArUco MARKER 14 VERIFIED at viewpoint 8
+============================================================
+Viewpoint done
+Go to 5 using straight with 1 subgoals
+Detected IDs: [14]
+Detected IDs: [64]
+
+============================================================
+  ✓ ArUco MARKER 64 VERIFIED at viewpoint 5
+============================================================
+Viewpoint done
+Go to 11 using straight with 1 subgoals
+Detected IDs: [44, 74, 34]
+Detected IDs: [44, 74, 34]
+Detected IDs: [34, 44, 74]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [74]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [74, 44]
+Detected IDs: [44]
+
+============================================================
+  ✓ ArUco MARKER 44 VERIFIED at viewpoint 11
+============================================================
+Viewpoint done
+Go to 12 using straight with 1 subgoals
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [74, 44]
+Detected IDs: [24, 44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [54]
+Detected IDs: [34, 54]
+Detected IDs: [34, 54, 44]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 12
+============================================================
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario3.yaml took 115.1469247341156 seconds
+---------------------------------
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Detected IDs: [34, 54, 44]
+Detected IDs: [44]
+Detected IDs: [54]
+Return-to-start verified: True
+End mission
+Land
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Land success: True
+Manual
+Manual success: True
+Disarm
+Disarm success: False
+[RunLogger] Saved run to: runs/20260818_053554__scenario3__straight__drone0
+[RunLogger] Summary: {
+  "success": true,
+  "duration_s": 140.13395404815674,
+  "path_length_m": 108.58124503852859,
+  "mean_speed_mps": 0.8012000154776985,
+  "max_speed_mps": 6.136993661186051,
+  "num_samples": 5006,
+  "scenario_path": "scenarios/scenario3.yaml",
+  "drone_namespace": "drone0",
+  "planner": "straight",
+  "git_commit": "c8238b6"
+}
+Clean exit

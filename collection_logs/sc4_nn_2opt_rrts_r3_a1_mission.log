@@ -1,0 +1,40 @@
+[INFO] [1787037066.834379492] [drone0.drone0_interface]: Starting drone0
+[INFO] [1787037067.430708142] [drone0.drone0_interface]: drone0 interface initialized
+[WARN] [1787037068.811724641] [drone0.drone0_interface]: set_arming_state not immediately available (DDS discovery may be pending)
+[WARN] [1787037078.818463738] [drone0.drone0_interface]: set_arming_state call timed out after 10s (DDS discovery may be slow)
+[WARN] [1787037079.370033922] [drone0.drone0_interface]: Goal Rejected
+[WARN] [1787037080.302048818] [drone0.drone0_interface]: set_offboard_mode returned failure (may be state/already armed)
+[WARN] [1787037080.937310830] [drone0.drone0_interface]: set_arming_state returned failure (may be state/already armed)
+Running mission for drone drone0
+Reading scenario scenarios/scenario4.yaml
+Start mission
+Arm
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Arm success: False
+End mission
+Land
+Detected IDs: [64]
+Land success: False
+Manual
+Detected IDs: [64]
+Manual success: False
+Disarm
+Disarm success: False
+Detected IDs: [64]
+[RunLogger] Saved run to: runs/20260818_071106__scenario4__rrts__drone0
+[RunLogger] Summary: {
+  "success": false,
+  "duration_s": 14.646833896636963,
+  "path_length_m": 0.0,
+  "mean_speed_mps": 0.0,
+  "max_speed_mps": 0.0,
+  "num_samples": 433,
+  "scenario_path": "scenarios/scenario4.yaml",
+  "drone_namespace": "drone0",
+  "planner": "rrts",
+  "git_commit": "c8238b6"
+}
+Exit with failure (reason: normal)

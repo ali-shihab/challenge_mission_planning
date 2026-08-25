@@ -1,0 +1,16 @@
+Start mission
+Arm
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Arm success: True
+Offboard
+Detected IDs: [64]
+Offboard success: False
+End mission
+Land
+Land success: False
+Manual
+Manual success: True
+Disarm
+Disarm success: True

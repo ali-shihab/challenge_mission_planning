@@ -1,0 +1,55 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Detected IDs: [64]
+Detected IDs: [64]
+Offboard success: True
+Take Off
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Take Off success: True
+Detected IDs: [64]
+Detected IDs: [64]
+Run mission
+Go to 2 using rrts with 2 subgoals
+Detected IDs: [34]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 2
+============================================================
+Viewpoint done
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Go to 1 using rrts with 4 subgoals
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 1
+============================================================
+Viewpoint done
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Go to 3 using rrts with 4 subgoals
+Viewpoint 3 failed (action timeout/sim quirk), continuing to next
+Go to 4 using rrts with 2 subgoals

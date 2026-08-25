@@ -1,0 +1,37 @@
+{
+  "scenario_path": "scenarios/scenario1.yaml",
+  "drone_namespace": "drone0",
+  "planner": "baseline",
+  "use_sim_time": true,
+  "verbose": false,
+  "started_at_utc": "2026-03-28T21:45:05Z",
+  "git_commit": "94fe6a3",
+  "extra": {
+    "script": "mission_scenario.py",
+    "ordering": "input",
+    "local_planner": "straight",
+    "fallback_ordering_start": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 1.0
+    },
+    "grid_resolution": 0.5,
+    "obstacle_inflation_m": 0.8,
+    "grid_margin_m": 2.0,
+    "path_stride": 1,
+    "goto_timeout_s": 45.0,
+    "stuck_timeout_s": 8.0,
+    "progress_epsilon_m": 0.15,
+    "subgoal_pos_tolerance_m": 1.0,
+    "final_pos_tolerance_m": 0.75,
+    "yaw_tolerance_deg": 30.0,
+    "dwell_s": 1.0,
+    "require_pose_verified": false,
+    "aruco_topic": null,
+    "require_aruco_verified": false,
+    "marker_id_offset": 0,
+    "inspection_timeout_s": 3.0,
+    "inspection_recent_window_s": 1.5,
+    "inspection_min_count": 1
+  }
+}
