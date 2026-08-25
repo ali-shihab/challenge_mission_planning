@@ -2,18 +2,20 @@
 """
 build_report_assets.py — report figures for the 2x3 factorial dataset.
 
-Produces, from collection_ledger.csv + runs/:
-  fig_paths_scenarioN.png  trajectories, split file-order | NN+2-opt so the
-                           ordering effect is visible side by side
-  fig_altitude.png         altitude vs tour progress (evidences 3D planning)
-  fig_reliability.png      success rate and ArUco confirmation by condition
+Figures are generated at the size they are PRINTED at (a \textwidth figure on
+A4 with 2 cm margins is 17 cm = 6.7 in). Generating wide and scaling down in
+LaTeX is what made the earlier versions unreadable: an 8 pt label on a 17 in
+canvas becomes ~3 pt on the page.
 
-Each path/altitude trace is the MEDIAN-tour run of its cell, so the figure
-shows a representative run rather than a cherry-picked best.
+Outputs:
+  fig_paths_scenarioN.png  trajectories, file-order | NN+2-opt side by side
+  fig_altitude.png         altitude vs tour progress
+  fig_reliability.png      success and ArUco confirmation by condition
+  fig_effects.png          decomposed ordering and planner main effects
 """
 import csv
 import json
-import os
+import statistics as st
 from collections import defaultdict
 from pathlib import Path
 
@@ -23,6 +25,21 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
 import yaml
+
+# Printed width of a \textwidth figure: A4 (21 cm) - 2*2 cm margins = 17 cm.
+TEXTWIDTH_IN = 6.7
+
+matplotlib.rcParams.update({
+    "font.size": 9,
+    "axes.titlesize": 9.5,
+    "axes.labelsize": 9,
+    "xtick.labelsize": 8,
+    "ytick.labelsize": 8,
+    "legend.fontsize": 8,
+    "figure.titlesize": 10,
+    "lines.linewidth": 1.3,
+    "savefig.dpi": 200,
+})
 
 REPO = Path(__file__).resolve().parent
 RUNS = REPO / "runs"
@@ -34,18 +51,16 @@ ORDERINGS = ["input", "nn_2opt"]
 PLANNERS = ["straight", "astar", "rrts"]
 ORD_LABEL = {"input": "File order", "nn_2opt": "NN+2-opt"}
 PL_LABEL = {"straight": "Straight", "astar": "A*", "rrts": "RRT*"}
-# Okabe-Ito, colourblind safe; distinct dash patterns as a second channel
 STYLE = {
-    "straight": dict(color="#0072B2", ls="-",  lw=1.5),
-    "astar":    dict(color="#009E73", ls="-",  lw=2.2),
-    "rrts":     dict(color="#D55E00", ls="--", lw=1.6),
+    "straight": dict(color="#0072B2", ls="-",  lw=1.2),
+    "astar":    dict(color="#009E73", ls="-",  lw=1.9),
+    "rrts":     dict(color="#D55E00", ls="--", lw=1.4),
 }
 NVP = {"1": 10, "2": 10, "3": 20, "4": 5}
 SCENARIOS = ["1", "2", "3", "4"]
 
 
 def load_cells():
-    """(scenario, ordering, planner) -> list of run records, flown runs only."""
     cells = defaultdict(list)
     for row in csv.DictReader(open(REPO / "collection_ledger.csv")):
         if row["status"] not in ("ok", "ok_incomplete"):
@@ -55,7 +70,6 @@ def load_cells():
             continue
         tour = None
         vp = aruco = 0
-        xs, ys, zs = [], [], []
         ep = d / "events.jsonl"
         if ep.exists():
             for line in open(ep):
@@ -72,6 +86,11 @@ def load_cells():
                     aruco += 1
         if tour is None:
             continue
+        path = None
+        mp = d / "metrics.json"
+        if mp.exists():
+            path = json.load(open(mp)).get("path_length_m")
+        xs, ys, zs = [], [], []
         tp = d / "trajectory.csv"
         if tp.exists():
             with open(tp) as f:
@@ -82,17 +101,13 @@ def load_cells():
                         pass
         n = NVP[row["scenario"]]
         cells[(row["scenario"], row["ordering"], row["planner"])].append(
-            dict(tour=tour, vp=vp, aruco=aruco, n=n, complete=vp >= n,
-                 xs=xs, ys=ys, zs=zs, status=row["status"])
-        )
+            dict(tour=tour, path=path, vp=vp, aruco=aruco, n=n,
+                 complete=vp >= n, xs=xs, ys=ys, zs=zs))
     return cells
 
 
 def median_run(runs):
-    """The run whose tour time is the median of its cell."""
-    if not runs:
-        return None
-    return sorted(runs, key=lambda r: r["tour"])[len(runs) // 2]
+    return sorted(runs, key=lambda r: r["tour"])[len(runs) // 2] if runs else None
 
 
 def scenario(sc):
@@ -104,90 +119,83 @@ def draw_world(ax, sd):
         ax.add_patch(mpatches.Rectangle(
             (ob["x"] - ob.get("w", 1) / 2, ob["y"] - ob.get("d", 1) / 2),
             ob.get("w", 1), ob.get("d", 1),
-            facecolor="#b0b0b0", edgecolor="#404040", lw=1.0, alpha=0.85, zorder=1))
+            facecolor="#b8b8b8", edgecolor="#404040", lw=0.8, alpha=0.9, zorder=1))
     for _, vp in sd.get("viewpoint_poses", {}).items():
-        ax.plot(vp["x"], vp["y"], marker="*", color="#CC79A7", ms=11,
-                mec="#5a2d4a", mew=0.5, ls="none", zorder=6)
-    st = sd.get("drone_start_pose", {"x": 0, "y": 0})
-    ax.plot(st["x"], st["y"], marker="D", color="#111111", ms=8, ls="none", zorder=7)
+        ax.plot(vp["x"], vp["y"], marker="*", color="#CC79A7", ms=9,
+                mec="#5a2d4a", mew=0.4, ls="none", zorder=6)
+    st_ = sd.get("drone_start_pose", {"x": 0, "y": 0})
+    ax.plot(st_["x"], st_["y"], marker="D", color="#111111", ms=6, ls="none", zorder=7)
 
 
 def main():
     cells = load_cells()
 
-    # ---------- path figures: ordering side by side ----------
+    # ---------- paths ----------
     for sc in SCENARIOS:
         sd = scenario(sc)
-        fig, axes = plt.subplots(1, 2, figsize=(13, 6), sharex=True, sharey=True)
+        fig, axes = plt.subplots(1, 2, figsize=(TEXTWIDTH_IN, 3.6), sharex=True, sharey=True)
         for ax, o in zip(axes, ORDERINGS):
             draw_world(ax, sd)
             for p in PLANNERS:
                 r = median_run(cells.get((sc, o, p), []))
                 if not r or not r["xs"]:
                     continue
-                lab = PL_LABEL[p]
-                if not r["complete"]:
-                    lab += f" ({r['vp']}/{r['n']} vp)"
-                step = max(1, len(r["xs"]) // 700)
+                lab = PL_LABEL[p] + ("" if r["complete"] else f" ({r['vp']}/{r['n']})")
+                step = max(1, len(r["xs"]) // 600)
                 ax.plot(r["xs"][::step], r["ys"][::step], alpha=0.9,
                         zorder=3 if p == "astar" else 4, label=lab, **STYLE[p])
-            ax.set_title(f"{ORD_LABEL[o]} ordering", fontsize=11)
+            ax.set_title(f"{ORD_LABEL[o]} ordering")
             ax.set_xlabel("x (m)")
-            # 'box' rather than 'datalim': the two panels share axes so the
-            # ordering comparison is at identical scale, and datalim is
-            # disallowed on shared axes.
             ax.set_aspect("equal", adjustable="box")
-            ax.grid(True, alpha=0.3, zorder=0)
-            ax.legend(fontsize=8, loc="best", framealpha=0.92)
+            ax.grid(True, alpha=0.3, zorder=0, lw=0.5)
+            ax.legend(fontsize=7, loc="upper left", framealpha=0.9, handlelength=1.6)
         axes[0].set_ylabel("y (m)")
         n_o = len(sd.get("obstacles", {}))
         fig.suptitle(f"Scenario {sc} — {NVP[sc]} viewpoints, {n_o} obstacle"
-                     f"{'' if n_o == 1 else 's'}   (median run of each cell)", fontsize=12)
-        fig.tight_layout(rect=[0, 0, 1, 0.94])
-        fig.savefig(OUT / f"fig_paths_scenario{sc}.png", dpi=150, bbox_inches="tight")
+                     f"{'' if n_o == 1 else 's'}", y=0.99)
+        fig.tight_layout(rect=[0, 0, 1, 0.93])
+        fig.savefig(OUT / f"fig_paths_scenario{sc}.png", bbox_inches="tight")
         plt.close()
-        print("wrote fig_paths_scenario%s.png" % sc)
+        print("paths", sc)
 
-    # ---------- altitude ----------
-    fig, axes = plt.subplots(2, 4, figsize=(17, 6.4), sharey="row")
+    # ---------- altitude: 4 scenarios x 2 orderings, taller so labels breathe ----------
+    fig, axes = plt.subplots(2, 4, figsize=(TEXTWIDTH_IN, 4.0), sharey="row", sharex=True)
     for col, sc in enumerate(SCENARIOS):
         sd = scenario(sc)
         hmax = max([ob.get("h", 1) for ob in sd.get("obstacles", {}).values()] + [0])
         for row, o in enumerate(ORDERINGS):
             ax = axes[row][col]
             if hmax > 0:
-                ax.axhspan(0, hmax, color="#b0b0b0", alpha=0.4, zorder=0)
+                ax.axhspan(0, hmax, color="#c8c8c8", alpha=0.55, zorder=0)
             for p in PLANNERS:
                 r = median_run(cells.get((sc, o, p), []))
                 if not r or not r["zs"]:
                     continue
                 z = np.array(r["zs"])
                 prog = np.linspace(0, 100, len(z))
-                step = max(1, len(z) // 700)
+                step = max(1, len(z) // 400)
                 ax.plot(prog[::step], z[::step], alpha=0.9, label=PL_LABEL[p], **STYLE[p])
-            ax.grid(True, alpha=0.3)
-            ax.tick_params(labelsize=8)
+            ax.grid(True, alpha=0.3, lw=0.5)
+            ax.set_xticks([0, 50, 100])
             if row == 0:
-                ax.set_title(f"Scenario {sc}", fontsize=10)
+                ax.set_title(f"Scenario {sc}", pad=4)
             if row == 1:
-                ax.set_xlabel("tour progress (%)", fontsize=9)
+                ax.set_xlabel("tour progress (%)")
             if col == 0:
-                ax.set_ylabel(f"{ORD_LABEL[o]}\naltitude z (m)", fontsize=9)
-    axes[0][0].legend(fontsize=7, loc="upper left")
-    fig.suptitle("Altitude profiles — grey band is the obstacle height envelope "
-                 "(both planners route over obstacles as well as around them)", fontsize=11)
-    fig.tight_layout(rect=[0, 0, 1, 0.94])
-    fig.savefig(OUT / "fig_altitude.png", dpi=150, bbox_inches="tight")
+                ax.set_ylabel(f"{ORD_LABEL[o]}\naltitude (m)")
+    axes[0][0].legend(fontsize=7, loc="upper left", handlelength=1.5, framealpha=0.9)
+    fig.tight_layout()
+    fig.savefig(OUT / "fig_altitude.png", bbox_inches="tight")
     plt.close()
-    print("wrote fig_altitude.png")
+    print("altitude")
 
-    # ---------- reliability: the headline result ----------
-    fig, axes = plt.subplots(1, 2, figsize=(14, 4.8))
+    # ---------- reliability ----------
+    fig, axes = plt.subplots(1, 2, figsize=(TEXTWIDTH_IN, 3.1), sharey=True)
     x = np.arange(len(SCENARIOS) * 2)
-    xt = [f"Sc{sc}\n{ORD_LABEL[o]}" for sc in SCENARIOS for o in ORDERINGS]
-    w = 0.26
+    xt = [f"Sc{sc}\n{'File' if o=='input' else '2-opt'}" for sc in SCENARIOS for o in ORDERINGS]
+    w = 0.27
     for ax, (key, ylab) in zip(axes, [("success", "Mission success rate (%)"),
-                                      ("aruco", "ArUco confirmation rate (%)")]):
+                                      ("aruco", "ArUco confirmation (%)")]):
         for i, p in enumerate(PLANNERS):
             vals = []
             for sc in SCENARIOS:
@@ -195,25 +203,90 @@ def main():
                     runs = cells.get((sc, o, p), [])
                     if not runs:
                         vals.append(0); continue
-                    if key == "success":
-                        vals.append(100 * sum(r["complete"] for r in runs) / len(runs))
-                    else:
-                        vals.append(100 * sum(r["aruco"] / r["n"] for r in runs) / len(runs))
+                    vals.append(100 * sum(r["complete"] for r in runs) / len(runs) if key == "success"
+                                else 100 * sum(r["aruco"] / r["n"] for r in runs) / len(runs))
             ax.bar(x + i * w, vals, w, label=PL_LABEL[p],
-                   color=STYLE[p]["color"], alpha=0.9, edgecolor="white", lw=0.5)
+                   color=STYLE[p]["color"], alpha=0.92, edgecolor="white", lw=0.4)
         ax.set_xticks(x + w)
-        ax.set_xticklabels(xt, fontsize=8)
-        ax.set_ylabel(ylab, fontsize=10)
-        ax.set_ylim(0, 108)
-        ax.axhline(100, color="#666", ls=":", lw=1)
-        ax.grid(axis="y", alpha=0.3)
+        ax.set_xticklabels(xt)
+        ax.set_ylabel(ylab)
+        ax.set_ylim(0, 112)
+        ax.axhline(100, color="#666", ls=":", lw=0.8)
+        ax.grid(axis="y", alpha=0.3, lw=0.5)
         ax.set_axisbelow(True)
-        ax.legend(fontsize=8, loc="lower right")
-    fig.suptitle("Reliability by condition (n=3 per cell)", fontsize=12)
-    fig.tight_layout(rect=[0, 0, 1, 0.93])
-    fig.savefig(OUT / "fig_reliability.png", dpi=150, bbox_inches="tight")
+    axes[0].legend(fontsize=7.5, loc="lower left", ncol=3, columnspacing=0.8,
+                   handlelength=1.2, framealpha=0.95)
+    fig.tight_layout()
+    fig.savefig(OUT / "fig_reliability.png", bbox_inches="tight")
     plt.close()
-    print("wrote fig_reliability.png")
+    print("reliability")
+
+    # ---------- main effects ----------
+    def umean(runs, k):
+        v = [r[k] for r in runs if r.get(k) is not None]
+        return st.mean(v) if v else None
+
+    def ok(sc, o, p):
+        r = cells.get((sc, o, p), [])
+        return bool(r) and all(x["complete"] for x in r)
+
+    fig, axes = plt.subplots(1, 2, figsize=(TEXTWIDTH_IN, 3.0))
+
+    # ordering effect on path %, planner as series, scenario on x
+    xs_ = np.arange(len(SCENARIOS))
+    for i, p in enumerate(PLANNERS):
+        vals = []
+        for sc in SCENARIOS:
+            if ok(sc, "input", p) and ok(sc, "nn_2opt", p):
+                a = umean(cells[(sc, "input", p)], "path")
+                b = umean(cells[(sc, "nn_2opt", p)], "path")
+                vals.append(100 * (b - a) / a)
+            else:
+                vals.append(np.nan)
+        axes[0].bar(xs_ + i * w, vals, w, label=PL_LABEL[p],
+                    color=STYLE[p]["color"], alpha=0.92, edgecolor="white", lw=0.4)
+    axes[0].set_xticks(xs_ + w)
+    axes[0].set_xticklabels([f"Sc{s}" for s in SCENARIOS])
+    axes[0].set_ylabel("path change (%)")
+    axes[0].set_title("Ordering effect\n(NN+2-opt vs file order, planner fixed)", pad=4)
+    axes[0].axhline(0, color="k", lw=0.8)
+    axes[0].grid(axis="y", alpha=0.3, lw=0.5)
+    axes[0].set_axisbelow(True)
+    axes[0].legend(fontsize=7.5, loc="lower left", handlelength=1.2)
+    # Bars go downward here, so annotate at the top where nothing is drawn.
+    axes[0].text(0.5, -0.30, "missing bar = comparison invalid (baseline never completed)",
+                 transform=axes[0].transAxes, ha="center", fontsize=6.5, color="#555")
+
+    # planner effect on success rate, ordering as series
+    for i, p in enumerate(["astar", "rrts"]):
+        for j, o in enumerate(ORDERINGS):
+            vals = []
+            for sc in SCENARIOS:
+                base = cells.get((sc, o, "straight"), [])
+                cur = cells.get((sc, o, p), [])
+                if not base or not cur:
+                    vals.append(np.nan); continue
+                bs = 100 * sum(r["complete"] for r in base) / len(base)
+                cs = 100 * sum(r["complete"] for r in cur) / len(cur)
+                vals.append(cs - bs)
+            off = (i * 2 + j) * 0.21
+            axes[1].bar(xs_ + off, vals, 0.20,
+                        label=f"{PL_LABEL[p]}, {'File' if o=='input' else '2-opt'}",
+                        color=STYLE[p]["color"], alpha=0.95 if o == "input" else 0.55,
+                        edgecolor="white", lw=0.4)
+    axes[1].set_xticks(xs_ + 0.315)
+    axes[1].set_xticklabels([f"Sc{s}" for s in SCENARIOS])
+    axes[1].set_ylabel("success rate change (pp)")
+    axes[1].set_title("Planner effect vs straight-line\n(ordering fixed)", pad=4)
+    axes[1].axhline(0, color="k", lw=0.8)
+    axes[1].grid(axis="y", alpha=0.3, lw=0.5)
+    axes[1].set_axisbelow(True)
+    axes[1].legend(fontsize=6.8, loc="upper left", ncol=2, columnspacing=0.7, handlelength=1.1)
+
+    fig.tight_layout()
+    fig.savefig(OUT / "fig_effects.png", bbox_inches="tight")
+    plt.close()
+    print("effects")
 
 
 if __name__ == "__main__":

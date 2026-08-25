@@ -14,7 +14,7 @@
 \usepackage{float}
 \usepackage{parskip}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta, positioning}
+\usetikzlibrary{arrows.meta, positioning, backgrounds, fit}
 
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
 
@@ -64,39 +64,47 @@ A verification thread polls TF at 10\,Hz and marks a viewpoint reached once the 
 \centering
 \begin{tikzpicture}[
   font=\footnotesize,
-  box/.style={draw, rounded corners=2pt, minimum height=7mm, align=center, inner xsep=4pt},
+  box/.style={draw, rounded corners=2pt, minimum height=8mm, minimum width=26mm,
+              align=center, inner xsep=3pt, fill=white},
   off/.style={box, fill=black!4},
-  sim/.style={box, fill=black!10},
-  ar/.style={-{Latex[length=2mm]}, thick},
-  node distance=3.5mm
+  sim/.style={box, fill=black!12},
+  ar/.style={-{Latex[length=2mm]}, semithick}
 ]
-\node[off] (yaml) {scenario\\YAML};
-\node[off, right=9mm of yaml] (gen) {world\\generator};
-\node[sim, right=9mm of gen] (gz) {Ignition Gazebo\\obstacles + ArUco};
-\node[sim, right=9mm of gz] (as2) {AS2 platform\\+ behaviours};
+% ---- offline planning chain (row 1) ----
+\node[off]                       (yaml) {scenario YAML};
+\node[off, right=8mm of yaml]    (grid) {occupancy grid\\{\scriptsize 0.5\,m, 0.4\,m infl.}};
+\node[off, right=8mm of grid]    (tsp)  {NN + 2-opt\\ordering};
+\node[off, right=8mm of tsp]     (loc)  {local planner\\{\scriptsize straight / A* / RRT*}};
 
-\node[off, below=8mm of yaml] (grid) {occupancy grid\\(0.5\,m, +0.4\,m infl.)};
-\node[off, right=7mm of grid] (tsp) {NN + 2-opt\\ordering};
-\node[off, right=7mm of tsp] (loc) {local planner\\straight / A* / RRT*};
-\node[box, right=7mm of loc, fill=black!4] (goto) {\texttt{GoTo}\\waypoints};
+% ---- simulator chain (row 2) ----
+\node[sim, below=13mm of yaml]   (gen)  {world generator};
+\node[sim, right=8mm of gen]     (gz)   {Ignition Gazebo\\{\scriptsize obstacles + ArUco}};
+\node[sim, right=8mm of gz]      (as2)  {AS2 platform\\{\scriptsize + behaviours}};
+\node[off, right=8mm of as2]     (goto) {\texttt{GoTo} waypoints};
 
-\node[box, below=8mm of tsp, fill=black!4] (ver) {pose check 10\,Hz\\+ ArUco detect};
-\node[box, right=7mm of ver, fill=black!4] (log) {JSONL events\\trajectory 50\,Hz};
+% ---- runtime monitoring (row 3) ----
+\node[box, below=13mm of gz]     (ver)  {pose check 10\,Hz\\{\scriptsize + ArUco detect}};
+\node[box, right=8mm of ver]     (log)  {JSONL events\\{\scriptsize trajectory 50\,Hz}};
 
-\draw[ar] (yaml) -- (gen);
-\draw[ar] (gen) -- (gz);
-\draw[ar] (gz) -- (as2);
-\draw[ar] (yaml) -- (grid);
-\draw[ar] (grid) -- (tsp);
-\draw[ar] (tsp) -- (loc);
-\draw[ar] (loc) -- (goto);
-\draw[ar] (goto.east) -- ++(6mm,0) |- (as2.south east);
-\draw[ar] (as2.south) -- ++(0,-4mm) -| (log.north);
-\draw[ar] (ver) -- (log);
-\draw[ar] (as2.south west) -- ++(-3mm,-6mm) -| (ver.north);
+% Arrows on the background layer so they never paint over a box or its text.
+\begin{scope}[on background layer]
+  \draw[ar] (yaml) -- (grid);
+  \draw[ar] (grid) -- (tsp);
+  \draw[ar] (tsp)  -- (loc);
+  \draw[ar] (loc) -- (goto);
+  \draw[ar] (yaml) -- (gen);
+  \draw[ar] (gen)  -- (gz);
+  \draw[ar] (gz)   -- (as2);
+  \draw[ar] (goto) -- (as2);
+  \draw[ar] (as2)  -- (ver);
+  \draw[ar] (ver)  -- (log);
+\end{scope}
 
-\node[anchor=west, font=\scriptsize\itshape] at ([yshift=3.5mm]grid.north west) {offline, before takeoff};
-\node[anchor=west, font=\scriptsize\itshape] at ([yshift=3.5mm]ver.north west) {in flight};
+% ---- stage labels, placed clear of the boxes ----
+\node[anchor=east, font=\scriptsize\itshape, align=right]
+      at ([xshift=-4mm]yaml.west) {offline\\(pre-flight)};
+\node[anchor=east, font=\scriptsize\itshape, align=right]
+      at ([xshift=-4mm]ver.west) {in flight};
 \end{tikzpicture}
 \caption{Pipeline. One YAML drives both the world and the planner, so the geometry planned against is the geometry flown.}
 \label{fig:arch}
@@ -167,8 +175,8 @@ Table~\ref{tab:results} reports all 24 cells as mean $\pm$ s.d.\ over three runs
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.49\textwidth]{report_figs/fig_paths_scenario2.png}
-  \includegraphics[width=0.49\textwidth]{report_figs/fig_paths_scenario4.png}
+  \includegraphics[width=\textwidth]{report_figs/fig_paths_scenario2.png}\\[3pt]
+  \includegraphics[width=\textwidth]{report_figs/fig_paths_scenario4.png}
   \caption{Median run per cell. (a,b) Scenario~2; (c,d) Scenario~4; file ordering then NN+2-opt. File-order tours cross themselves repeatedly.}
   \label{fig:paths}
 \end{figure}

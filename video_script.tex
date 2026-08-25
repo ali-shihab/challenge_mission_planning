@@ -21,100 +21,112 @@
 \begin{document}
 \maketitle
 
-\noindent\textbf{Runtime:} 4:00 hard limit. \textbf{Narration:} 569 words --- 3:55 at 145\,wpm, 4:03 at 140. Rehearse first: if your natural pace is under 145\,wpm, cut the caveat at 3:04 ($\approx$12\,s) to fit.\\
+\noindent\textbf{Runtime:} 4:00 limit. \textbf{Narration:} 392 words at \textbf{100\,wpm} $=$ 3:55, leaving 5\,s.\\
 \textbf{Rubric:} Clarity 20\% \quad \textbf{Successful runs 60\%} \quad Performance analysis 20\%
 
 \medskip
-\noindent\textbf{Critical recording requirements}
+\noindent At 100\,wpm there is roughly a second of silence for every two spoken words, so the footage carries long stretches alone. Let it. The gaps between the lines below are where the drone should be visibly flying, not where you should speak faster.
+
+\medskip
+\noindent\textbf{Recording requirements}
 \begin{itemize}
-  \item The 60\%-weighted criterion asks for \emph{``capturing ArUco marker images, providing clear visual proof''}. A terminal banner is not an image. Show the \textbf{camera feed} with the detected marker outlined and its ID drawn on it (\texttt{cv2.aruco.drawDetectedMarkers}).
-  \item \textbf{Layout:} Gazebo left ($\sim$60\%), camera feed top-right, mission log bottom-right. 1920$\times$1080 in OBS.
-  \item Scenario~3 footage at 2$\times$ with an on-screen caption saying so.
-  \item The Scenario~2 and~4 baseline failures are the most valuable footage in the whole video --- they carry the argument. Show the drone driving into the obstacle and the watchdog abandoning the leg. Note the report describes strikes as \emph{inferred} from altitude traces rather than measured, so narrate what is visible on screen and do not claim instrumented collision detection.
+  \item The 60\%-weighted criterion asks for \emph{``capturing ArUco marker images, providing clear visual proof''}. A terminal banner is not an image. Show the \textbf{camera feed} with the marker outlined and its ID drawn on (\texttt{cv2.aruco.drawDetectedMarkers}).
+  \item \textbf{Layout:} Gazebo left ($\sim$60\%), camera feed top-right, mission log bottom-right, 1920$\times$1080.
+  \item Scenario~3 at 2$\times$ with an on-screen caption saying so.
+  \item The Scenario~2 and~4 baseline failures carry the argument. Show the drone driving into the obstacle and the watchdog giving up on the leg. The report calls strikes \emph{inferred} from altitude traces, not measured, so describe what is on screen and claim no collision sensor.
 \end{itemize}
 
 \bigskip\hrule\bigskip
 
-\section*{Segment 1 --- Problem and Approach (0:00--0:35)}
+\section*{Segment 1 --- Problem and Approach (0:00--0:33)}
 
 \cue{Gazebo wide shot of Scenario~2: drone on pad, five obstacle blocks, ArUco markers on stands}
 
 \timecode{0:00}
 ``The task is to fly a drone around a set of inspection viewpoints, photograph an ArUco marker at each one, and avoid every obstacle.
 
-\timecode{0:08}
-Two decisions: what order to visit the viewpoints in, and how to route between them. Ordering is nearest-neighbour with 2-opt. For routing I compare flying straight at the target, 3D A-star on a voxel grid, and RRT-star in continuous space.
+\timecode{0:12}
+There are two decisions. What order to visit the viewpoints in, and how to route between them.
 
 \timecode{0:20}
-Rather than three fixed configurations, I ran the full grid: both orderings crossed with all three planners, three times each, on four scenarios. Seventy-two runs. That's what lets me attribute each effect to a specific component.''
+For ordering I use nearest-neighbour with 2-opt. For routing, either A-star on a voxel grid, or RRT-star sampling in continuous space.
+
+\timecode{0:32}
+Rather than pick a configuration and test it, I crossed both factors: two orderings, three planners, four scenarios, three repeats. Seventy-two runs.''
 
 \bigskip\hrule\bigskip
 
-\section*{Segment 2 --- Demonstration (0:35--2:20)}
+\section*{Segment 2 --- Demonstration (0:33--2:30)}
 
-\subsection*{Scenario 1 --- 10 viewpoints, 1 obstacle (0:35--0:52)}
+\subsection*{Scenario 1 --- 10 viewpoints, 1 obstacle (0:33--1:00)}
 
-\cue{Split-screen: file ordering left, NN+2-opt right, both with A*. Camera inset showing marker detections.}
+\cue{Split-screen, both running A*: file ordering left, NN+2-opt right. Camera inset showing marker detections. Let it run.}
 
-\timecode{0:35}
-``Scenario 1, ten viewpoints. Same planner both sides, only the ordering differs. On the left, file order: the path crosses itself repeatedly. On the right, 2-opt: no crossings.
+\timecode{0:33}
+``Scenario 1. Same planner on both sides. Only the ordering differs.
 
 \timecode{0:42}
-That change alone takes the path from 159 metres down to 96, and the tour from 130 seconds to 99. Every marker confirmed on both.''
-
-\subsection*{Scenario 2 --- 10 viewpoints, 5 obstacles (0:52--1:25)}
-
-\cue{First 6\,s: baseline clip --- drone flying straight into an obstacle. Caption: ``BASELINE --- OBSTACLE STRIKE''. Then cut to A*.}
+On the left, file order. The path keeps crossing itself. On the right, 2-opt. No crossings.
 
 \timecode{0:52}
-``Scenario 2 adds five obstacles, and this is where straight-line flight breaks. It flies straight at a viewpoint sitting behind an obstacle, collides, and the watchdog gives up on that leg. Across three runs it reached just over half the viewpoints. Success rate: zero.
+That one change takes the path from 159 metres to 96.''
 
-\timecode{1:08}
-A-star routes around all five blocks and completes every run --- 136 seconds, all ten markers confirmed. Note it flies further than the baseline, 156 metres against 105. It's not taking a shortcut. It's doing the whole job.''
+\subsection*{Scenario 2 --- 10 viewpoints, 5 obstacles (1:00--1:35)}
 
-\subsection*{Scenario 3 --- 20 viewpoints, 1 obstacle (1:25--1:52)}
+\cue{Baseline clip first: drone flying into an obstacle. Caption ``BASELINE --- OBSTACLE STRIKE''. Hold it. Then cut to A*.}
 
-\cue{Split-screen at 2$\times$, ``2$\times$ SPEED'' caption.}
+\timecode{1:00}
+``Scenario 2 adds five obstacles. This is where flying straight breaks down.
 
-\timecode{1:25}
-``Scenario 3 doubles the viewpoints to twenty --- the clearest case for the tour optimiser. File order flies 226 metres, 2-opt flies 119, and the tour drops from 242 seconds to 163.
+\timecode{1:10}
+It heads directly for a viewpoint sitting behind an obstacle, collides, and the watchdog abandons that leg. Over three runs it reached about half the viewpoints. It never once finished.
 
-\timecode{1:40}
-Every planner finishes this one. With a single obstacle in an open arena, this scenario tests ordering, not avoidance.''
+\timecode{1:26}
+A-star routes around all five and completes every run. All ten markers confirmed.''
 
-\subsection*{Scenario 4 --- 5 viewpoints, 10 obstacles (1:52--2:20)}
+\subsection*{Scenario 3 --- 20 viewpoints, 1 obstacle (1:35--2:02)}
 
-\cue{Show baseline failing, then A* threading the obstacle field.}
+\cue{Split-screen at 2$\times$, ``2$\times$ SPEED'' caption}
 
-\timecode{1:52}
-``Scenario 4 inverts it: five viewpoints, ten obstacles. With only five viewpoints there's essentially nothing to reorder, so ordering buys nothing here. Obstacle avoidance is everything.
+\timecode{1:35}
+``Scenario 3 doubles the viewpoints to twenty. This is the strongest case for the tour optimiser.
 
-\timecode{2:04}
-The straight-line baseline reaches two thirds of the viewpoints and never once finishes the mission. A-star completes all three runs in 73 seconds. The baseline's 77 seconds looks comparable, but it never finished, so that number doesn't mean anything. RRT-star also completes, though under file ordering it managed only two runs in three.''
+\timecode{1:47}
+File order flies 226 metres. Two-opt flies 119. The tour drops from 242 seconds to 163.''
+
+\subsection*{Scenario 4 --- 5 viewpoints, 10 obstacles (2:02--2:30)}
+
+\cue{Baseline failing, then A* threading the obstacle field}
+
+\timecode{2:02}
+``Scenario 4 inverts it. Five viewpoints, ten obstacles.
+
+\timecode{2:10}
+With so few viewpoints there is nothing to reorder, so ordering buys nothing here. Avoidance is everything.
+
+\timecode{2:20}
+The baseline reaches two thirds of the viewpoints and never finishes. A-star completes all three runs. Its 73 seconds beats the baseline's 77, but that baseline never finished, so the comparison does not hold.''
 
 \bigskip\hrule\bigskip
 
-\section*{Segment 3 --- Results (2:20--3:26)}
+\section*{Segment 3 --- Results (2:30--3:30)}
 
 \cue{Full-screen \texttt{report\_figs/fig\_reliability.png}, then the table below}
 
-\timecode{2:20}
-``Here is the whole grid. Two findings, pointing in opposite directions.
+\timecode{2:30}
+``Two findings, pulling in opposite directions.
 
-\timecode{2:27}
-Ordering drives efficiency. Holding the planner fixed, 2-opt cuts path length by 38 to 50 per cent in the first three scenarios, and cuts tour time in every comparison where both configurations actually finished --- nine out of twelve.
-
-\timecode{2:42}
-The obstacle-aware planners push efficiency the other way. A-star adds up to 40 seconds. On time alone they look worse than flying straight.
+\timecode{2:36}
+Ordering drives efficiency. With the planner held fixed, 2-opt cuts path length by 38 to 50 per cent, and cuts tour time in every comparison where both configurations finished.
 
 \timecode{2:52}
-Now look at the success column. Straight-line flight hits zero per cent in two conditions. A-star completes every one of its twenty-four runs. The seconds it costs you are buying reliability.
+The obstacle-aware planners push efficiency the other way. A-star adds up to 40 seconds.
 
-\timecode{3:06}
-One caution --- where success is below a hundred per cent, the times and distances aren't comparable. That 105-metre baseline quit early. Read success first.
+\timecode{3:02}
+Now look at success. Straight-line flight hits zero per cent in two conditions. A-star completes all twenty-four of its runs. Those extra seconds are buying reliability.
 
-\timecode{3:18}
-A-star and RRT-star came within a metre of each other on path, so RRT-star's continuous-space advantage didn't show up at this sample budget.''
+\timecode{3:19}
+One caution. Below a hundred per cent success, the times and distances mean nothing, because the drone simply did less work.''
 
 \bigskip
 \begin{table}[H]
@@ -123,54 +135,48 @@ A-star and RRT-star came within a metre of each other on path, so RRT-star's con
 \toprule
 \textbf{Effect} & \textbf{Comparison (one factor varied)} & \textbf{Tour (s)} & \textbf{Path (m)} & \textbf{Success} \\
 \midrule
-\textbf{Ordering} & Sc3 \; File / A* & 241.5 & 226.2 & 100\% \\
-\emph{planner fixed} & Sc3 \; 2-opt / A* & \textbf{162.7} & \textbf{118.8} & 100\% \\
+\textbf{Ordering} & Sc3 \; File order / A* & 241.5 & 226.2 & 100\% \\
+\emph{planner fixed} & Sc3 \; NN+2-opt / A* & \textbf{162.7} & \textbf{118.8} & 100\% \\
 \midrule
- & Sc1 \; File / Straight & 107.3 & 153.9 & 100\% \\
- & Sc1 \; 2-opt / Straight & \textbf{93.5} & \textbf{91.1} & 100\% \\
-\midrule
-\textbf{Planner} & Sc1 \; 2-opt / Straight & \textbf{93.5} & \textbf{91.1} & 100\% \\
-\emph{ordering fixed} & Sc1 \; 2-opt / A* & 98.7 & 95.8 & 100\% \\
-\midrule
- & Sc4 \; 2-opt / Straight & 77.3 & --- & \textbf{0\%} \\
- & Sc4 \; 2-opt / A* & 73.4 & 70.7 & \textbf{100\%} \\
+\textbf{Planner} & Sc4 \; NN+2-opt / Straight & 77.3 & --- & \textbf{0\%} \\
+\emph{ordering fixed} & Sc4 \; NN+2-opt / A* & 73.4 & 70.7 & \textbf{100\%} \\
 \bottomrule
-\multicolumn{5}{l}{\footnotesize Each pair varies ONE factor. Dashes: not comparable at $<$100\% success.}
+\multicolumn{5}{l}{\footnotesize Each pair varies one factor. Dashes: not comparable below 100\% success.}
 \end{tabular}
 \end{table}
 
 \bigskip\hrule\bigskip
 
-\section*{Segment 4 --- Conclusions (3:26--3:55)}
+\section*{Segment 4 --- Conclusions (3:30--3:55)}
 
 \cue{Drone landing at origin, or the four-scenario path figure}
 
-\timecode{3:26}
-``So the two components do different jobs. Ordering makes the mission efficient; obstacle-aware planning gets it finished. Tune on time alone and you end up choosing the configuration that leaves the survey incomplete.
+\timecode{3:30}
+``So the two components do different jobs. Ordering makes the mission efficient. Obstacle-aware planning gets it finished.
 
-\timecode{3:39}
-A-star is the better default. Same path quality as RRT-star here, comparable time, and it's the only configuration that completed all twenty-four runs. Next would be tuning RRT-star's sample budget and adding smooth trajectory generation. Thanks for watching.''
+\timecode{3:42}
+Tune on time alone and you would pick the configuration that leaves the survey incomplete. Thanks for watching.''
 
 \bigskip\hrule\bigskip
 
-\section*{Timing budget}
+\section*{Timing budget at 100\,wpm}
 
 \begin{table}[H]
 \centering\small
 \begin{tabular}{lccl}
 \toprule
-\textbf{Segment} & \textbf{Words} & \textbf{@145\,wpm} & \textbf{Rubric served} \\
+\textbf{Segment} & \textbf{Words} & \textbf{Time} & \textbf{Rubric served} \\
 \midrule
-1 Problem and approach & 101 & 0:42 & Clarity (20\%) \\
-2 Demonstration        & 247 & 1:42 & \textbf{Successful runs (60\%)} \\
-3 Results              & 151 & 1:03 & Analysis (20\%) \\
-4 Conclusions          & 70  & 0:29 & Clarity (20\%) \\
+1 Problem and approach & 55  & 0:33 & Clarity (20\%) \\
+2 Demonstration        & 197 & 1:57 & \textbf{Successful runs (60\%)} \\
+3 Results              & 105 & 1:03 & Analysis (20\%) \\
+4 Conclusions          & 35  & 0:21 & Clarity (20\%) \\
 \midrule
-\textbf{Total}         & \textbf{569} & \textbf{3:55} & 5\,s margin \\
+\textbf{Total}         & \textbf{392} & \textbf{3:54} & 6\,s spare \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent Segment 2 holds 43\% of the runtime against a 60\%-weighted criterion, so the demo footage has to carry weight the narration does not --- keep the camera inset visible throughout it. If you overrun, cut the caveat at 3:04 ($\approx$12\,s), the least load-bearing passage. Never cut Segment 2.
+\noindent Segment 2 takes 50\% of the runtime for a 60\%-weighted criterion, and at this pace most of it is footage rather than narration --- which is what that criterion rewards. If you run long, cut the caution at 3:19 ($\approx$14\,s). Never cut Segment 2.
 
 \end{document}
