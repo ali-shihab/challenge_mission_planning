@@ -91,6 +91,10 @@ class RunLogger:
         self.use_sim_time = use_sim_time
         self.verbose = verbose
         self.sample_hz = sample_hz
+        self._min_sample_dt = 1.0 / max(1e-6, sample_hz)
+        self._last_sample_t: Optional[float] = None
+        self._sample_count = 0
+        self._sample_cap = 500000  # hard ceiling; guards against a runaway sampler
 
         self.repo_root = Path(repo_root) if repo_root else Path.cwd()
         self.git_commit = _git_commit_short(self.repo_root)
@@ -259,6 +263,19 @@ class RunLogger:
         """
         if self._closed:
             return
+
+        # Enforce sample_hz here rather than trusting the caller. The sampling
+        # thread drives this from executor.spin_once(), which returns instantly
+        # whenever messages are queued, so without this gate the loop writes at
+        # CPU speed. That both inflates the file and makes the effective sample
+        # rate load-dependent, which biases any metric integrated from it.
+        _now = time.time()
+        if self._last_sample_t is not None and (_now - self._last_sample_t) < self._min_sample_dt:
+            return
+        if self._sample_count >= self._sample_cap:
+            return
+        self._last_sample_t = _now
+        self._sample_count += 1
 
         pose = None
         with self._odom_lock:

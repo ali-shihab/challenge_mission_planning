@@ -1,0 +1,357 @@
+Start mission
+Arm
+Arm success: True
+Offboard
+Offboard success: True
+Take Off
+Take Off success: True
+Run mission
+Go to 1 using astar with 2 subgoals
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [74]
+Detected IDs: [44, 74]
+Detected IDs: [74, 44]
+Detected IDs: [74, 44]
+Detected IDs: [74, 44]
+Detected IDs: [44]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 1
+============================================================
+Viewpoint done
+Go to 2 using astar with 2 subgoals
+Detected IDs: [24]
+Detected IDs: [44, 24]
+Detected IDs: [44, 24]
+Detected IDs: [44, 24]
+Detected IDs: [44, 24]
+Detected IDs: [24]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [34]
+Detected IDs: [74]
+Detected IDs: [34]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 2
+============================================================
+Viewpoint done
+Go to 3 using astar with 2 subgoals
+Detected IDs: [34]
+Detected IDs: [14]
+Detected IDs: [54, 14, 84]
+Detected IDs: [54, 14]
+Detected IDs: [54, 14]
+Detected IDs: [54, 14]
+Detected IDs: [54, 14]
+Detected IDs: [44]
+Detected IDs: [44]
+
+============================================================
+  ✓ ArUco MARKER 44 VERIFIED at viewpoint 3
+============================================================
+Viewpoint done
+Go to 4 using astar with 2 subgoals
+Detected IDs: [84]
+Detected IDs: [84, 34, 84]
+Detected IDs: [54, 84, 24]
+Detected IDs: [54, 84, 24]
+Detected IDs: [54, 84, 24]
+Detected IDs: [24, 54, 84]
+Detected IDs: [84, 54, 34, 24]
+Detected IDs: [54, 84, 34, 24]
+Detected IDs: [54, 84, 34, 24]
+Detected IDs: [54, 34, 24]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [54]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 4
+============================================================
+Viewpoint done
+Go to 5 using astar with 2 subgoals
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44, 74]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [64]
+
+============================================================
+  ✓ ArUco MARKER 64 VERIFIED at viewpoint 5
+============================================================
+Viewpoint done
+Go to 6 using astar with 2 subgoals
+Detected IDs: [44, 74, 64]
+Detected IDs: [44, 64]
+Detected IDs: [44, 64]
+Detected IDs: [34, 44, 64, 14]
+Detected IDs: [34, 44, 34, 64, 14]
+Detected IDs: [34, 44, 54]
+Detected IDs: [44, 34]
+Detected IDs: [34, 44]
+Detected IDs: [34, 44, 24]
+Detected IDs: [34, 44, 24]
+Detected IDs: [44, 74, 24]
+Detected IDs: [74]
+Detected IDs: [74]
+
+============================================================
+  ✓ ArUco MARKER 74 VERIFIED at viewpoint 6
+============================================================
+Viewpoint done
+Go to 7 using astar with 2 subgoals
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [84, 34]
+
+============================================================
+  ✓ ArUco MARKER 84 VERIFIED at viewpoint 7
+============================================================
+Viewpoint done
+Go to 8 using astar with 3 subgoals
+Detected IDs: [14]
+Detected IDs: [14]
+Detected IDs: [54, 14]
+Detected IDs: [54, 14]
+
+============================================================
+  ✓ ArUco MARKER 14 VERIFIED at viewpoint 8
+============================================================
+Viewpoint done
+Go to 9 using astar with 2 subgoals
+Detected IDs: [54, 14]
+Detected IDs: [54, 14]
+Detected IDs: [54]
+Detected IDs: [44, 74]
+Detected IDs: [24]
+Detected IDs: [24, 54]
+Detected IDs: [24]
+Detected IDs: [24, 54, 24]
+Detected IDs: [24, 24, 54]
+Detected IDs: [24, 54, 24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 9
+============================================================
+Viewpoint done
+Go to 10 using astar with 2 subgoals
+Detected IDs: [24, 24, 54]
+Detected IDs: [54, 24, 24]
+Detected IDs: [54, 24, 24]
+Detected IDs: [54, 34, 24, 24]
+Detected IDs: [34, 24, 54, 24]
+Detected IDs: [54, 34, 24, 24]
+Detected IDs: [74, 54, 44]
+Detected IDs: [74, 54, 44]
+Detected IDs: [74, 54, 44, 34]
+Detected IDs: [44, 74, 54, 34]
+Detected IDs: [44, 74, 54, 34]
+Detected IDs: [44]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 10
+============================================================
+Viewpoint done
+Go to 11 using astar with 2 subgoals
+Detected IDs: [34]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [74, 54]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [44]
+
+============================================================
+  ✓ ArUco MARKER 44 VERIFIED at viewpoint 11
+============================================================
+Viewpoint done
+Go to 12 using astar with 2 subgoals
+Detected IDs: [34, 64]
+Detected IDs: [34, 44, 64]
+Detected IDs: [34, 44]
+Detected IDs: [34, 44]
+Detected IDs: [74, 34, 44]
+Detected IDs: [34, 24]
+Detected IDs: [34, 54, 44]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 12
+============================================================
+Viewpoint done
+Go to 13 using astar with 2 subgoals
+Detected IDs: [34, 44, 64]
+Detected IDs: [34, 44, 64]
+Detected IDs: [34, 64]
+Detected IDs: [74, 34]
+Detected IDs: [34]
+Detected IDs: [34, 44]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [74, 34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [34]
+Detected IDs: [64, 34]
+Detected IDs: [64, 34]
+Detected IDs: [44, 74, 64]
+Detected IDs: [44, 74, 34, 64]
+Detected IDs: [44, 34]
+Detected IDs: [44, 34]
+Detected IDs: [44, 64, 34]
+
+============================================================
+  ✓ ArUco MARKER 64 VERIFIED at viewpoint 13
+============================================================
+Viewpoint done
+Go to 14 using astar with 2 subgoals
+Detected IDs: [44, 74]
+Detected IDs: [44, 74]
+Detected IDs: [44, 54]
+Detected IDs: [44, 54, 34]
+Detected IDs: [44, 74, 34]
+Detected IDs: [74, 44, 34]
+Detected IDs: [74, 34]
+Detected IDs: [74]
+  ✗ ArUco marker 74 NOT seen at viewpoint 14
+Viewpoint done
+Go to 15 using astar with 2 subgoals
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [34, 84, 14]
+Detected IDs: [34, 84, 14]
+Detected IDs: [34, 84, 14]
+Detected IDs: [24, 34, 84]
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [84]
+Detected IDs: [84]
+
+============================================================
+  ✓ ArUco MARKER 84 VERIFIED at viewpoint 15
+============================================================
+Viewpoint done
+Go to 16 using astar with 2 subgoals
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [84]
+Detected IDs: [34, 24, 84]
+Detected IDs: [84, 54, 34, 24]
+Detected IDs: [24, 84, 54, 34]
+Detected IDs: [54, 84, 14]
+
+============================================================
+  ✓ ArUco MARKER 14 VERIFIED at viewpoint 16
+============================================================
+Viewpoint done
+Go to 17 using astar with 2 subgoals
+Detected IDs: [54, 14, 84]
+Detected IDs: [54, 24, 84, 34]
+Detected IDs: [54, 34, 24, 84]
+Detected IDs: [24, 54, 34, 84]
+Detected IDs: [34, 24, 54, 84]
+Detected IDs: [54, 34, 24]
+Detected IDs: [24, 54, 34]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+
+============================================================
+  ✓ ArUco MARKER 24 VERIFIED at viewpoint 17
+============================================================
+Viewpoint done
+Go to 18 using astar with 2 subgoals
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [24]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [74, 24]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [34, 24]
+Detected IDs: [34, 24]
+Detected IDs: [34, 24]
+
+============================================================
+  ✓ ArUco MARKER 34 VERIFIED at viewpoint 18
+============================================================
+Viewpoint done
+Go to 19 using astar with 2 subgoals
+Detected IDs: [34, 24]
+Detected IDs: [44, 74]
+Detected IDs: [44, 74]
+Detected IDs: [44, 74]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44, 74]
+Detected IDs: [74]
+Detected IDs: [74]
+Detected IDs: [44]
+
+============================================================
+  ✓ ArUco MARKER 44 VERIFIED at viewpoint 19
+============================================================
+Viewpoint done
+Go to 20 using astar with 2 subgoals
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [44]
+Detected IDs: [54]
+Detected IDs: [54]
+Detected IDs: [54]
+
+============================================================
+  ✓ ArUco MARKER 54 VERIFIED at viewpoint 20
+============================================================
+Viewpoint done
+---------------------------------
+Tour of scenarios/scenario3.yaml took 243.02606964111328 seconds
+---------------------------------
+Returning to start pose: [0.0, 0.0, 1.0], yaw=0.0
+Detected IDs: [54]
+Detected IDs: [24, 54, 84, 34]
+Detected IDs: [54, 84, 34]
+Detected IDs: [54, 84, 34]
+Detected IDs: [54, 24, 34]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24, 34]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Detected IDs: [54, 24]
+Return-to-start verified: True
+Detected IDs: [54, 24]
+End mission
+Land
+Land success: True
+Manual
+Manual success: True
+Disarm
+Disarm success: False

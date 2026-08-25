@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "duration_s": 179.87315225601196,
+  "path_length_m": 154.78852453728618,
+  "mean_speed_mps": 0.897278836706053,
+  "max_speed_mps": 6.474156459686489,
+  "num_samples": 6497,
+  "scenario_path": "scenarios/scenario2.yaml",
+  "drone_namespace": "drone0",
+  "planner": "rrts",
+  "git_commit": "c8238b6"
+}

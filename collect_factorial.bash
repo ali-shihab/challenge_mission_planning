@@ -70,11 +70,23 @@ STUCK_TIMEOUT=20.0
 DWELL=0.2
 FINAL_TOL=0.75
 YAW_TOL=30.0
+# Trajectory sampling rate. Must be pinned: path distance is integrated from
+# these samples, so a rate that drifts between runs biases the comparison.
+# 50 Hz gives ~6 cm resolution at the 3 m/s cruise speed.
+SAMPLE_HZ=50
 ARUCO_TOPIC="/${NS}/sensor_measurements/hd_camera/image_raw"
 
 # timing guards
 SIM_READY_TIMEOUT=180     # max seconds to wait for a usable simulator
 TEARDOWN_SETTLE=8         # seconds to let processes die after stop.bash
+SIM_SETTLE=12             # extra settle after pose appears, before arming
+# Refuse to start a cell below this much free disk. Sized against the actual
+# workload: with sampling pinned at SAMPLE_HZ and the logger's row cap, a run
+# writes ~1-2 MB and the whole 72-run batch under 150 MB. 5 GB therefore still
+# catches genuine exhaustion (or a regression in the sampler) with a wide
+# margin, without false-tripping the way a 15 GB threshold did.
+MIN_FREE_GB=5
+MAX_ATTEMPTS=3            # in-place retries per cell before giving up on it
 
 LEDGER="$REPO/collection_ledger.csv"
 LOGDIR="$REPO/collection_logs"
@@ -118,36 +130,77 @@ enable_headless() {
     || { log "ERROR: could not enable headless; restoring and aborting"; restore_gui; exit 1; }
 }
 
-# Recover from a previously killed batch that never got to restore.
-if [[ -f "$TMUXBAK" ]]; then
-  echo "NOTE: found a leftover pre-batch backup of tmuxinator/aerostack2.yaml"
-  echo "      (a previous batch was killed before it could restore). Restoring now."
-  mv -f "$TMUXBAK" "$TMUXCONF"
+# Refuse to run two batches at once: they would fight over the simulator, the
+# ledger and the tmuxinator config.
+exec 9>"$REPO/.collect_factorial.lock"
+if ! flock -n 9; then
+  echo "ERROR: another collect_factorial.bash appears to be running."
+  echo "       If you are sure it is not, remove $REPO/.collect_factorial.lock"
+  exit 1
 fi
 
-# Per-run mission timeout: scenario 3 has 20 viewpoints so needs a bigger budget.
+# Recover from a previously killed batch. A SIGKILL cannot run the EXIT trap,
+# so the config may still be headless and sim processes may still be alive.
+if [[ -f "$TMUXBAK" ]]; then
+  echo "NOTE: found a leftover pre-batch backup of tmuxinator/aerostack2.yaml"
+  echo "      (a previous batch was killed before it could restore it). Restoring,"
+  echo "      and clearing any simulator processes it left behind."
+  mv -f "$TMUXBAK" "$TMUXCONF"
+  ./stop.bash >/dev/null 2>&1
+  pkill -9 -f 'ign gazebo' >/dev/null 2>&1
+  pkill -9 -f 'ros_gz_bridge' >/dev/null 2>&1
+  sleep 3
+fi
+
+# Per-run mission timeout.
+#
+# Sized against the WORST case, not the typical one. If every leg stalls, the
+# watchdog still walks the whole tour: n_viewpoints * goto_timeout_s, plus the
+# return-to-start leg and landing. For 20 viewpoints at 60 s that is already
+# ~1290 s. A budget below that kills legitimately-degraded runs and records
+# them as infrastructure timeouts, which both loses real data (a slow, partly
+# failed run IS a result) and triggers pointless retries.
 timeout_for_scenario() {
   case "$1" in
-    3) echo 900 ;;
-    *) echo 600 ;;
+    3) echo 1500 ;;   # 20 viewpoints
+    4) echo  600 ;;   #  5 viewpoints
+    *) echo  900 ;;   # 10 viewpoints
   esac
 }
 
 already_done() {
-  # $1=sc $2=ord $3=pl $4=rep  — a cell counts as done only if it SUCCEEDED
-  grep -q ",$1,$2,$3,$4,ok," "$LEDGER" 2>/dev/null
+  # $1=sc $2=ord $3=pl $4=rep
+  # A cell is done once the mission actually FLEW. 'ok_incomplete' counts: the
+  # tour ran but did not reach every viewpoint, which is a result to keep, not
+  # a run to repeat. Only infrastructure failures leave a cell outstanding.
+  grep -qE ",$1,$2,$3,$4,(ok|ok_incomplete)," "$LEDGER" 2>/dev/null
 }
 
 teardown() {
   ./stop.bash >/dev/null 2>&1
-  # stop.bash is best-effort; make sure nothing survives to poison the next run
-  pkill -9 -f 'ign gazebo'      >/dev/null 2>&1
-  pkill -9 -f 'gz sim'          >/dev/null 2>&1
-  pkill -9 -f 'ros_gz_bridge'   >/dev/null 2>&1
-  pkill -9 -f 'as2_'            >/dev/null 2>&1
-  pkill -9 -f 'mission_scenario'>/dev/null 2>&1
-  tmux kill-server              >/dev/null 2>&1
+  # stop.bash is best-effort; make sure nothing survives to poison the next run.
+  # NOTE: deliberately NOT `tmux kill-server` — that would kill every tmux
+  # session on the machine including the one this script may be running in.
+  # stop.bash already kills the drone/ground_station sessions by name.
+  tmux kill-session -t "$NS"             >/dev/null 2>&1
+  tmux kill-session -t ground_station    >/dev/null 2>&1
+  pkill -9 -f 'ign gazebo'               >/dev/null 2>&1
+  pkill -9 -f 'gz sim'                   >/dev/null 2>&1
+  pkill -9 -f 'ros_gz_bridge'            >/dev/null 2>&1
+  pkill -9 -f 'as2_'                     >/dev/null 2>&1
+  pkill -9 -f 'mission_scenario'         >/dev/null 2>&1
   sleep "$TEARDOWN_SETTLE"
+}
+
+# Refuse to start another cell if the disk is nearly full. A prior bug in this
+# project produced multi-GB trajectory files; unattended, that fills the VM and
+# every later cell fails for reasons that look unrelated.
+check_disk() {
+  local free_gb=$(( $(df -Pk "$REPO" | awk 'NR==2{print $4}') / 1024 / 1024 ))
+  if (( free_gb < MIN_FREE_GB )); then
+    log "ABORT: only ${free_gb} GB free (need ${MIN_FREE_GB}) — stopping before data is corrupted"
+    teardown; exit 2
+  fi
 }
 
 # Wait until the simulator is genuinely usable, not merely launched.
@@ -159,13 +212,23 @@ wait_for_sim() {
 
   while (( SECONDS < deadline )); do
     if (( ! clock_ok )); then
-      timeout 12 ros2 topic echo /clock --once >/dev/null 2>&1 && { clock_ok=1; log "    sim clock is ticking"; }
+      # -k is mandatory on every `timeout` wrapping a ROS CLI call: rclpy
+      # ignores SIGTERM, so a bare `timeout` waits on the child forever. One
+      # such probe blocked this batch for 71 minutes.
+      timeout -k 5 12 ros2 topic echo /clock --once >/dev/null 2>&1 && { clock_ok=1; log "    sim clock is ticking"; }
     fi
     if (( clock_ok && ! pose_ok )); then
-      timeout 12 ros2 topic echo "/${NS}/self_localization/pose" --once >/dev/null 2>&1 \
+      timeout -k 5 12 ros2 topic echo "/${NS}/self_localization/pose" --once >/dev/null 2>&1 \
         && { pose_ok=1; log "    drone is publishing pose"; }
     fi
-    (( clock_ok && pose_ok )) && return 0
+    if (( clock_ok && pose_ok )); then
+      # Pose publishing does not mean the platform will accept arm/offboard.
+      # A failed arm here costs a whole run, so pay a few seconds to let the
+      # platform and behaviour servers finish coming up.
+      log "    settling ${SIM_SETTLE}s before starting the mission"
+      sleep "$SIM_SETTLE"
+      return 0
+    fi
     sleep 5
   done
 
@@ -173,15 +236,15 @@ wait_for_sim() {
   return 1
 }
 
-# Pull the outcome of the most recent run directory back out of its own logs,
-# so the ledger is a real summary rather than just an exit code.
-summarise_latest_run() {
-  python3 - <<'PY' 2>/dev/null || echo "unknown,,,"
-import json, glob, os
-ds = sorted(glob.glob('runs/*/'), key=os.path.getmtime)
-if not ds:
-    print("unknown,,,"); raise SystemExit
-d = ds[-1]
+# Summarise ONE named run directory. The directory is passed in explicitly,
+# identified by diffing runs/ before and after the mission. Picking "newest by
+# mtime" instead would silently attribute the PREVIOUS cell's results to this
+# one whenever a mission exits 0 without creating a directory, which quietly
+# duplicates a run into an unrelated factorial cell.
+summarise_run() {
+  RUN_DIR="$1" python3 - <<'PY' 2>/dev/null || echo "unknown,,,"
+import json, os
+d = os.environ['RUN_DIR']
 tour = ''; vp = 0; ar = 0
 try:
     for line in open(os.path.join(d, 'events.jsonl')):
@@ -259,10 +322,21 @@ for sc in $SCENARIOS; do
           continue
         fi
 
+        check_disk
+
         DONE=$((DONE+1))
-        TAG="sc${sc}_${ord}_${pl}_r${r}"
         log "───────────────────────────────────────────────────────────"
         log "RUN ${DONE}/${TODO}  scenario=${sc} ordering=${ord} planner=${pl} rep=${r}"
+
+        # A timeout or a simulator that never came up is an infrastructure
+        # artefact (host load, wedged Gazebo), not a result for this planner.
+        # Retry the cell in place so the design keeps its full N, instead of
+        # moving on and silently leaving a thin cell behind.
+        ATTEMPT=1
+        STATUS=""   # referenced in the retry banner; must exist under `set -u`
+        while (( ATTEMPT <= MAX_ATTEMPTS )); do
+        TAG="sc${sc}_${ord}_${pl}_r${r}_a${ATTEMPT}"
+        (( ATTEMPT > 1 )) && log "  RETRY ${ATTEMPT}/${MAX_ATTEMPTS} (previous attempt: $STATUS)"
 
         teardown
 
@@ -271,20 +345,27 @@ for sc in $SCENARIOS; do
         SIM_PID=$!
 
         if ! wait_for_sim; then
-          log "  ABORT: simulator never became ready"
-          echo "$(date -Is),$sc,$ord,$pl,$r,sim_not_ready,,,," >> "$LEDGER"
+          log "  simulator never became ready"
+          STATUS="sim_not_ready"
+          echo "$(date -Is),$sc,$ord,$pl,$r,$STATUS,,,," >> "$LEDGER"
           teardown
+          ATTEMPT=$((ATTEMPT+1))
           continue
         fi
 
         log "  running mission (timeout ${RUN_TIMEOUT}s)"
-        timeout "$RUN_TIMEOUT" python3 mission_scenario.py \
+        BEFORE_DIRS=$(ls -1d runs/*/ 2>/dev/null | sort)
+        # -k is essential: plain `timeout` only sends SIGTERM, which rclpy
+        # swallows, so a wedged mission survives its own timeout and blocks the
+        # batch indefinitely. SIGKILL 60 s later guarantees the cell ends.
+        timeout -k 60 "$RUN_TIMEOUT" python3 mission_scenario.py \
             "$SCEN_FILE" \
             --namespace "$NS" \
             --use_sim_time \
             --ordering "$ord" \
             --local_planner "$pl" \
             --rrt_max_iter "$RRT_ITER" \
+            --sample_hz "$SAMPLE_HZ" \
             --speed "$SPEED" \
             --obstacle_inflation_m "$INFLATION" \
             --grid_resolution "$GRID_RES" \
@@ -298,17 +379,57 @@ for sc in $SCENARIOS; do
             > "$LOGDIR/${TAG}_mission.log" 2>&1
         RC=$?
 
+        AFTER_DIRS=$(ls -1d runs/*/ 2>/dev/null | sort)
+        NEW_DIR=$(comm -13 <(echo "$BEFORE_DIRS") <(echo "$AFTER_DIRS") | head -n1)
+
+        # Distinguish MISSION outcome from INFRASTRUCTURE outcome.
+        #
+        # mission_scenario.py exits non-zero when the tour was incomplete, which
+        # is a legitimate RESULT (the baseline genuinely cannot reach every
+        # viewpoint in a dense obstacle field) and must be kept, not retried.
+        # The thing that warrants a retry is a run that never flew at all.
+        #
+        # The discriminator is therefore the presence of a mission_duration
+        # event, not the exit status: if the tour was timed, the mission ran.
         case $RC in
-          0)   STATUS="ok" ;;
           124) STATUS="timeout" ;;
-          *)   STATUS="error_rc${RC}" ;;
+          0)   STATUS="ok" ;;
+          *)   STATUS="ok_incomplete" ;;   # flew, but did not reach every viewpoint
         esac
 
-        SUMMARY=$(summarise_latest_run)
+        # A zero exit code is not proof the mission ran. If no new run directory
+        # appeared, downgrade the status so the cell is retried on resume rather
+        # than silently recorded against another run's data.
+        if [[ -z "$NEW_DIR" ]]; then
+          [[ "$STATUS" == "ok" ]] && STATUS="ok_no_rundir"
+          SUMMARY="none,,,"
+          log "  WARNING: mission produced no run directory"
+        else
+          SUMMARY=$(summarise_run "$NEW_DIR")
+          # No mission_duration means the tour never started (a failed
+          # arm/offboard/takeoff falls straight through to disarm). That is an
+          # infrastructure failure and must be retried, whatever the exit code.
+          if [[ -z "$(cut -d, -f2 <<<"$SUMMARY")" ]]; then
+            [[ "$STATUS" != "timeout" ]] && STATUS="no_mission"
+            log "  WARNING: no mission_duration — the mission never flew"
+          fi
+        fi
+
         echo "$(date -Is),$sc,$ord,$pl,$r,$STATUS,$SUMMARY" >> "$LEDGER"
         log "  -> $STATUS  ($SUMMARY)"
 
         teardown
+
+        # A flown mission ends the cell, complete or not. Anything else is an
+        # infrastructure failure and gets another attempt.
+        [[ "$STATUS" == "ok" || "$STATUS" == "ok_incomplete" ]] && break
+        ATTEMPT=$((ATTEMPT+1))
+        done
+
+        if [[ "$STATUS" != "ok" && "$STATUS" != "ok_incomplete" ]]; then
+          log "  GAVE UP on this cell after ${MAX_ATTEMPTS} attempts (last: $STATUS)"
+          log "  -> rerun the script later to retry it; the cell is not marked done"
+        fi
       done
     done
   done

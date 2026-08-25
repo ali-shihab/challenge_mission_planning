@@ -307,12 +307,50 @@ def safe_disarm(drone_interface: DroneInterface, logger: RunLogger) -> bool:
     return success
 
 
+# Timeouts for the blocking AS2 startup actions. These calls occasionally never
+# return (~2% of runs were observed wedging in takeoff) and, unlike the GoTo
+# legs, they were not covered by any watchdog, so one wedged action could hang
+# an entire mission indefinitely.
+ARM_TIMEOUT_S = 20.0
+OFFBOARD_TIMEOUT_S = 20.0
+TAKEOFF_TIMEOUT_S = 60.0
+
+
+def call_with_timeout(fn, timeout_s, logger, name):
+    """
+    Run a blocking AS2 action on a daemon thread so a wedged action cannot hang
+    the mission. Returns True only on a clean, in-time, truthy result.
+    """
+    box = {"value": None, "exc": None}
+
+    def _target():
+        try:
+            box["value"] = fn()
+        except BaseException as exc:  # must not escape the worker thread
+            box["exc"] = exc
+
+    th = threading.Thread(target=_target, daemon=True)
+    th.start()
+    th.join(timeout_s)
+
+    if th.is_alive():
+        logger.event(name + "_timeout", {"timeout_s": timeout_s})
+        print(name + " TIMED OUT after " + str(timeout_s) + "s")
+        return False
+    if box["exc"] is not None:
+        logger.event(name + "_exception",
+                     {"type": type(box["exc"]).__name__, "msg": str(box["exc"])})
+        print(name + " raised " + type(box["exc"]).__name__ + ": " + str(box["exc"]))
+        return False
+    return bool(box["value"])
+
+
 def drone_start(drone_interface: DroneInterface, logger: RunLogger) -> bool:
     print("Start mission")
 
     logger.event("arm_start")
     print("Arm")
-    success = bool(drone_interface.arm())
+    success = call_with_timeout(drone_interface.arm, ARM_TIMEOUT_S, logger, "arm")
     logger.event("arm_done", {"success": success})
     print(f"Arm success: {success}")
     if not success:
@@ -320,7 +358,8 @@ def drone_start(drone_interface: DroneInterface, logger: RunLogger) -> bool:
 
     logger.event("offboard_start")
     print("Offboard")
-    success = bool(drone_interface.offboard())
+    success = call_with_timeout(drone_interface.offboard, OFFBOARD_TIMEOUT_S,
+                                logger, "offboard")
     logger.event("offboard_done", {"success": success})
     print(f"Offboard success: {success}")
     if not success:
@@ -328,7 +367,9 @@ def drone_start(drone_interface: DroneInterface, logger: RunLogger) -> bool:
 
     logger.event("takeoff_start", {"height": TAKE_OFF_HEIGHT, "speed": TAKE_OFF_SPEED})
     print("Take Off")
-    success = bool(drone_interface.takeoff(height=TAKE_OFF_HEIGHT, speed=TAKE_OFF_SPEED))
+    success = call_with_timeout(
+        lambda: drone_interface.takeoff(height=TAKE_OFF_HEIGHT, speed=TAKE_OFF_SPEED),
+        TAKEOFF_TIMEOUT_S, logger, "takeoff")
     logger.event("takeoff_done", {"success": success})
     print(f"Take Off success: {success}")
     return success
@@ -1334,5 +1375,11 @@ if __name__ == '__main__':
 
         logger.finalize(success=bool(overall_success), ended_reason=ended_reason)
 
-    print('Clean exit')
-    exit(0)
+    # The exit code must reflect the mission outcome. Returning 0 unconditionally
+    # made a mission that never flew indistinguishable from a completed tour, so
+    # any harness trusting the exit status recorded failures as successes.
+    if overall_success:
+        print('Clean exit')
+        exit(0)
+    print('Exit with failure (reason: ' + str(ended_reason) + ')')
+    exit(1)

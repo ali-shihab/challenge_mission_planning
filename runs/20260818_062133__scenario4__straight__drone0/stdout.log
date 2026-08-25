@@ -1,0 +1,30 @@
+Start mission
+Arm
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Arm success: False
+End mission
+Land
+Detected IDs: [64]
+Land success: False
+Manual
+Detected IDs: [64]
+Manual success: False
+Disarm
+Detected IDs: [64]
+Detected IDs: [64]
+Detected IDs: [64]
+Disarm success: False
