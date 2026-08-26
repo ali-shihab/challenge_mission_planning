@@ -27,11 +27,73 @@
 \medskip
 \noindent At 100\,wpm there is roughly a second of silence for every two spoken words, so the footage carries long stretches alone. Let it. The gaps between the lines below are where the drone should be visibly flying, not where you should speak faster.
 
+\section*{Terminal layout and commands}
+
+Three terminals, all inside the XRDP desktop (the camera window needs a real
+display). \textbf{T1} runs the simulator, \textbf{T2} runs the mission, and
+\textbf{T3} runs the camera viewer. Each begins with:
+
+\begin{quote}\ttfamily
+cd \textasciitilde/mission\_planning\_ws/src/challenge\_mission\_planning\\
+source setup.bash
+\end{quote}
+
+\noindent\textbf{T1 --- simulator.} Relaunch between scenarios, and run
+\texttt{./stop.bash} first so the previous world is fully torn down:
+\begin{quote}\ttfamily
+./stop.bash \&\& sleep 5\\
+./launch\_as2.bash -s scenarios/scenario\emph{N}.yaml
+\end{quote}
+
+\noindent\textbf{T3 --- camera viewer} (start once the drone has spawned, leave running):
+\begin{quote}\ttfamily
+python3 aruco\_viewer.py --scale 0.6 --save-dir aruco\_captures
+\end{quote}
+
+\noindent\textbf{T2 --- the mission.} Every run uses the same parameters as the
+72-run dataset, so what is on screen matches the report. Only
+\texttt{--ordering} and \texttt{--local\_planner} change. Define this once per
+terminal:
+\begin{quote}\ttfamily
+\footnotesize
+MP="--namespace drone0 --use\_sim\_time --speed 3.0 --sample\_hz 50 \textbackslash\\
+\hspace*{2em}--obstacle\_inflation\_m 0.4 --grid\_resolution 0.5 --goto\_timeout\_s 60.0 \textbackslash\\
+\hspace*{2em}--stuck\_timeout\_s 20.0 --dwell\_s 0.2 --final\_pos\_tolerance\_m 0.75 \textbackslash\\
+\hspace*{2em}--yaw\_tolerance\_deg 30.0 --return\_to\_start \textbackslash\\
+\hspace*{2em}--aruco\_topic /drone0/sensor\_measurements/hd\_camera/image\_raw"
+\end{quote}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{llll}
+\toprule
+\textbf{Segment} & \textbf{Sim (T1)} & \textbf{Mission (T2)} & \textbf{Shows} \\
+\midrule
+Sc1, 0:33 & \texttt{scenario1.yaml} & \texttt{\$MP --ordering input --local\_planner astar}   & file order \\
+          &                         & \texttt{\$MP --ordering nn\_2opt --local\_planner astar} & 2-opt \\
+\midrule
+Sc2, 1:00 & \texttt{scenario2.yaml} & \texttt{\$MP --ordering input --local\_planner straight} & \textbf{fails, 0\%} \\
+          &                         & \texttt{\$MP --ordering input --local\_planner astar}    & completes \\
+\midrule
+Sc3, 1:35 & \texttt{scenario3.yaml} & \texttt{\$MP --ordering input --local\_planner astar}    & 226\,m \\
+          &                         & \texttt{\$MP --ordering nn\_2opt --local\_planner astar}  & 119\,m \\
+\midrule
+Sc4, 2:02 & \texttt{scenario4.yaml} & \texttt{\$MP --ordering nn\_2opt --local\_planner straight} & \textbf{fails, 0\%} \\
+          &                         & \texttt{\$MP --ordering nn\_2opt --local\_planner astar}    & completes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Prefix each with \texttt{python3 mission\_scenario.py scenarios/scenarioN.yaml}.
+Each pair varies exactly one factor, matching the argument in the narration.
+Scenario~2 and~4 straight-line runs are expected to fail --- that is the footage
+the argument depends on, so record them rather than retrying until they pass.
+
 \medskip
 \noindent\textbf{Recording requirements}
 \begin{itemize}
   \item The 60\%-weighted criterion asks for \emph{``capturing ArUco marker images, providing clear visual proof''}. A terminal banner is not an image. Show the \textbf{camera feed} with the marker outlined and its ID drawn on (\texttt{cv2.aruco.drawDetectedMarkers}).
-  \item \textbf{Layout:} Gazebo left ($\sim$60\%), camera feed top-right, mission log bottom-right, 1920$\times$1080.
+  \item \textbf{Layout:} Gazebo left ($\sim$60\%), the \texttt{aruco\_viewer} window top-right, and terminal \textbf{T2} bottom-right, 1920$\times$1080. T2 is the mission log: \texttt{mission\_scenario.py} prints arm, takeoff, every viewpoint result and each \texttt{Detected IDs} line to its own terminal (also tee'd to \texttt{runs/<run>/stdout.log}). The tmux session in T1 shows only simulator and ROS node output, which is not worth screen space.
   \item Scenario~3 at 2$\times$ with an on-screen caption saying so.
   \item The Scenario~2 and~4 baseline failures carry the argument. Show the drone driving into the obstacle and the watchdog giving up on the leg. The report calls strikes \emph{inferred} from altitude traces, not measured, so describe what is on screen and claim no collision sensor.
 \end{itemize}
